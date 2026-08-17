@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TechMatch Bolivia — Compra y vende tecnologia en segundos</title>
+  <meta name="description" content="TechMatch Bolivia es el marketplace de tecnologia numero uno en Bolivia. Compra y vende laptops, celulares, componentes y mas con inteligencia artificial que te ayuda en cada paso." />
+  <meta name="theme-color" content="#ffffff" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- ================================================ NAV ================================================ -->
+<header class="nav-header" id="nav-header">
+  <nav class="nav-container">
+    <div class="nav-brand">
+      <div class="nav-logo-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M7 16V4m0 0L3 8m4-4l4 4"/><path d="M17 8v12m0 0l4-4m-4 4l-4-4"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <span class="brand-name">TechMatch</span>
+        <span class="brand-sub">Bolivia</span>
+      </div>
+    </div>
+    <div class="nav-links" id="nav-links">
+      <a href="#features" class="nav-link">Caracteristicas</a>
+      <a href="#about"    class="nav-link">Nosotros</a>
+      <a href="#plans"    class="nav-link">Planes</a>
+      <a href="#contact"  class="nav-link">Contacto</a>
+      <a href="#hero"     class="nav-cta" id="nav-cta-btn">Crear mi Cuenta</a>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+</header>
+
+
+<!-- ================================================ HERO ================================================ -->
+<section class="hero" id="hero">
+  <div class="hero-content">
+    <div class="hero-left">
+      <div class="hero-eyebrow">App Web y Mobile · Solo Tecnologia · Bolivia</div>
+      <h1 class="hero-title">
+        Compra y vende<br/>
+        <span class="hero-highlight">tecnologia</span><br/>
+        en segundos.
+      </h1>
+      <p class="hero-subtitle">
+        El marketplace donde encontras laptops, celulares, componentes y todo lo tech que necesitas. Publicar es gratis. Vender es facil.
+      </p>
+      <div class="hero-actions">
+        <a href="#" class="btn-primary" id="hero-btn-primary">Crear mi Cuenta Gratis</a>
+        <a href="#features" class="btn-link" id="hero-btn-secondary">Ver como funciona</a>
+      </div>
+      <div class="hero-trust">
+        <div class="trust-item">
+          <span class="trust-num" data-target="8500">0</span>
+          <span class="trust-label">Usuarios activos</span>
+        </div>
+        <div class="trust-sep"></div>
+        <div class="trust-item">
+          <span class="trust-num" data-target="23000">0</span>
+          <span class="trust-label">Productos publicados</span>
+        </div>
+        <div class="trust-sep"></div>
+        <div class="trust-item">
+          <span class="trust-num" data-target="9">0</span>
+          <span class="trust-label">Ciudades</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-phone-wrap">
+        <img src="phone_mockup.png" alt="TechMatch App" class="hero-phone-img" id="hero-phone" />
+        <div class="phone-badge phone-badge-1">
+          <span class="pb-dot"></span>
+          IA sugiere precio automaticamente
+        </div>
+        <div class="phone-badge phone-badge-2">Vendido en 2 dias</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll"><span class="scroll-line"></span></div>
+</section>
+
+
+<!-- ================================================ FEATURES ================================================ -->
+<section class="features" id="features">
+  <div class="container">
+    <p class="section-label">Por que TechMatch</p>
+    <h2 class="section-title">Lo que nos hace diferentes</h2>
+    <p class="section-subtitle">Mas que un marketplace. Una plataforma inteligente que trabaja para que tus productos se vendan rapido.</p>
+
+    <div class="features-grid">
+
+      <!-- FEAT 1: IA DEMO (grande, ocupa todo el ancho) -->
+      <div class="feat-card feat-card--large feat-card--ai" id="feat-1">
+        <div class="feat-ai-left">
+          <div class="feat-icon-wrap feat-icon--blue">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/>
+            </svg>
+          </div>
+          <div class="feat-tag">Inteligencia Artificial</div>
+          <h3 class="feat-title">La IA publica por vos</h3>
+          <p class="feat-desc">Solo subis una foto de tu producto. Nuestra IA lo reconoce, rellena el titulo, descripcion y caracteristicas tecnicas automaticamente, y te da un precio promedio basado en el mercado boliviano.</p>
+
+          <!-- UPLOAD ZONE -->
+          <div class="ai-upload-zone" id="ai-upload-zone">
+            <input type="file" id="ai-file-input" accept="image/*" style="display:none" />
+            <div class="auz-idle" id="auz-idle" onclick="document.getElementById('ai-file-input').click()">
+              <div class="auz-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/>
+                </svg>
+              </div>
+              <p class="auz-title">Sube una foto de tu producto</p>
+              <p class="auz-sub">JPG, PNG o foto de celular — max 10MB</p>
+              <button class="auz-btn" type="button">Seleccionar imagen</button>
+              <span class="auz-or">o usa un ejemplo</span>
+              <div class="auz-examples" id="auz-examples">
+                <button class="ex-btn" data-demo="laptop"  type="button">Laptop</button>
+                <button class="ex-btn" data-demo="phone"   type="button">Celular</button>
+                <button class="ex-btn" data-demo="gpu"     type="button">Componente</button>
+                <button class="ex-btn" data-demo="tablet"  type="button">Tablet</button>
+              </div>
+            </div>
+
+            <!-- SCANNING STATE -->
+            <div class="auz-scanning" id="auz-scanning" style="display:none">
+              <div class="scan-img-wrap">
+                <img id="scan-preview-img" src="" alt="Producto" class="scan-preview" />
+                <div class="scan-line-ani" id="scan-line-ani"></div>
+                <div class="scan-corners-wrap">
+                  <span class="sc tl"></span><span class="sc tr"></span>
+                  <span class="sc bl"></span><span class="sc br"></span>
+                </div>
+              </div>
+              <div class="scan-status" id="scan-status">Detectando producto...</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RESULT PANEL -->
+        <div class="ai-result-panel" id="ai-result-panel">
+          <div class="arp-placeholder" id="arp-placeholder">
+            <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+              <circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>
+            </svg>
+            <p>Sube o selecciona una imagen para ver el analisis</p>
+          </div>
+
+          <div class="arp-content" id="arp-content" style="display:none">
+            <div class="arp-product-header">
+              <div class="arp-product-img-wrap">
+                <img id="arp-img" src="" alt="" class="arp-product-img" />
+                <div class="arp-verified-badge">Analizado por IA</div>
+              </div>
+              <div class="arp-product-info">
+                <div class="arp-category" id="arp-category">Laptop</div>
+                <div class="arp-product-name" id="arp-name">ASUS VivoBook 15</div>
+                <div class="arp-condition">
+                  <span class="cond-dot"></span>
+                  <span id="arp-condition">Buen estado</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- PRICE CONTROL (estilo InDrive) -->
+            <div class="price-control-block">
+              <div class="pcb-label">Precio sugerido por IA</div>
+              <div class="price-adjuster">
+                <button class="price-btn price-btn--down" id="price-down" type="button">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/></svg>
+                </button>
+                <div class="price-display">
+                  <span class="price-currency-sm">Bs.</span>
+                  <span class="price-value" id="price-value">4200</span>
+                </div>
+                <button class="price-btn price-btn--up" id="price-up" type="button">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+                </button>
+              </div>
+              <div class="pcb-range" id="pcb-range">Rango de mercado: Bs. 3.800 — Bs. 4.800</div>
+              <div class="pcb-meter">
+                <div class="pcb-meter-bar" id="pcb-meter-bar"></div>
+              </div>
+              <div class="pcb-meter-labels">
+                <span>Precio bajo</span><span>Optimo</span><span>Precio alto</span>
+              </div>
+            </div>
+
+            <!-- CHARACTERISTICS LIST -->
+            <div class="chars-block">
+              <div class="chars-label">Caracteristicas detectadas por IA</div>
+              <ul class="chars-list" id="chars-list"></ul>
+            </div>
+
+            <div class="arp-actions">
+              <button class="btn-primary" style="font-size:0.88rem;padding:12px 20px;" type="button">Publicar con este precio</button>
+              <button class="btn-arp-reset" id="btn-arp-reset" type="button" onclick="resetAIDemo()">Analizar otro</button>
+            </div>
+          </div>
+        </div>
+      </div><!-- /feat-card--large -->
+
+      <!-- FEAT 2: RECOMENDACIONES -->
+      <div class="feat-card" id="feat-2">
+        <div class="feat-icon-wrap feat-icon--indigo">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+        </div>
+        <div class="feat-tag feat-tag--indigo">Recomendaciones</div>
+        <h3 class="feat-title">Tu feed, personalizado</h3>
+        <p class="feat-desc">El algoritmo aprende tus preferencias y te muestra productos que realmente te interesan. Sin ruido, sin relleno.</p>
+        <div class="mini-feed">
+          <div class="mini-card mc-active">
+            <div class="mc-img mc-laptop"></div>
+            <div class="mc-info"><div class="mc-name">Laptop Gaming MSI</div><div class="mc-price">Bs. 8.500</div></div>
+            <div class="mc-match">98% match</div>
+          </div>
+          <div class="mini-card">
+            <div class="mc-img mc-phone"></div>
+            <div class="mc-info"><div class="mc-name">iPhone 14 Pro</div><div class="mc-price">Bs. 6.200</div></div>
+            <div class="mc-match">95% match</div>
+          </div>
+          <div class="mini-card">
+            <div class="mc-img mc-gpu"></div>
+            <div class="mc-info"><div class="mc-name">RTX 4060 Ti</div><div class="mc-price">Bs. 3.100</div></div>
+            <div class="mc-match">91% match</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FEAT 3: PRECIO DINAMICO -->
+      <div class="feat-card" id="feat-3">
+        <div class="feat-icon-wrap feat-icon--green">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/></svg>
+        </div>
+        <div class="feat-tag feat-tag--green">Precio Dinamico</div>
+        <h3 class="feat-title">Si no se vende, te avisamos</h3>
+        <p class="feat-desc">Si tu producto lleva cierto tiempo sin ventas, la plataforma te notifica y sugiere el precio ideal para que salga rapido.</p>
+        <div class="price-alert-demo">
+          <div class="pa-product">
+            <div class="pa-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+            </div>
+            <div><div class="pa-name">Samsung Galaxy A54</div><div class="pa-days">Sin ventas hace 12 dias</div></div>
+          </div>
+          <div class="pa-suggestion">
+            <div class="pa-label">Precio sugerido para venta rapida</div>
+            <div class="pa-prices">
+              <span class="pa-old">Bs. 1.800</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              <span class="pa-new">Bs. 1.550</span>
+            </div>
+            <div class="pa-insight">Reduce un 14% y vendes en menos de 3 dias</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FEAT 4: COMPARADOR -->
+      <div class="feat-card" id="feat-4">
+        <div class="feat-icon-wrap feat-icon--orange">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        </div>
+        <div class="feat-tag feat-tag--orange">Comparador</div>
+        <h3 class="feat-title">Compara antes de comprar</h3>
+        <p class="feat-desc">Selecciona dos o mas productos y compara sus especificaciones tecnicas lado a lado. Toma la mejor decision con datos claros.</p>
+        <div class="compare-demo">
+          <div class="cmp-header">
+            <span>MacBook Air M2</span>
+            <span class="cmp-vs">vs</span>
+            <span>Laptop ASUS</span>
+          </div>
+          <div class="cmp-rows">
+            <div class="cmp-row"><span class="cmp-label">Procesador</span><span class="cmp-a cmp-win">Apple M2</span><span class="cmp-b">i5-1235U</span></div>
+            <div class="cmp-row"><span class="cmp-label">RAM</span><span class="cmp-a">8 GB</span><span class="cmp-b cmp-win">16 GB</span></div>
+            <div class="cmp-row"><span class="cmp-label">Precio</span><span class="cmp-a">Bs. 9.800</span><span class="cmp-b cmp-win">Bs. 4.200</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ================================================ HOW IT WORKS ================================================ -->
+<section class="how-it-works" id="how">
+  <div class="container">
+    <p class="section-label">Simple y rapido</p>
+    <h2 class="section-title">Publicar dura menos de un minuto</h2>
+    <p class="section-subtitle">Sin formularios interminables. Sin complicaciones. Solo vos y tu tecnologia.</p>
+    <div class="steps-grid">
+      <div class="step-card" id="step-1">
+        <div class="step-number">01</div>
+        <h3 class="step-title">Crea tu cuenta</h3>
+        <p class="step-desc">Registrate con tu correo o numero de celular. Despues eleges si quieres una cuenta personal o de negocio, segun como quieras vender.</p>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-card" id="step-2">
+        <div class="step-number">02</div>
+        <h3 class="step-title">Saca una foto</h3>
+        <p class="step-desc">Fotografias tu producto y nuestra IA se encarga de reconocerlo, completar las especificaciones tecnicas y sugerirte un precio justo de mercado.</p>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-card" id="step-3">
+        <div class="step-number">03</div>
+        <h3 class="step-title">Publica y vende</h3>
+        <p class="step-desc">Tu producto llega a compradores que realmente lo buscan. La plataforma te avisa si debes ajustar el precio para vender mas rapido.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ================================================ ABOUT ================================================ -->
+<section class="about" id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-left">
+        <p class="section-label">Quienes somos</p>
+        <h2 class="section-title">Nacimos para ordenar el mercado tech boliviano</h2>
+        <p class="about-body">TechMatch Bolivia es una aplicacion web y mobile diseñada para que cualquier persona en Bolivia pueda comprar y vender tecnologia de manera rapida, confiable y con soporte de inteligencia artificial.</p>
+        <p class="about-body">Vimos que el mercado tecnologico boliviano no tenia un espacio serio y organizado. Las redes sociales no son un marketplace. Nosotros si lo somos.</p>
+        <div class="about-pillars">
+          <div class="pillar"><div class="pillar-dot pillar-dot--blue"></div><div><div class="pillar-title">Disponible en todo Bolivia</div><div class="pillar-desc">La Paz, Cochabamba, Santa Cruz y 6 ciudades mas</div></div></div>
+          <div class="pillar"><div class="pillar-dot pillar-dot--indigo"></div><div><div class="pillar-title">100% web y mobile</div><div class="pillar-desc">Funciona en cualquier celular sin necesidad de instalar nada</div></div></div>
+          <div class="pillar"><div class="pillar-dot pillar-dot--green"></div><div><div class="pillar-title">Publicar es gratis</div><div class="pillar-desc">La cuenta basica no tiene costo. Publicar tu primer producto tampoco</div></div></div>
+        </div>
+      </div>
+      <div class="about-right">
+        <div class="about-mission-card"><div class="amc-tag">Mision</div><p class="amc-text">Conectar a compradores y vendedores de tecnologia en Bolivia con herramientas inteligentes que hacen el proceso rapido, justo y confiable.</p></div>
+        <div class="about-vision-card"><div class="amc-tag amc-tag--indigo">Vision</div><p class="amc-text">Ser el marketplace de referencia para tecnologia en toda Bolivia y expandirnos a Latinoamerica antes del 2028.</p></div>
+        <div class="about-stat-row">
+          <div class="about-stat"><div class="as-num">2025</div><div class="as-label">Fundacion</div></div>
+          <div class="about-stat"><div class="as-num">100%</div><div class="as-label">Boliviano</div></div>
+          <div class="about-stat"><div class="as-num">Mobile</div><div class="as-label">Primero</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ================================================ PLANES ================================================ -->
+<section class="plans" id="plans">
+  <div class="container">
+    <p class="section-label">Planes</p>
+    <h2 class="section-title">Empieza gratis, crece cuando quieras</h2>
+    <p class="section-subtitle">Elige el plan que se adapta a como queres vender. Todos incluyen IA de reconocimiento de productos.</p>
+
+    <div class="plans-grid plans-grid--3">
+
+      <!-- PLAN GRATIS -->
+      <div class="plan-card" id="plan-free">
+        <div class="plan-type">Basico</div>
+        <div class="plan-price-block">
+          <span class="plan-currency">Bs.</span>
+          <span class="plan-amount" data-monthly="0" data-annual="0">0</span>
+          <span class="plan-period">/mes</span>
+        </div>
+        <p class="plan-tagline">Para empezar a comprar y vender sin costo.</p>
+        <div class="plan-limit-chip">Hasta 25 productos activos</div>
+        <ul class="plan-features">
+          <li class="pf-yes">Cuenta personal o negocio</li>
+          <li class="pf-yes">25 productos activos</li>
+          <li class="pf-yes">IA de reconocimiento de producto</li>
+          <li class="pf-yes">Chat con compradores</li>
+          <li class="pf-yes">Precio promedio sugerido por IA</li>
+          <li class="pf-no">Catalogo ampliado</li>
+          <li class="pf-no">Insignia de verificacion</li>
+          <li class="pf-no">Videos y Reels del producto</li>
+          <li class="pf-no">Mayor alcance de publico</li>
+        </ul>
+        <a href="#" class="plan-btn plan-btn--outline" id="plan-free-btn">Crear cuenta gratis</a>
+      </div>
+
+      <!-- PLAN PERSONAL PRO -->
+      <div class="plan-card plan-card--personal" id="plan-personal">
+        <div class="plan-type">Personal Pro</div>
+        <div class="plan-price-block">
+          <span class="plan-currency">Bs.</span>
+          <span class="plan-amount" data-monthly="99" data-annual="79">99</span>
+          <span class="plan-period">/mes</span>
+        </div>
+        <p class="plan-tagline">Para personas que venden seguido y quieren llegar a mas compradores.</p>
+        <div class="plan-limit-chip plan-limit-chip--personal">Catalogo ampliado ilimitado</div>
+        <ul class="plan-features">
+          <li class="pf-yes">Todo lo del plan Basico</li>
+          <li class="pf-yes">Productos ilimitados</li>
+          <li class="pf-yes">Insignia de usuario verificado</li>
+          <li class="pf-yes">Tus productos llegan a mas personas</li>
+          <li class="pf-yes">Publicar videos y Reels del producto</li>
+          <li class="pf-yes">Alerta de precio dinamico inteligente</li>
+          <li class="pf-yes">Comparador avanzado de productos</li>
+          <li class="pf-no">Perfil de tienda oficial</li>
+          <li class="pf-no">Publicidad en apartado de tiendas destacadas</li>
+        </ul>
+        <a href="#" class="plan-btn plan-btn--personal" id="plan-personal-btn">Activar Personal Pro</a>
+      </div>
+
+      <!-- PLAN NEGOCIO -->
+      <div class="plan-card plan-card--business" id="plan-business">
+        <div class="plan-featured-tag">Para negocios</div>
+        <div class="plan-type plan-type--white">Negocio</div>
+        <div class="plan-price-block">
+          <span class="plan-currency">Bs.</span>
+          <span class="plan-amount" data-monthly="249" data-annual="199">249</span>
+          <span class="plan-period">/mes</span>
+        </div>
+        <p class="plan-tagline" style="color:rgba(255,255,255,0.72)">Para tiendas y negocios que quieren maxima visibilidad y ventas.</p>
+        <div class="plan-limit-chip plan-limit-chip--business">Perfil de tienda oficial + publicidad</div>
+        <ul class="plan-features plan-features--white">
+          <li class="pf-yes">Todo lo del plan Personal Pro</li>
+          <li class="pf-yes">Perfil de tienda oficial con logo y banner</li>
+          <li class="pf-yes">Insignia de Tienda Verificada</li>
+          <li class="pf-yes">Publicidad en el apartado de Tiendas Destacadas</li>
+          <li class="pf-yes">Maxima visibilidad en busquedas y feed</li>
+          <li class="pf-yes">Reels y videos del catalogo de productos</li>
+          <li class="pf-yes">Estadisticas avanzadas de visitas y ventas</li>
+          <li class="pf-yes">Soporte prioritario 24/7</li>
+        </ul>
+        <a href="#" class="plan-btn plan-btn--white" id="plan-business-btn">Activar Plan Negocio</a>
+      </div>
+
+    </div>
+
+    <div class="billing-note">
+      <button class="billing-toggle-btn" id="billing-toggle-btn">
+        <span id="billing-toggle-label">Ver precios anuales — Ahorra un 20%</span>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+
+<!-- ================================================ DESCARGA ================================================ -->
+<section class="download-section" id="download">
+  <div class="container">
+    <div class="download-inner">
+      <div class="dl-left">
+        <p class="section-label">Disponible ahora</p>
+        <h2 class="dl-title">Llevate TechMatch en tu bolsillo</h2>
+        <p class="dl-desc">Disponible como app web en cualquier navegador y proximamente en Google Play y App Store. Sin instalar nada, funciona directo desde tu celular.</p>
+        <div class="dl-badges">
+          <a href="#" class="dl-badge-link" id="dl-playstore">
+            <img src="playstore.png" alt="Descargar en Google Play" class="dl-badge-img" />
+          </a>
+          <a href="#" class="dl-badge-link" id="dl-appstore">
+            <img src="appstore.png" alt="Disponible en App Store" class="dl-badge-img" />
+          </a>
+        </div>
+        <div class="dl-note">App web disponible ahora mismo en tu navegador — sin instalar</div>
+      </div>
+      <div class="dl-right">
+        <div class="dl-phone-preview">
+          <img src="phone_mockup.png" alt="TechMatch en tu celular" class="dl-phone-img" />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ================================================ CONTACTO ================================================ -->
+<section class="contact" id="contact">
+  <div class="container">
+    <div class="contact-grid">
+      <div class="contact-left">
+        <p class="section-label">Contacto</p>
+        <h2 class="section-title">Hablemos</h2>
+        <p class="contact-intro">Tienes una consulta, quieres ser parte del equipo o simplemente quieres saber mas? Escribinos.</p>
+        <div class="contact-info-list">
+          <div class="ci-item">
+            <div class="ci-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+            <div><div class="ci-label">Correo</div><a href="mailto:hola@techmatch.bo" class="ci-val">hola@techmatch.bo</a></div>
+          </div>
+          <div class="ci-item">
+            <div class="ci-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+            <div><div class="ci-label">WhatsApp</div><a href="https://wa.me/59171234567" class="ci-val">+591 7123-4567</a></div>
+          </div>
+          <div class="ci-item">
+            <div class="ci-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg></div>
+            <div><div class="ci-label">Horario</div><div class="ci-val">Lunes a Viernes, 8:00 — 18:00</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="contact-right">
+        <form class="contact-form" id="contact-form" onsubmit="submitForm(event)">
+          <div class="form-row">
+            <div class="form-group"><label for="cf-name">Nombre completo</label><input type="text" id="cf-name" name="name" placeholder="Tu nombre" required /></div>
+            <div class="form-group"><label for="cf-email">Correo electronico</label><input type="email" id="cf-email" name="email" placeholder="tu@correo.com" required /></div>
+          </div>
+          <div class="form-group">
+            <label for="cf-topic">Asunto</label>
+            <select id="cf-topic" name="topic">
+              <option value="">Selecciona un asunto</option>
+              <option>Crear mi cuenta</option>
+              <option>Informacion sobre Tech Pro</option>
+              <option>Propuesta de inversion</option>
+              <option>Soporte tecnico</option>
+              <option>Prensa o medios</option>
+              <option>Otro</option>
+            </select>
+          </div>
+          <div class="form-group"><label for="cf-msg">Mensaje</label><textarea id="cf-msg" name="message" rows="4" placeholder="Cuentanos en que podemos ayudarte..."></textarea></div>
+          <button type="submit" class="btn-primary btn-full" id="cf-submit">Enviar mensaje</button>
+          <div class="form-success" id="form-success" style="display:none">Mensaje enviado. Te respondemos en menos de 24 horas.</div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- FOOTER -->
+<footer class="footer" id="footer">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand-col">
+        <div class="footer-logo-row">
+          <div class="footer-logo-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16V4m0 0L3 8m4-4l4 4"/><path d="M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
+          </div>
+          <span class="footer-brand-name">TechMatch Bolivia</span>
+        </div>
+        <p class="footer-desc">El marketplace de tecnologia numero uno de Bolivia. Compra, vende y descubre tecnologia con inteligencia artificial.</p>
+        <div class="footer-social">
+          <a href="#" class="social-link" id="s-ig" aria-label="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+          <a href="#" class="social-link" id="s-fb" aria-label="Facebook"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></a>
+          <a href="#" class="social-link" id="s-wa" aria-label="WhatsApp"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg></a>
+        </div>
+      </div>
+      <div class="footer-col"><div class="footer-col-title">Plataforma</div><ul class="footer-links"><li><a href="#features">Caracteristicas</a></li><li><a href="#plans">Planes</a></li><li><a href="#">Explorar productos</a></li><li><a href="#">Publicar gratis</a></li></ul></div>
+      <div class="footer-col"><div class="footer-col-title">Empresa</div><ul class="footer-links"><li><a href="#about">Quienes somos</a></li><li><a href="#">Blog</a></li><li><a href="#contact">Contacto</a></li><li><a href="#">Trabaja con nosotros</a></li></ul></div>
+      <div class="footer-col"><div class="footer-col-title">Legal</div><ul class="footer-links"><li><a href="#">Terminos de uso</a></li><li><a href="#">Privacidad</a></li><li><a href="#">Cookies</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <span>2025 TechMatch Bolivia. Hecho en Bolivia.</span>
+      <span>App web y mobile · Solo tecnologia</span>
+    </div>
+  </div>
+</footer>
+
+<button class="back-to-top" id="back-to-top" aria-label="Volver arriba" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg>
+</button>
+
+<script src="script.js"></script>
+</body>
+</html>
