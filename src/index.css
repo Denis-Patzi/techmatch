@@ -1,0 +1,150 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ══════════════════════════════════════════════════════════════
+   SISTEMA DE TEMAS — Variables en formato R G B (sin coma)
+   Tailwind las usa como: rgb(var(--c-xxx) / alpha)
+   
+   DARK  (default) → azul marino #0A192F
+   LIGHT (html.light) → blanco/gris iOS
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── DARK MODE ── */
+:root {
+  /* New Palette */
+  --c-navy:          13 17 24;      /* #0D1118 */
+  --c-navy-light:    20 16 51;      /* #141033 */
+  --c-navy-lighter:  38 49 173;     /* #2631AD */
+  --c-cyan:          42 255 204;    /* #2AFFCC */
+  --c-slate-body:    255 255 255;   /* #FFFFFF */
+  --c-slate-sub:     92 156 235;    /* #5C9CEB */
+  --c-slate-muted:   125 127 129;   /* #7D7F81 */
+  
+  --c-brand-blue:    38 49 173;     /* #2631AD */
+  --c-brand-purple:  127 36 231;    /* #7F24E7 */
+  --c-brand-cyan:    42 255 204;    /* #2AFFCC */
+  --c-brand-neon:    0 255 161;     /* #00FFA1 */
+}
+
+/* ── LIGHT MODE ── */
+html.light {
+  --c-navy:          249 249 252;    /* #f9f9fc  fondo principal */
+  --c-navy-light:    255 255 255;    /* #ffffff  tarjetas */
+  --c-navy-lighter:  232 232 237;    /* #e8e8ed  fondos secundarios */
+  --c-cyan:          0 113 227;      /* #0071e3  acento = azul brand */
+  --c-slate-body:    29 29 31;       /* #1d1d1f  texto principal */
+  --c-slate-sub:     110 110 115;    /* #6e6e73  texto secundario */
+  --c-slate-muted:   174 174 178;    /* #aeaeb2  texto muted */
+  /* Los brand colors se mantienen iguales en ambos temas */
+}
+
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; font-size: 106.25%; }
+
+body {
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+  /* El body usa la variable directamente — garantiza el cambio de tema */
+  background-color: rgb(var(--c-navy));
+  color: rgb(var(--c-slate-body));
+  line-height: 1.6;
+  overflow-x: hidden;
+  transition: background-color 0.4s cubic-bezier(0.16,1,0.3,1),
+              color 0.4s cubic-bezier(0.16,1,0.3,1);
+}
+
+::selection { background: rgb(var(--c-cyan) / 0.2); color: rgb(var(--c-cyan)); }
+a { color: rgb(var(--c-cyan)); text-decoration: none; }
+img { max-width: 100%; display: block; }
+ul { list-style: none; }
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar       { width: 6px; }
+::-webkit-scrollbar-track  { background: rgb(var(--c-navy-light)); }
+::-webkit-scrollbar-thumb  { background: rgb(var(--c-slate-muted)); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgb(var(--c-slate-sub)); }
+
+/* ── Spotlight (SpotlightCard) ── */
+.spotlight-card { position: relative; overflow: hidden; }
+.spotlight-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    var(--spot-color, rgb(var(--c-cyan) / 0.05)),
+    transparent 40%
+  );
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.spotlight-card:hover::before { opacity: 1; }
+
+/* ── Scan line (AI Demo) ── */
+@keyframes scanLine {
+  0%   { top: 0%;   opacity: 1; }
+  90%  { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+.scan-line-animated {
+  position: absolute;
+  left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgb(var(--c-cyan)), transparent);
+  box-shadow: 0 0 12px rgb(var(--c-cyan));
+  animation: scanLine 1.6s ease-in-out infinite;
+}
+
+/* ── Shared animations ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Carrusel ── */
+.carousel-track { cursor: grab; user-select: none; }
+.carousel-track:active { cursor: grabbing; }
+
+/* ── Nav mobile ── */
+@media (max-width: 768px) {
+  .nav-links-mobile {
+    position: fixed;
+    top: 62px; left: 0; right: 0;
+    background: rgb(var(--c-navy) / 0.97);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgb(var(--c-cyan) / 0.1);
+    padding: 20px 24px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    z-index: 999;
+    transition: background 0.4s;
+  }
+}
+
+/* ── Responsive helpers ── */
+@media (max-width: 768px) {
+  .hero-grid { grid-template-columns: 1fr !important; }
+  .hero-phone-wrap { display: none; }
+}
+@media (max-width: 900px) {
+  .plans-grid-3 { grid-template-columns: 1fr !important; }
+  .feat-card-large { grid-template-columns: 1fr !important; }
+}
+
+@layer utilities {
+  .glow-purple {
+    background: radial-gradient(circle at center, rgba(127, 36, 231, 0.4) 0%, transparent 70%);
+  }
+  .glow-blue {
+    background: radial-gradient(circle at center, rgba(38, 49, 173, 0.4) 0%, transparent 70%);
+  }
+  .bento-card {
+    @apply bg-navy-light border border-cyan/15 rounded-[2rem] overflow-hidden;
+  }
+}
