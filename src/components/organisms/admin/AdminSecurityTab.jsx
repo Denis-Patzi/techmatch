@@ -23,7 +23,7 @@ export default function AdminSecurityTab() {
 
       <div className="bg-navy-light border border-cyan/10 p-6 rounded-2xl max-w-2xl mb-8">
         <h3 className="font-bold text-slate-body mb-4">Herramienta de Verificación Manual</h3>
-        <form onSubmit={handleSearch} className="flex gap-3">
+        <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-3">
           <input
             type="text"
             placeholder="Ingrese IMEI o Nro. de Serie..."
@@ -31,7 +31,7 @@ export default function AdminSecurityTab() {
             onChange={(e) => setImei(e.target.value)}
             className="flex-1 bg-navy border border-cyan/20 rounded-xl px-4 py-2.5 text-sm text-slate-body focus:outline-none focus:border-cyan"
           />
-          <button type="submit" className="bg-brand-blue text-white px-6 py-2.5 rounded-xl font-bold text-sm hover:bg-brand-hover transition-colors">
+          <button type="submit" className="bg-brand-blue text-white px-6 py-2.5 rounded-xl font-bold text-sm hover:bg-brand-hover transition-colors whitespace-nowrap">
             Consultar
           </button>
         </form>
