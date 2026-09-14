@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { PlanFeatureItem } from '@/components/atoms/PlanFeatureItem';
 
 /**
@@ -100,16 +101,16 @@ export function PlanCard({ plan, isAnnual, index = 0 }) {
       </ul>
 
       {/* CTA */}
-      <a
-        href="#"
+      <Link
+        to="/signup"
         className={`
           w-full text-center py-3.5 rounded-full text-sm font-bold
-          transition-all duration-200 hover:-translate-y-0.5
+          transition-all duration-200 hover:-translate-y-0.5 inline-block
           ${ctaStyles[variant] ?? ctaStyles.free}
         `}
       >
         {cta}
-      </a>
+      </Link>
     </motion.div>
   );
 }

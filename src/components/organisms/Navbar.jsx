@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Link, useNavigate } from 'react-router-dom';
 import { NavBrand } from '@/components/molecules/NavBrand';
 import { Button } from '@/components/atoms/Button';
 import { useScrollAware } from '@/hooks/useScrollAware';
 import { useScrollSpy } from '@/hooks/useScrollSpy';
 import { navLinks } from '@/data/navLinks';
 import { ThemeToggle } from '@/components/atoms/ThemeToggle';
+import { useAuth } from '@/hooks/useAuth';
 
 const SECTION_IDS = ['hero', 'features', 'sellers', 'buyers', 'about', 'plans', 'contact'];
 
@@ -21,12 +23,19 @@ export function Navbar({ isDark, onToggleTheme }) {
   const { scrolled } = useScrollAware(12);
   const activeId     = useScrollSpy(SECTION_IDS, 0.4);
   const [open, setOpen] = useState(false);
+  const { user, profile, signOut } = useAuth();
+  const navigate = useNavigate();
 
   const scrollTo = (href) => {
     const id = href.replace('#', '');
     const el = document.getElementById(id);
     if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 72, behavior: 'smooth' });
     setOpen(false);
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/');
   };
 
   return (
@@ -73,15 +82,46 @@ export function Navbar({ isDark, onToggleTheme }) {
                 </a>
               );
             })}
+
             <ThemeToggle isDark={isDark} onToggle={onToggleTheme} className="ml-2 w-9 h-9" />
-            <Button
-              variant="cyan"
-              href="#hero"
-              onClick={(e) => { e.preventDefault(); scrollTo('#hero'); }}
-              className="ml-3 text-[0.84rem] py-2.5 px-5"
-            >
-              Crear mi Cuenta
-            </Button>
+
+            {/* ── Botones según estado de sesión ── */}
+            {user ? (
+              /* Usuario autenticado */
+              <div className="flex items-center gap-2 ml-3">
+                <Link
+                  to={profile?.role === 'admin' ? '/admin' : profile?.role === 'seller' ? '/seller' : '/profile'}
+                  className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-[0.84rem] font-medium text-slate-sub hover:text-slate-body transition-colors"
+                >
+                  <span className="w-7 h-7 rounded-full bg-cyan/20 border border-cyan/30 flex items-center justify-center text-xs font-bold text-cyan">
+                    {profile?.full_name?.[0]?.toUpperCase() ?? '?'}
+                  </span>
+                  {profile?.full_name?.split(' ')[0] ?? 'Perfil'}
+                </Link>
+                <button
+                  onClick={handleSignOut}
+                  className="text-[0.84rem] font-medium text-slate-muted hover:text-red-400 transition-colors px-3 py-2 rounded-xl"
+                >
+                  Salir
+                </button>
+              </div>
+            ) : (
+              /* Usuario no autenticado */
+              <div className="flex items-center gap-2 ml-3">
+                <Link
+                  to="/login"
+                  className="px-4 py-2.5 rounded-xl text-[0.84rem] font-medium text-slate-sub hover:text-slate-body border border-cyan/20 hover:border-cyan/40 transition-all duration-150"
+                >
+                  Iniciar Sesión
+                </Link>
+                <Link
+                  to="/signup"
+                  className="px-5 py-2.5 rounded-xl text-[0.84rem] font-bold text-navy bg-cyan hover:opacity-90 transition-all duration-150"
+                >
+                  Crear mi Cuenta
+                </Link>
+              </div>
+            )}
           </div>
 
           {/* Mobile controls */}
@@ -138,14 +178,44 @@ export function Navbar({ isDark, onToggleTheme }) {
                 </a>
               );
             })}
-            <Button
-              variant="cyan"
-              href="#hero"
-              onClick={(e) => { e.preventDefault(); scrollTo('#hero'); setOpen(false); }}
-              className="mt-2 w-full justify-center"
-            >
-              Crear mi Cuenta
-            </Button>
+            {/* Mobile: botones de auth */}
+            {user ? (
+              <div className="flex flex-col gap-2 mt-2 pt-2 border-t border-cyan/10">
+                <Link
+                  to={profile?.role === 'admin' ? '/admin' : profile?.role === 'seller' ? '/seller' : '/profile'}
+                  onClick={() => setOpen(false)}
+                  className="px-4 py-3 rounded-xl text-sm font-medium text-slate-sub hover:text-slate-body hover:bg-navy-lighter flex items-center gap-2"
+                >
+                  <span className="w-6 h-6 rounded-full bg-cyan/20 flex items-center justify-center text-xs font-bold text-cyan">
+                    {profile?.full_name?.[0]?.toUpperCase() ?? '?'}
+                  </span>
+                  {profile?.full_name?.split(' ')[0] ?? 'Mi Perfil'}
+                </Link>
+                <button
+                  onClick={() => { handleSignOut(); setOpen(false); }}
+                  className="px-4 py-3 rounded-xl text-sm font-medium text-red-400/70 hover:text-red-400 text-left transition-colors"
+                >
+                  Cerrar sesión
+                </button>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-2 mt-2">
+                <Link
+                  to="/login"
+                  onClick={() => setOpen(false)}
+                  className="px-4 py-3 rounded-xl text-sm font-medium text-center border border-cyan/20 text-slate-sub hover:text-slate-body transition-colors"
+                >
+                  Iniciar Sesión
+                </Link>
+                <Link
+                  to="/signup"
+                  onClick={() => setOpen(false)}
+                  className="px-4 py-3 rounded-xl text-sm font-bold text-center text-navy bg-cyan hover:opacity-90 transition-all"
+                >
+                  Crear mi Cuenta
+                </Link>
+              </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>

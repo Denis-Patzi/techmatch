@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { SectionLabel } from '@/components/atoms/SectionLabel';
 import { Button } from '@/components/atoms/Button';
 
@@ -43,6 +44,7 @@ function revealProps(i) {
 }
 
 export function SellersSection() {
+  const navigate = useNavigate();
   const scrollTo = (id) => {
     const el = document.getElementById(id);
     if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 72, behavior: 'smooth' });
@@ -84,7 +86,7 @@ export function SellersSection() {
           {...revealProps(4)}
           className="flex items-center gap-5 flex-wrap"
         >
-          <Button variant="cyan" href="#">
+          <Button variant="cyan" onClick={() => navigate('/signup')}>
             Registrar mi tienda gratis
           </Button>
           <button

@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { SectionLabel } from '@/components/atoms/SectionLabel';
 import { Button } from '@/components/atoms/Button';
 
@@ -43,6 +44,7 @@ function revealProps(i) {
 }
 
 export function BuyersSection() {
+  const navigate = useNavigate();
   return (
     <section id="buyers" className="min-h-screen flex flex-col justify-center py-16 bg-navy-light">
       <div className="max-w-[1080px] mx-auto px-6 w-full">
@@ -76,7 +78,7 @@ export function BuyersSection() {
         </div>
 
         <motion.div {...revealProps(4)}>
-          <Button variant="cyan" href="#">
+          <Button variant="cyan" onClick={() => navigate('/signup')}>
             Crear mi cuenta gratis
           </Button>
         </motion.div>

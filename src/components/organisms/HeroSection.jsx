@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/atoms/Button';
 import { StatCounter } from '@/components/atoms/StatCounter';
 import { PhoneBadge } from '@/components/molecules/PhoneBadge';
@@ -10,6 +11,7 @@ import { AnimatedText } from '@/lib/reactbits/AnimatedText';
  * Sección principal: título animado, CTA magnético, mockup con tilt 3D, stats animados.
  */
 export function HeroSection() {
+  const navigate = useNavigate();
   const phoneRef = useRef(null);
 
   const handleMouseMove = (e) => {
@@ -90,11 +92,14 @@ export function HeroSection() {
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.54 }}
             className="flex items-center gap-5 mb-12 flex-wrap"
           >
-            <Button variant="cyan" href="#">
+            <Button variant="cyan" onClick={() => navigate('/signup')}>
               Crear mi Cuenta Gratis
             </Button>
             <button
-              onClick={() => scrollTo('features')}
+              onClick={() => {
+                const el = document.getElementById('features');
+                if (el) window.scrollTo({ top: el.offsetTop - 72, behavior: 'smooth' });
+              }}
               className="text-[0.95rem] font-semibold text-cyan hover:opacity-75 transition-opacity flex items-center gap-2"
             >
               Ver cómo funciona

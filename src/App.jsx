@@ -1,7 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
+import { Toaster } from 'react-hot-toast';
 
-/* ── Organisms ── */
+/* ── Auth ── */
+import { AuthProvider } from '@/contexts/AuthContext';
+import { ProtectedRoute } from '@/components/organisms/ProtectedRoute';
+
+/* ── Organisms (Landing) ── */
 import { Navbar }            from '@/components/organisms/Navbar';
 import { HeroSection }       from '@/components/organisms/HeroSection';
 import { FeaturesSection }   from '@/components/organisms/FeaturesSection';
@@ -15,8 +21,22 @@ import { LocationsSection }  from '@/components/organisms/LocationsSection';
 import { ContactSection }    from '@/components/organisms/ContactSection';
 import { Footer }            from '@/components/organisms/Footer';
 
-/* ── Atoms ── */
-import { ThemeToggle } from '@/components/atoms/ThemeToggle';
+/* ── Pages (lazy load) ── */
+const SignUpPage  = lazy(() => import('@/pages/SignUpPage'));
+const LoginPage   = lazy(() => import('@/pages/LoginPage'));
+const ProfilePage = lazy(() => import('@/pages/ProfilePage'));
+const AdminPage   = lazy(() => import('@/pages/AdminPage'));
+const SellerPage  = lazy(() => import('@/pages/SellerPage'));
+const OnboardingPage = lazy(() => import('@/pages/OnboardingPage'));
+const ForgotPasswordPage = lazy(() => import('@/pages/ForgotPasswordPage'));
+const UpdatePasswordPage = lazy(() => import('@/pages/UpdatePasswordPage'));
+
+/* ── Spinner de carga ── */
+const PageSpinner = () => (
+  <div className="min-h-screen bg-navy flex items-center justify-center">
+    <div className="w-8 h-8 border-2 border-cyan border-t-transparent rounded-full animate-spin" />
+  </div>
+);
 
 /* ── Back-to-top ── */
 function BackToTop() {
@@ -54,27 +74,11 @@ function BackToTop() {
   );
 }
 
-/**
- * App — Raíz
- * Gestiona el estado del tema (isDark) y lo aplica como clase en <html>.
- * ThemeToggle y BackToTop son botones fijos en las esquinas inferiores.
- */
-export default function App() {
-  const [isDark, setIsDark] = useState(false);
-
-  /* Aplica/quita la clase 'light' en el elemento <html> */
-  useEffect(() => {
-    const root = document.documentElement;
-    if (isDark) {
-      root.classList.remove('light');
-    } else {
-      root.classList.add('light');
-    }
-  }, [isDark]);
-
+/* ── Landing Page ── */
+function LandingPage({ isDark, onToggleTheme }) {
   return (
     <>
-      <Navbar isDark={isDark} onToggleTheme={() => setIsDark(d => !d)} />
+      <Navbar isDark={isDark} onToggleTheme={onToggleTheme} />
       <main>
         <HeroSection />
         <FeaturesSection />
@@ -88,9 +92,71 @@ export default function App() {
         <ContactSection />
       </main>
       <Footer />
-
-      {/* Controles fijos */}
       <BackToTop />
     </>
+  );
+}
+
+/* ── App Root ── */
+export default function App() {
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (isDark) root.classList.remove('light');
+    else root.classList.add('light');
+  }, [isDark]);
+
+  return (
+    <BrowserRouter>
+      <AuthProvider>
+        {/* Toast notifications globales */}
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            duration: 4000,
+            style: {
+              background: 'rgb(20 16 51)',
+              color: '#ffffff',
+              border: '1px solid rgba(42,255,204,0.2)',
+              borderRadius: '12px',
+              fontSize: '0.9rem',
+            },
+            success: { iconTheme: { primary: '#2AFFCC', secondary: '#0D1118' } },
+            error:   { iconTheme: { primary: '#f87171', secondary: '#0D1118' } },
+          }}
+        />
+
+        <Suspense fallback={<PageSpinner />}>
+          <Routes>
+            {/* Landing */}
+            <Route path="/" element={<LandingPage isDark={isDark} onToggleTheme={() => setIsDark(d => !d)} />} />
+
+            {/* Auth */}
+            <Route path="/signup" element={<SignUpPage />} />
+            <Route path="/login"  element={<LoginPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/update-password" element={<UpdatePasswordPage />} />
+
+            {/* Protegidas */}
+            <Route path="/onboarding" element={
+              <ProtectedRoute requiredRole="buyer"><OnboardingPage /></ProtectedRoute>
+            } />
+            <Route path="/profile" element={
+              <ProtectedRoute><ProfilePage /></ProtectedRoute>
+            } />
+            <Route path="/admin" element={
+              <ProtectedRoute requiredRole="admin"><AdminPage /></ProtectedRoute>
+            } />
+            <Route path="/seller" element={
+              <ProtectedRoute requiredRole="seller"><SellerPage /></ProtectedRoute>
+            } />
+
+            {/* Fallback */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Suspense>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
