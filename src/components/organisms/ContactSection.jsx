@@ -115,11 +115,13 @@ export function ContactSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-            className="bg-navy-light border border-cyan/10 rounded-2xl p-8"
+            className="bg-navy-light border border-cyan/10 rounded-2xl p-5 md:p-8"
+
           >
             <form onSubmit={handleSubmit} noValidate>
               {/* Name + Email */}
-              <div className="grid grid-cols-2 gap-4 mb-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+
                 <div>
                   <label className="text-sm text-slate-muted font-semibold block mb-1.5">Nombre completo</label>
                   <input

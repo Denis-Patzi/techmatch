@@ -45,10 +45,10 @@ export default function SellerPage() {
   };
 
   return (
-    <div className="flex h-screen bg-navy text-slate-body overflow-hidden">
+    <div className="flex flex-col md:flex-row h-screen bg-navy text-slate-body overflow-hidden">
       
-      {/* ── Sidebar (Menú Lateral) ── */}
-      <aside className="w-56 bg-navy-light border-r border-cyan/10 flex flex-col shrink-0">
+      {/* ── Sidebar — solo visible en md+ ── */}
+      <aside className="hidden md:flex md:w-56 bg-navy-light border-r border-cyan/10 flex-col shrink-0">
         
         {/* Logo */}
         <div className="p-5 border-b border-cyan/10">
@@ -119,7 +119,8 @@ export default function SellerPage() {
       </aside>
 
       {/* ── Contenido principal ── */}
-      <main className="flex-1 p-6 md:p-8 overflow-auto bg-navy">
+      {/* pb-24 en mobile deja espacio para la bottom nav bar */}
+      <main className="flex-1 p-4 md:p-6 lg:p-8 overflow-auto bg-navy pb-24 md:pb-6">
         {section === 'dashboard'    && <SellerDashboardTab />}
         {section === 'catalog'      && <SellerCatalogTab />}
         {section === 'offers'       && <div className="text-slate-muted">Negociaciones en construcción...</div>}
@@ -127,6 +128,54 @@ export default function SellerPage() {
         {section === 'subscription' && <SellerSubscriptionTab />}
         {section === 'settings'     && <div className="text-slate-muted">Ajustes en construcción...</div>}
       </main>
+
+      {/* ══════════════════════════════════════════════════════
+          BOTTOM NAVIGATION BAR — Mobile only (md-)
+          ▸ Glassmorphism / Frosted Glass (backdrop-blur + transparencia)
+          ▸ Fixed position, full-width (borde a borde)
+          ▸ Safe Area Insets: soporta la barra de gestos de iPhone
+          ══════════════════════════════════════════════════════ */}
+      <nav
+        className="md:hidden fixed bottom-0 left-0 right-0 z-50
+                   bg-navy/80 backdrop-blur-xl
+                   border-t border-cyan/15
+                   shadow-[0_-4px_24px_rgba(0,0,0,0.3)]"
+        style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
+      >
+        <div className="flex items-center justify-around px-1 pt-1.5 pb-1.5">
+
+          {NAV.map(item => (
+            <button
+              key={item.id}
+              onClick={() => setSection(item.id)}
+              className={`flex flex-col items-center gap-1 px-2 py-2 rounded-2xl transition-all duration-200 min-w-[48px] active:scale-95 ${
+                section === item.id ? 'text-cyan' : 'text-slate-muted'
+              }`}
+            >
+              <div className={section === item.id ? '[&>svg]:stroke-[2.5]' : '[&>svg]:stroke-[1.8]'}>
+                {item.icon}
+              </div>
+              <span className="text-[0.55rem] font-semibold leading-none text-center">
+                {item.label}
+              </span>
+            </button>
+          ))}
+
+          {/* Salir */}
+          <button
+            onClick={handleSignOut}
+            className="flex flex-col items-center gap-1 px-2 py-2 rounded-2xl transition-all duration-200 min-w-[48px] active:scale-95 text-slate-muted active:text-red-400"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+              <polyline points="16 17 21 12 16 7"/>
+              <line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
+            <span className="text-[0.55rem] font-semibold leading-none">Salir</span>
+          </button>
+
+        </div>
+      </nav>
 
     </div>
   );

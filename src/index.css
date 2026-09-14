@@ -130,10 +130,8 @@ ul { list-style: none; }
 /* ── Responsive helpers ── */
 @media (max-width: 768px) {
   .hero-grid { grid-template-columns: 1fr !important; }
-  .hero-phone-wrap { display: none; }
 }
 @media (max-width: 900px) {
-  .plans-grid-3 { grid-template-columns: 1fr !important; }
   .feat-card-large { grid-template-columns: 1fr !important; }
 }
 

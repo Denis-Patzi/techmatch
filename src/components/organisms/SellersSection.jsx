@@ -61,7 +61,8 @@ export function SellersSection() {
           Unite a la plataforma que ya conecta a más de 8,500 usuarios con productos tech en Bolivia.
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12 auto-rows-[240px]">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 md:mb-12 md:auto-rows-[240px]">
+
           {SELLER_BENEFITS.map((b, i) => {
             const isLarge = i === 0 || i === 3;
             return (

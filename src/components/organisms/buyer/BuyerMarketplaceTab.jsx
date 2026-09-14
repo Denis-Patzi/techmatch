@@ -13,10 +13,10 @@ export default function BuyerMarketplaceTab() {
   const [filterCategory, setFilterCategory] = useState('all');
 
   return (
-    <div className="flex flex-col h-full max-w-5xl mx-auto">
+    <div className="flex flex-col h-full w-full max-w-5xl mx-auto overflow-hidden">
       
       {/* ── Top Bar: Buscador y Filtros ── */}
-      <div className="sticky top-0 bg-navy z-10 pb-6">
+      <div className="sticky top-0 bg-navy z-10 pb-6 shrink-0">
         <h1 className="font-display text-2xl font-bold text-slate-body mb-4">Marketplace</h1>
         
         <div className="flex flex-col md:flex-row gap-3">
@@ -63,7 +63,7 @@ export default function BuyerMarketplaceTab() {
       </div>
 
       {/* ── Feed de Productos ── */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 pb-8 overflow-y-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 pb-8 overflow-y-auto min-h-0 pr-1">
         {MOCK_PRODUCTS.map((item) => (
           <div key={item.id} className="bg-navy-light border border-cyan/10 rounded-2xl overflow-hidden hover:border-cyan/30 transition-all group flex flex-col">
             

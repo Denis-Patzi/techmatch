@@ -170,7 +170,8 @@ function InfiniteMarquee() {
 
 export function LocationsSection() {
   return (
-    <section className="py-20 bg-navy-light border-t border-cyan/15 overflow-hidden">
+    <section id="locations" className="py-20 bg-navy-light border-t border-cyan/15 overflow-hidden">
+
       <div className="max-w-[1080px] mx-auto px-6 mb-10">
         <SectionLabel>Presencia Nacional</SectionLabel>
         <h2 className="font-display text-[clamp(1.9rem,4vw,2.7rem)] font-extrabold text-slate-body tracking-tight mb-3">

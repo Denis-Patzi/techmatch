@@ -81,10 +81,10 @@ export default function AdminPage() {
   const handleSignOut = async () => { await signOut(); navigate('/'); };
 
   return (
-    <div className="min-h-screen bg-navy flex">
+    <div className="min-h-screen bg-navy flex flex-col md:flex-row">
 
-      {/* ── Sidebar ── */}
-      <aside className="w-56 bg-navy-light border-r border-cyan/10 flex flex-col">
+      {/* ── Sidebar ── solo visible en md+ */}
+      <aside className="hidden md:flex md:w-56 bg-navy-light border-r border-cyan/10 flex-col">
         {/* Logo */}
         <div className="p-5 border-b border-cyan/10">
           <div className="flex items-center gap-2.5">
@@ -131,14 +131,58 @@ export default function AdminPage() {
         </div>
       </aside>
 
-      {/* ── Contenido principal ── */}
-      <main className="flex-1 p-8 overflow-auto">
+      {/* ── Contenido principal ── pb-24 deja espacio al nav en móvil */}
+      <main className="flex-1 p-4 md:p-8 pb-24 md:pb-8 overflow-auto">
         {section === 'summary'       && <AdminSummaryTab counts={counts} />}
         {section === 'users'         && <AdminUsersTab />}
         {section === 'verifications' && <AdminVerificationsTab />}
         {section === 'moderation'    && <AdminModerationTab />}
         {section === 'security'      && <AdminSecurityTab />}
       </main>
+
+      {/* ══════════════════════════════════════════════════════
+          BOTTOM NAVIGATION BAR (Mobile only md-)
+          ══════════════════════════════════════════════════════ */}
+      <nav
+        className="md:hidden fixed bottom-0 left-0 right-0 z-50
+                   bg-navy/80 backdrop-blur-xl
+                   border-t border-cyan/15
+                   shadow-[0_-4px_24px_rgba(0,0,0,0.3)]"
+        style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
+      >
+        <div className="flex items-center justify-around px-1 pt-1.5 pb-1.5">
+          {NAV.map(item => (
+            <button
+              key={item.id}
+              onClick={() => setSection(item.id)}
+              className={`flex flex-col items-center gap-1 px-1.5 py-2 rounded-2xl transition-all duration-200 min-w-[44px] active:scale-95 ${
+                section === item.id ? 'text-cyan' : 'text-slate-muted'
+              }`}
+            >
+              <div className={section === item.id ? '[&>svg]:stroke-[2.5]' : '[&>svg]:stroke-[1.8]'}>
+                {item.icon}
+              </div>
+              <span className="text-[0.55rem] font-semibold leading-none text-center">
+                {/* En admin el label de 'verificaciones' es largo, lo acortamos para móvil si se puede, pero NAV lo tiene ya */}
+                {item.id === 'verifications' ? 'Verif.' : item.label}
+              </span>
+            </button>
+          ))}
+
+          <button
+            onClick={handleSignOut}
+            className="flex flex-col items-center gap-1 px-1.5 py-2 rounded-2xl transition-all duration-200 min-w-[44px] active:scale-95 text-slate-muted active:text-red-400"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
+              <polyline points="16 17 21 12 16 7"/>
+              <line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
+            <span className="text-[0.55rem] font-semibold leading-none">Salir</span>
+          </button>
+        </div>
+      </nav>
+
     </div>
   );
 }

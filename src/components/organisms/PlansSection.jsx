@@ -23,8 +23,9 @@ export function PlansSection() {
           Elegí el plan que se adapta a cómo querés vender. Todos incluyen IA de reconocimiento de productos.
         </p>
 
-        {/* Plans grid */}
-        <div className="plans-grid-3 grid grid-cols-3 gap-6 mb-10">
+        {/* Plans grid — responsive con Tailwind (columna única en mobile, 3 columnas en md+) */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+
           {plans.map((plan, i) => (
             <PlanCard key={plan.id} plan={plan} isAnnual={isAnnual} index={i} />
           ))}

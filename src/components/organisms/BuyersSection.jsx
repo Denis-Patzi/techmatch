@@ -56,7 +56,8 @@ export function BuyersSection() {
           La plataforma que aprende tus gustos y te muestra solo lo que te interesa.
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12 auto-rows-[240px]">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 md:mb-12 md:auto-rows-[240px]">
+
           {BUYER_BENEFITS.map((b, i) => {
             const isLarge = i === 0 || i === 3;
             return (

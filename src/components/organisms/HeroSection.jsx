@@ -37,24 +37,14 @@ export function HeroSection() {
   };
 
   return (
-    <section id="hero" className="relative min-h-screen pt-28 pb-16 overflow-hidden bg-navy flex items-center">
+    <section id="hero" className="relative min-h-screen pt-24 sm:pt-28 pb-16 overflow-hidden bg-navy flex items-center">
       {/* Background Glows */}
       <div className="absolute top-1/4 -left-1/4 w-[800px] h-[800px] glow-purple opacity-50 blur-[100px] pointer-events-none" />
       <div className="absolute bottom-0 right-[-20%] w-[600px] h-[600px] glow-blue opacity-50 blur-[100px] pointer-events-none" />
       
       <div className="relative z-10 max-w-[1080px] mx-auto px-6 w-full flex flex-col md:flex-row items-center gap-12">
         {/* ── LEFT ── */}
-        <div>
-          {/* Brand logo */}
-          {/* <motion.img
-            src="/logo.png"
-            alt="TechMatch Bolivia"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="w-16 h-16 rounded-2xl mb-5"
-          />*/}
-
+        <div className="flex-1 w-full">
           {/* Eyebrow */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -65,8 +55,8 @@ export function HeroSection() {
             App Web y Mobile · Solo Tecnología · Bolivia
           </motion.div>
 
-          {/* Title */}
-          <h1 className="font-display text-[clamp(3.2rem,6.5vw,5rem)] font-black leading-[1.04] tracking-tight text-slate-body mb-5">
+          {/* Title — clamp reducido de 3.2rem → 2rem para mobile */}
+          <h1 className="font-display text-[clamp(2rem,6.5vw,5rem)] font-black leading-[1.04] tracking-tight text-slate-body mb-5">
             <AnimatedText text="Compra y vende" delay={0.12} /><br />
             <span className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-slate-body via-slate-body to-brand-purple">
               <AnimatedText text="tecnología" delay={0.24} />
@@ -146,20 +136,20 @@ export function HeroSection() {
               ref={phoneRef}
               src="/phone_mockup.png"
               alt="TechMatch App en tu celular"
-              className="max-h-[560px] w-auto object-contain drop-shadow-[0_32px_64px_rgba(0,0,0,0.5)] animate-phone-float"
+              className="max-h-[320px] sm:max-h-[560px] w-auto object-contain drop-shadow-[0_32px_64px_rgba(0,0,0,0.5)] animate-phone-float"
               style={{ willChange: 'transform' }}
             />
 
-            {/* Floating badges */}
+            {/* Floating badges — ocultos en mobile para evitar overflow horizontal */}
             <PhoneBadge
               variant="ai"
               text="IA sugiere precio automáticamente"
-              className="top-[18%] -left-[8%] text-[0.75rem]"
+              className="top-[18%] -left-[8%] text-[0.75rem] hidden sm:block"
             />
             <PhoneBadge
               variant="success"
               text="Vendido en 2 días ✓"
-              className="bottom-[22%] -right-[6%] text-[0.75rem]"
+              className="bottom-[22%] -right-[6%] text-[0.75rem] hidden sm:block"
             />
           </div>
         </motion.div>

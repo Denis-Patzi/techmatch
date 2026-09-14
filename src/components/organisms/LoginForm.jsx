@@ -211,16 +211,17 @@ export function LoginForm() {
           </button>
 
           {/* Reenviar / Volver */}
-          <div className="flex gap-4 text-sm">
+          <div className="flex gap-2 text-sm">
             {canResend && (
-              <button onClick={resendCode} className="text-cyan hover:opacity-75 font-medium transition-opacity">
+              <button onClick={resendCode} className="text-cyan hover:opacity-75 font-medium transition-opacity py-2 px-3 rounded-lg">
                 Reenviar código
               </button>
             )}
-            <button onClick={() => { setStep('credentials'); setOtpValue(''); }} className="text-slate-muted hover:text-slate-sub transition-colors">
+            <button onClick={() => { setStep('credentials'); setOtpValue(''); }} className="text-slate-muted hover:text-slate-sub transition-colors py-2 px-3 rounded-lg">
               ← Volver
             </button>
           </div>
+
         </motion.div>
       )}
 

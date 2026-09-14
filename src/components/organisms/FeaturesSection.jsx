@@ -166,7 +166,7 @@ function SlideCard({ slide, index, isDragging }) {
   return (
     <motion.div
       className="relative flex-shrink-0 w-[78%] md:w-[46%] rounded-3xl overflow-hidden select-none"
-      style={{ height: 420 }}
+      style={{ height: typeof window !== 'undefined' && window.innerWidth < 640 ? 300 : 420 }}
       whileHover={isDragging ? {} : { scale: 1.015 }}
       transition={{ duration: 0.25 }}
       initial={{ opacity: 0, y: 24 }}
@@ -294,14 +294,16 @@ function FeatureCarousel() {
               key={i}
               onClick={() => snapTo(i)}
               aria-label={`Slide ${i + 1}`}
-              className={`
-                rounded-full transition-all duration-300
+              className="p-2 -m-2"
+            >
+              <span className={`
+                block rounded-full transition-all duration-300
                 ${i === current
                   ? 'w-6 h-2 bg-cyan'
                   : 'w-2 h-2 bg-slate-muted/30 hover:bg-slate-muted/60'
                 }
-              `}
-            />
+              `} />
+            </button>
           ))}
         </div>
         {/* Flechas */}
@@ -311,11 +313,11 @@ function FeatureCarousel() {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             disabled={current === 0}
-            className="w-8 h-8 rounded-full border border-cyan/20 flex items-center justify-center
+            className="w-11 h-11 rounded-full border border-cyan/20 flex items-center justify-center
                        text-slate-sub hover:border-cyan/50 hover:text-cyan
                        transition-colors duration-150 disabled:opacity-30 disabled:cursor-not-allowed"
           >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <path d="M15 18l-6-6 6-6"/>
             </svg>
           </motion.button>
@@ -324,11 +326,11 @@ function FeatureCarousel() {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             disabled={current === SLIDES.length - 1}
-            className="w-8 h-8 rounded-full border border-cyan/20 flex items-center justify-center
+            className="w-11 h-11 rounded-full border border-cyan/20 flex items-center justify-center
                        text-slate-sub hover:border-cyan/50 hover:text-cyan
                        transition-colors duration-150 disabled:opacity-30 disabled:cursor-not-allowed"
           >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <path d="M9 18l6-6-6-6"/>
             </svg>
           </motion.button>
@@ -363,7 +365,7 @@ export function FeaturesSection() {
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           className="mb-12"
         >
-          <SpotlightCard className="bg-navy border border-cyan/10 rounded-2xl p-8 hover:border-cyan/25 transition-all duration-300">
+          <SpotlightCard className="bg-navy border border-cyan/10 rounded-2xl p-5 md:p-8 hover:border-cyan/25 transition-all duration-300">
             <AITasadorDemo />
           </SpotlightCard>
         </motion.div>
@@ -371,7 +373,7 @@ export function FeaturesSection() {
         {/* ── Bento Box Grid ── */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Feed AI - Large Card */}
-          <motion.div className="bento-card col-span-1 md:col-span-2 p-8 flex flex-col md:flex-row gap-6 items-center overflow-hidden relative">
+          <motion.div className="bento-card col-span-1 md:col-span-2 p-5 md:p-8 flex flex-col md:flex-row gap-6 items-center overflow-hidden relative">
             <div className={`absolute inset-0 bg-gradient-to-br ${SLIDES[0].bgClass} opacity-50`} />
             <div className="relative z-10 flex-1">
               <span className={`text-[0.65rem] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full ${SLIDES[0].badgeBg} mb-4 inline-block`}>
@@ -393,7 +395,7 @@ export function FeaturesSection() {
           </motion.div>
           
           {/* Comparador - Standard Card */}
-          <motion.div className="bento-card p-8 flex flex-col gap-4 overflow-hidden relative">
+          <motion.div className="bento-card p-5 md:p-8 flex flex-col gap-4 overflow-hidden relative">
             <div className={`absolute inset-0 bg-gradient-to-br ${SLIDES[2].bgClass} opacity-50`} />
             <div className="relative z-10">
               <span className={`text-[0.65rem] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full ${SLIDES[2].badgeBg} mb-4 inline-block`}>
@@ -415,7 +417,8 @@ export function FeaturesSection() {
           </motion.div>
 
           {/* Precio - Wide Card spanning full width below */}
-          <motion.div className="bento-card col-span-1 md:col-span-3 p-8 flex flex-col md:flex-row gap-6 justify-between items-center bg-gradient-to-r from-navy-light to-brand-blue/20 overflow-hidden relative">
+          <motion.div className="bento-card col-span-1 md:col-span-3 p-5 md:p-8 flex flex-col md:flex-row gap-6 justify-between items-center bg-gradient-to-r from-navy-light to-brand-blue/20 overflow-hidden relative">
+
             <div className={`absolute inset-0 bg-gradient-to-br ${SLIDES[1].bgClass} opacity-30`} />
             <div className="relative z-10 md:w-1/2">
               <span className={`text-[0.65rem] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full ${SLIDES[1].badgeBg} mb-4 inline-block`}>

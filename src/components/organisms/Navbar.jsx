@@ -126,7 +126,8 @@ export function Navbar({ isDark, onToggleTheme }) {
 
           {/* Mobile controls */}
           <div className="flex md:hidden items-center gap-2">
-            <ThemeToggle isDark={isDark} onToggle={onToggleTheme} className="w-9 h-9" />
+            <ThemeToggle isDark={isDark} onToggle={onToggleTheme} className="w-11 h-11" />
+
             <button
               onClick={() => setOpen(o => !o)}
               className="flex flex-col gap-[5px] p-2 text-slate-sub hover:text-slate-body"
