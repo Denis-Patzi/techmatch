@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { supabase } from '@/lib/supabaseClient';
@@ -13,11 +13,11 @@ const ROLE_COLOR = {
 };
 
 const NAV = [
-  { id: 'summary',       label: 'Dashboard',      icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg> },
-  { id: 'users',         label: 'Usuarios',       icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg> },
-  { id: 'verifications', label: 'Verificaciones', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg> },
-  { id: 'moderation',    label: 'Moderación',     icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg> },
-  { id: 'security',      label: 'Seguridad IMEI', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg> },
+  { id: 'summary',       label: 'Dashboard',      icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="24" height="24" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg> },
+  { id: 'users',         label: 'Usuarios',       icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg> },
+  { id: 'verifications', label: 'Verificaciones', icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg> },
+  { id: 'moderation',    label: 'Moderación',     icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg> },
+  { id: 'security',      label: 'Seguridad IMEI', icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg> },
 ];
 
 // Placeholder components (to be implemented)
@@ -35,7 +35,9 @@ export default function AdminPage() {
   const [users, setUsers]       = useState([]);
   const [counts, setCounts]     = useState({ total: 0, buyers: 0, sellers: 0 });
   const [loadingData, setLoadingData] = useState(false);
-  const { signOut } = useAuth();
+  const [avatarMenuOpen, setAvatarMenuOpen] = useState(false);
+  const avatarRef = useRef(null);
+  const { user, profile, signOut } = useAuth();
   const navigate = useNavigate();
 
   /* ── Cargar todos los perfiles ── */
@@ -78,7 +80,18 @@ export default function AdminPage() {
     else { toast.success('Usuario eliminado'); fetchUsers(); }
   };
 
-  const handleSignOut = async () => { await signOut(); navigate('/'); };
+  const handleSignOut = async () => { setAvatarMenuOpen(false); await signOut(); navigate('/'); };
+
+  // Cerrar el popover al hacer click fuera
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (avatarRef.current && !avatarRef.current.contains(e.target)) {
+        setAvatarMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   return (
     <div className="min-h-screen bg-navy flex flex-col md:flex-row">
@@ -142,6 +155,7 @@ export default function AdminPage() {
 
       {/* ══════════════════════════════════════════════════════
           BOTTOM NAVIGATION BAR (Mobile only md-)
+          ▸ Solo íconos + Avatar con popover
           ══════════════════════════════════════════════════════ */}
       <nav
         className="md:hidden fixed bottom-0 left-0 right-0 z-50
@@ -150,39 +164,64 @@ export default function AdminPage() {
                    shadow-[0_-4px_24px_rgba(0,0,0,0.3)]"
         style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
       >
-        <div className="flex items-center justify-around px-1 pt-1.5 pb-1.5">
+        <div className="flex items-center justify-around px-3 pt-2 pb-2">
           {NAV.map(item => (
             <button
               key={item.id}
               onClick={() => setSection(item.id)}
-              className={`flex flex-col items-center gap-1 px-1.5 py-2 rounded-2xl transition-all duration-200 min-w-[44px] active:scale-95 ${
+              className={`flex items-center justify-center w-11 h-11 rounded-2xl transition-all duration-200 active:scale-90 ${
                 section === item.id ? 'text-cyan' : 'text-slate-muted'
               }`}
             >
               <div className={section === item.id ? '[&>svg]:stroke-[2.5]' : '[&>svg]:stroke-[1.8]'}>
                 {item.icon}
               </div>
-              <span className="text-[0.55rem] font-semibold leading-none text-center">
-                {/* En admin el label de 'verificaciones' es largo, lo acortamos para móvil si se puede, pero NAV lo tiene ya */}
-                {item.id === 'verifications' ? 'Verif.' : item.label}
-              </span>
             </button>
           ))}
 
-          <button
-            onClick={handleSignOut}
-            className="flex flex-col items-center gap-1 px-1.5 py-2 rounded-2xl transition-all duration-200 min-w-[44px] active:scale-95 text-slate-muted active:text-red-400"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
-              <polyline points="16 17 21 12 16 7"/>
-              <line x1="21" y1="12" x2="9" y2="12"/>
-            </svg>
-            <span className="text-[0.55rem] font-semibold leading-none">Salir</span>
-          </button>
+          {/* ── Avatar con Popover de sesión ── */}
+          <div className="relative" ref={avatarRef}>
+            {avatarMenuOpen && (
+              <div className="absolute bottom-14 right-0 mb-1 w-52 bg-navy-light border border-cyan/15 rounded-2xl shadow-[0_-8px_32px_rgba(0,0,0,0.4)] overflow-hidden">
+                <div className="px-4 py-3 border-b border-cyan/10">
+                  <p className="text-xs font-bold text-slate-body truncate">
+                    {profile?.full_name ?? user?.email?.split('@')[0] ?? 'Admin'}
+                  </p>
+                  <p className="text-[0.65rem] text-slate-muted truncate">{user?.email}</p>
+                </div>
+                <button
+                  onClick={handleSignOut}
+                  className="w-full flex items-center gap-2.5 px-4 py-3 text-sm text-red-400 hover:bg-red-400/10 transition-colors active:bg-red-400/20"
+                >
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                    <polyline points="16 17 21 12 16 7"/>
+                    <line x1="21" y1="12" x2="9" y2="12"/>
+                  </svg>
+                  Cerrar sesión
+                </button>
+              </div>
+            )}
+            <button
+              onClick={() => setAvatarMenuOpen(!avatarMenuOpen)}
+              className={`w-9 h-9 rounded-full overflow-hidden border-2 transition-all duration-200 active:scale-90 ${
+                avatarMenuOpen ? 'border-cyan shadow-[0_0_0_3px_rgba(34,211,238,0.2)]' : 'border-brand-purple/40'
+              }`}
+            >
+              {profile?.avatar_url ? (
+                <img src={profile.avatar_url} alt="Foto de perfil" className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full bg-gradient-to-br from-brand-purple/40 to-cyan/20 flex items-center justify-center text-sm font-bold text-cyan">
+                  {profile?.full_name?.[0]?.toUpperCase() ?? user?.email?.[0]?.toUpperCase() ?? 'A'}
+                </div>
+              )}
+            </button>
+          </div>
         </div>
       </nav>
 
     </div>
   );
 }
+
+

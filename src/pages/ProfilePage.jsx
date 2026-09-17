@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -23,9 +23,23 @@ export default function ProfilePage() {
   const { user, profile, signOut } = useAuth();
   const [section, setSection] = useState('marketplace');
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [avatarMenuOpen, setAvatarMenuOpen] = useState(false);
+  const avatarRef = useRef(null);
   const navigate = useNavigate();
 
+  // Cerrar el popover al hacer click fuera
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (avatarRef.current && !avatarRef.current.contains(e.target)) {
+        setAvatarMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   const handleSignOut = async () => {
+    setAvatarMenuOpen(false);
     await signOut();
     navigate('/');
   };
@@ -121,9 +135,7 @@ export default function ProfilePage() {
 
       {/* ══════════════════════════════════════════════════════
           BOTTOM NAVIGATION BAR — Mobile only (md-)
-          ▸ Glassmorphism / Frosted Glass (backdrop-blur + transparencia)
-          ▸ Fixed position, full-width (borde a borde)
-          ▸ Safe Area Insets: soporta la barra de gestos de iPhone
+          ▸ Solo íconos (sin labels) + Avatar con popover
           ══════════════════════════════════════════════════════ */}
       <nav
         className="md:hidden fixed bottom-0 left-0 right-0 z-50
@@ -132,61 +144,89 @@ export default function ProfilePage() {
                    shadow-[0_-4px_24px_rgba(0,0,0,0.3)]"
         style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
       >
-        <div className="flex items-center justify-around px-2 pt-2 pb-2">
+        <div className="flex items-center justify-around px-4 pt-2 pb-2">
 
           {/* Marketplace */}
           <button
             onClick={() => setSection('marketplace')}
-            className={`flex flex-col items-center gap-1 px-4 py-2 rounded-2xl transition-all duration-200 min-w-[56px] active:scale-95 ${
+            className={`flex items-center justify-center w-11 h-11 rounded-2xl transition-all duration-200 active:scale-90 ${
               section === 'marketplace' ? 'text-cyan' : 'text-slate-muted'
             }`}
           >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={section === 'marketplace' ? 2.5 : 1.8} strokeLinecap="round" strokeLinejoin="round">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={section === 'marketplace' ? 2.5 : 1.8} strokeLinecap="round" strokeLinejoin="round">
               <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
               <polyline points="9 22 9 12 15 12 15 22"/>
             </svg>
-            <span className="text-[0.6rem] font-semibold leading-none">Marketplace</span>
           </button>
 
           {/* Mis Ofertas */}
           <button
             onClick={() => setSection('offers')}
-            className={`flex flex-col items-center gap-1 px-4 py-2 rounded-2xl transition-all duration-200 min-w-[56px] active:scale-95 ${
+            className={`flex items-center justify-center w-11 h-11 rounded-2xl transition-all duration-200 active:scale-90 ${
               section === 'offers' ? 'text-cyan' : 'text-slate-muted'
             }`}
           >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={section === 'offers' ? 2.5 : 1.8} strokeLinecap="round" strokeLinejoin="round">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={section === 'offers' ? 2.5 : 1.8} strokeLinecap="round" strokeLinejoin="round">
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
             </svg>
-            <span className="text-[0.6rem] font-semibold leading-none">Mis Ofertas</span>
           </button>
 
           {/* Mi Perfil */}
           <button
             onClick={() => setSection('profile')}
-            className={`flex flex-col items-center gap-1 px-4 py-2 rounded-2xl transition-all duration-200 min-w-[56px] active:scale-95 ${
+            className={`flex items-center justify-center w-11 h-11 rounded-2xl transition-all duration-200 active:scale-90 ${
               section === 'profile' ? 'text-cyan' : 'text-slate-muted'
             }`}
           >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={section === 'profile' ? 2.5 : 1.8} strokeLinecap="round" strokeLinejoin="round">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={section === 'profile' ? 2.5 : 1.8} strokeLinecap="round" strokeLinejoin="round">
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
               <circle cx="12" cy="7" r="4"/>
             </svg>
-            <span className="text-[0.6rem] font-semibold leading-none">Mi Perfil</span>
           </button>
 
-          {/* Salir */}
-          <button
-            onClick={handleSignOut}
-            className="flex flex-col items-center gap-1 px-4 py-2 rounded-2xl transition-all duration-200 min-w-[56px] active:scale-95 text-slate-muted hover:text-red-400 active:text-red-400"
-          >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-              <polyline points="16 17 21 12 16 7"/>
-              <line x1="21" y1="12" x2="9" y2="12"/>
-            </svg>
-            <span className="text-[0.6rem] font-semibold leading-none">Salir</span>
-          </button>
+          {/* ── Avatar con Popover de sesión ── */}
+          <div className="relative" ref={avatarRef}>
+            {/* Popover - aparece ARRIBA del avatar */}
+            {avatarMenuOpen && (
+              <div className="absolute bottom-14 right-0 mb-1 w-52 bg-navy-light border border-cyan/15 rounded-2xl shadow-[0_-8px_32px_rgba(0,0,0,0.4)] overflow-hidden">
+                {/* Info del usuario */}
+                <div className="px-4 py-3 border-b border-cyan/10">
+                  <p className="text-xs font-bold text-slate-body truncate">
+                    {profile?.full_name ?? user?.email?.split('@')[0] ?? 'Usuario'}
+                  </p>
+                  <p className="text-[0.65rem] text-slate-muted truncate">{user?.email}</p>
+                </div>
+                {/* Botón cerrar sesión */}
+                <button
+                  onClick={handleSignOut}
+                  className="w-full flex items-center gap-2.5 px-4 py-3 text-sm text-red-400 hover:bg-red-400/10 transition-colors active:bg-red-400/20"
+                >
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                    <polyline points="16 17 21 12 16 7"/>
+                    <line x1="21" y1="12" x2="9" y2="12"/>
+                  </svg>
+                  Cerrar sesión
+                </button>
+              </div>
+            )}
+
+            {/* Botón Avatar */}
+            <button
+              onClick={() => setAvatarMenuOpen(!avatarMenuOpen)}
+              className={`w-9 h-9 rounded-full overflow-hidden border-2 transition-all duration-200 active:scale-90 ${
+                avatarMenuOpen ? 'border-cyan shadow-[0_0_0_3px_rgba(34,211,238,0.2)]' : 'border-cyan/30'
+              }`}
+            >
+              {profile?.avatar_url ? (
+                <img src={profile.avatar_url} alt="Foto de perfil" className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full bg-gradient-to-br from-cyan/30 to-brand-purple/30 flex items-center justify-center text-sm font-bold text-cyan">
+                  {profile?.full_name?.[0]?.toUpperCase() ?? user?.email?.[0]?.toUpperCase() ?? '?'}
+                </div>
+              )}
+            </button>
+          </div>
 
         </div>
       </nav>
