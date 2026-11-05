@@ -16,7 +16,11 @@ export function ForgotPasswordForm() {
   const [sent, setSent] = useState(false);
   const { resetPassword } = useAuth();
 
-  const { register, handleSubmit, formState: { errors } } = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     resolver: zodResolver(resetSchema),
   });
 
@@ -36,17 +40,25 @@ export function ForgotPasswordForm() {
   if (sent) {
     return (
       <div className="flex flex-col items-center text-center py-4">
-        <div className="w-14 h-14 bg-cyan/10 border border-cyan/25 rounded-2xl flex items-center justify-center mb-4">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-cyan">
-            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-            <polyline points="22,6 12,13 2,6"/>
+        <div className="bare-icon w-14 h-14 text-cyan flex items-center justify-center mb-4">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            className="text-cyan"
+          >
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+            <polyline points="22,6 12,13 2,6" />
           </svg>
         </div>
         <h3 className="font-display text-xl font-bold text-slate-body mb-2">Revisá tu correo</h3>
         <p className="text-sm text-slate-sub mb-6">
           Te enviamos un enlace seguro para que puedas crear una nueva contraseña.
         </p>
-        <Link to="/login" className="w-full py-3.5 rounded-xl font-bold text-navy bg-cyan hover:opacity-90 transition-all inline-block">
+        <Link to="/login" className="btn-primary w-full">
           Volver a Iniciar Sesión
         </Link>
       </div>
@@ -55,7 +67,14 @@ export function ForgotPasswordForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-      <FormField label="Correo Electrónico" name="email" type="email" placeholder="correo@ejemplo.com" register={register} error={errors.email} />
+      <FormField
+        label="Correo Electrónico"
+        name="email"
+        type="email"
+        placeholder="correo@ejemplo.com"
+        register={register}
+        error={errors.email}
+      />
 
       <button
         type="submit"
@@ -67,7 +86,9 @@ export function ForgotPasswordForm() {
           flex items-center justify-center gap-2
         "
       >
-        {loading && <span className="w-4 h-4 border-2 border-navy border-t-transparent rounded-full animate-spin" />}
+        {loading && (
+          <span className="w-4 h-4 border-2 border-navy border-t-transparent rounded-full animate-spin" />
+        )}
         {loading ? 'Enviando enlace...' : 'Enviar enlace de recuperación'}
       </button>
     </form>

@@ -1,163 +1,133 @@
 import { useRef } from 'react';
-import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
-import { Button } from '@/components/atoms/Button';
-import { StatCounter } from '@/components/atoms/StatCounter';
-import { PhoneBadge } from '@/components/molecules/PhoneBadge';
-import { AnimatedText } from '@/lib/reactbits/AnimatedText';
+import { motion, useReducedMotion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { Link, useSearchParams } from 'react-router-dom';
+import { Icon } from '@/components/atoms/Icon';
+import { HeroTechScene } from './HeroTechScene';
 
-/**
- * HeroSection — Organismo
- * Sección principal: título animado, CTA magnético, mockup con tilt 3D, stats animados.
- */
+const concepts = [
+  { id: 'orbita', name: 'Órbita 3D', description: 'Dispositivos flotantes y órbitas de luz.' },
+  {
+    id: 'particulas',
+    name: 'Constelación',
+    description: 'Tecnología dibujada con partículas luminosas.',
+  },
+  { id: 'portal', name: 'Portal', description: 'Aros de energía y dispositivos en movimiento.' },
+];
+
+const categories = [
+  { name: 'Laptops', icon: 'laptop' },
+  { name: 'Celulares', icon: 'phone' },
+  { name: 'Componentes', icon: 'cpu' },
+  { name: 'Periféricos', icon: 'headphones' },
+];
+
 export function HeroSection() {
-  const navigate = useNavigate();
-  const phoneRef = useRef(null);
-
-  const handleMouseMove = (e) => {
-    const el = phoneRef.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width  - 0.5;
-    const y = (e.clientY - rect.top)  / rect.height - 0.5;
-    el.style.transform = `perspective(700px) rotateY(${x * 7}deg) rotateX(${-y * 5}deg)`;
-  };
-
-  const handleMouseLeave = () => {
-    const el = phoneRef.current;
-    if (!el) return;
-    el.style.transition = 'transform 0.5s cubic-bezier(0.16,1,0.3,1)';
-    el.style.transform = '';
-    setTimeout(() => { if (el) el.style.transition = ''; }, 500);
-  };
-
-  const scrollTo = (id) => {
-    const el = document.getElementById(id);
-    if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 72, behavior: 'smooth' });
-  };
-
+  const [searchParams, setSearchParams] = useSearchParams();
+  const requestedConcept = searchParams.get('portada');
+  const concept = concepts.find((item) => item.id === requestedConcept) || concepts[0];
+  const showConcepts = requestedConcept !== null;
+  const reducedMotion = useReducedMotion();
+  const heroRef = useRef(null);
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
+  const wordmarkY = useTransform(scrollYProgress, [0, 1], [0, 90]);
+  const showcaseTarget = useTransform(scrollYProgress, [0, 1], [0, -30]);
+  const showcaseY = useSpring(showcaseTarget, { stiffness: 100, damping: 28 });
+  const showcaseRotateX = useTransform(scrollYProgress, [0, 1], [4, -9]);
+  const showcaseRotateY = useTransform(scrollYProgress, [0, 1], [-7, 12]);
+  const showcaseDepth = useTransform(scrollYProgress, [0, 1], [10, -70]);
   return (
-    <section id="hero" className="relative min-h-screen pt-24 sm:pt-28 pb-16 overflow-hidden bg-navy flex items-center">
-      {/* Background Glows */}
-      <div className="absolute top-1/4 -left-1/4 w-[800px] h-[800px] glow-purple opacity-50 blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-0 right-[-20%] w-[600px] h-[600px] glow-blue opacity-50 blur-[100px] pointer-events-none" />
-      
-      <div className="relative z-10 max-w-[1080px] mx-auto px-6 w-full flex flex-col md:flex-row items-center gap-12">
-        {/* ── LEFT ── */}
-        <div className="flex-1 w-full">
-          {/* Eyebrow */}
+    <section id="hero" className="hero-section hero-section-universe scene-section" ref={heroRef}>
+      <motion.div
+        className="hero-wordmark"
+        aria-hidden="true"
+        style={{ x: '-50%', y: reducedMotion ? 0 : wordmarkY }}
+      >
+        TECHMATCH
+      </motion.div>
+      <div className="page-container">
+        <div className="hero-grid">
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.05 }}
-            className="text-[0.8rem] font-semibold tracking-[0.14em] uppercase text-cyan mb-5"
+            transition={{ duration: 0.6 }}
           >
-            App Web y Mobile · Solo Tecnología · Bolivia
+            <span className="eyebrow">Fotos, videos y tu próximo equipo</span>
+            <h1 className="hero-heading">
+              Tu próximo
+              <br />
+              <span>gran match.</span>
+              <br />
+              En tu feed.
+            </h1>
+            <p className="hero-description">
+              Deslizá entre fotos y videos de productos. Comprá, vendé o descubrí subastas desde
+              perfiles personales y de tiendas, con IA para ayudarte a publicar.
+            </p>
+            <div className="hero-actions">
+              <Link to="/signup" className="btn-primary">
+                Crear mi perfil <Icon name="arrow" size={17} />
+              </Link>
+              <a href="#features" className="btn-secondary">
+                Descubrir el feed <Icon name="arrowUp" size={16} />
+              </a>
+            </div>
+            <p className="hero-note">
+              <Icon name="check" size={15} /> Tu contenido, tu catálogo y tus subastas en un perfil.
+            </p>
           </motion.div>
-
-          {/* Title — clamp reducido de 3.2rem → 2rem para mobile */}
-          <h1 className="font-display text-[clamp(2rem,6.5vw,5rem)] font-black leading-[1.04] tracking-tight text-slate-body mb-5">
-            <AnimatedText text="Compra y vende" delay={0.12} /><br />
-            <span className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-slate-body via-slate-body to-brand-purple">
-              <AnimatedText text="tecnología" delay={0.24} />
-            </span>
-            <br />
-            <AnimatedText text="en segundos." delay={0.36} />
-          </h1>
-
-          {/* Subtitle */}
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.44 }}
-            className="text-lg text-slate-sub leading-[1.7] mb-8 max-w-[460px]"
-          >
-            El marketplace donde encontrás laptops, celulares, componentes y todo lo tech que necesitás. Publicar es gratis. Vender es fácil.
-          </motion.p>
-
-          {/* CTAs */}
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.54 }}
-            className="flex items-center gap-5 mb-12 flex-wrap"
+            className="hero-showcase hero-showcase-universe"
+            style={{
+              y: reducedMotion ? 0 : showcaseY,
+              rotateX: reducedMotion ? 0 : showcaseRotateX,
+              rotateY: reducedMotion ? 0 : showcaseRotateY,
+              z: reducedMotion ? 0 : showcaseDepth,
+            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.7, delay: 0.15 }}
           >
-            <Button variant="cyan" onClick={() => navigate('/signup')}>
-              Crear mi Cuenta Gratis
-            </Button>
-            <button
-              onClick={() => {
-                const el = document.getElementById('features');
-                if (el) window.scrollTo({ top: el.offsetTop - 72, behavior: 'smooth' });
-              }}
-              className="text-[0.95rem] font-semibold text-cyan hover:opacity-75 transition-opacity flex items-center gap-2"
-            >
-              Ver cómo funciona
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M5 12h14M12 5l7 7-7 7"/>
-              </svg>
-            </button>
-          </motion.div>
-
-          {/* Trust Stats */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.64 }}
-            className="flex items-center gap-0"
-          >
-            <div className="pr-6">
-              <StatCounter target={8500} label="Usuarios activos" />
-            </div>
-            <div className="w-px h-8 bg-cyan/15" />
-            <div className="px-6">
-              <StatCounter target={23000} label="Productos publicados" />
-            </div>
-            <div className="w-px h-8 bg-cyan/15" />
-            <div className="pl-6">
-              <StatCounter target={3} label="Sucursales" />
-            </div>
+            <HeroTechScene variant={concept.id} />
+            {showConcepts && (
+              <div className="hero-concepts">
+                <p className="hero-concepts-label">Elegí una propuesta para la portada</p>
+                <div
+                  className="hero-concepts-options"
+                  role="group"
+                  aria-label="Propuestas de animación"
+                >
+                  {concepts.map((item, index) => (
+                    <button
+                      key={item.id}
+                      type="button"
+                      aria-pressed={concept.id === item.id}
+                      onClick={() => {
+                        const next = new URLSearchParams(searchParams);
+                        next.set('portada', item.id);
+                        setSearchParams(next, { replace: true, preventScrollReset: true });
+                      }}
+                    >
+                      <span>0{index + 1}</span> {item.name}
+                    </button>
+                  ))}
+                </div>
+                <p className="hero-concepts-description" aria-live="polite">
+                  {concept.description}
+                </p>
+              </div>
+            )}
           </motion.div>
         </div>
-
-        {/* ── RIGHT — Phone Mockup ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
-          className="flex justify-center items-center"
-        >
-          <div
-            className="relative flex justify-center"
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
-          >
-            <img
-              ref={phoneRef}
-              src="/phone_mockup.png"
-              alt="TechMatch App en tu celular"
-              className="max-h-[320px] sm:max-h-[560px] w-auto object-contain drop-shadow-[0_32px_64px_rgba(0,0,0,0.5)] animate-phone-float"
-              style={{ willChange: 'transform' }}
-            />
-
-            {/* Floating badges — ocultos en mobile para evitar overflow horizontal */}
-            <PhoneBadge
-              variant="ai"
-              text="IA sugiere precio automáticamente"
-              className="top-[18%] -left-[8%] text-[0.75rem] hidden sm:block"
-            />
-            <PhoneBadge
-              variant="success"
-              text="Vendido en 2 días ✓"
-              className="bottom-[22%] -right-[6%] text-[0.75rem] hidden sm:block"
-            />
-          </div>
-        </motion.div>
-      </div>
-
-      {/* Scroll indicator */}
-      <div className="absolute bottom-7 left-1/2 -translate-x-1/2">
-        <span className="block w-px h-9 bg-gradient-to-b from-cyan/30 to-transparent animate-scroll-pulse mx-auto" />
+        <div className="hero-categories">
+          <span>Encontrá tu categoría</span>
+          {categories.map((category) => (
+            <a key={category.name} href="#features">
+              <Icon name={category.icon} size={19} />
+              {category.name}
+              <Icon name="arrowUp" size={12} />
+            </a>
+          ))}
+        </div>
       </div>
     </section>
   );

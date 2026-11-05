@@ -1,0 +1,34 @@
+{
+  "heroTransformChanges": true,
+  "sceneTransformChanges": true,
+  "backgrounds": [
+    {
+      "src": "/images/tech-workspace.webp",
+      "loaded": true
+    },
+    {
+      "src": "/images/tech-circuits.webp",
+      "loaded": true
+    },
+    {
+      "src": "/images/tech-workspace.webp",
+      "loaded": true
+    },
+    {
+      "src": "/images/tech-circuits.webp",
+      "loaded": true
+    }
+  ],
+  "demoAndBillingWork": true,
+  "widths": [
+    320,
+    375,
+    768,
+    1100,
+    1440,
+    1920
+  ],
+  "reducedMotionStatic": true,
+  "runtimeErrors": [],
+  "imageFailures": []
+}

@@ -7,18 +7,18 @@ export function NavBrand({ size = 'nav' }) {
   const isNav = size === 'nav';
   return (
     <div className="flex items-center gap-3">
-      <img
-        src="/logo.png"
-        alt="TechMatch Bolivia"
-        className={`flex-shrink-0 rounded-xl ${isNav ? 'w-10 h-10' : 'w-12 h-12'}`}
-      />
+      <span className="brand-mark brand-logo">
+        <img src="/logo-blue.png" alt="" width="40" height="40" />
+      </span>
       <div className="flex flex-col leading-none">
-        <span className={`font-display font-extrabold text-slate-body tracking-tight ${isNav ? 'text-[1.25rem]' : 'text-base'}`}>
+        <span
+          className={`brand-name font-display font-semibold text-slate-body tracking-tight ${isNav ? 'text-[1.2rem]' : 'text-base'}`}
+        >
           TechMatch
         </span>
-          {/*<span className={`text-cyan/70 tracking-wide font-medium ${isNav ? 'text-[0.62rem]' : 'text-[0.6rem]'} mt-0.5`}>
+        <span className="text-slate-muted tracking-[.16em] uppercase font-medium text-[0.5rem] mt-1">
           Bolivia
-        </span>*/}
+        </span>
       </div>
     </div>
   );

@@ -25,36 +25,52 @@ export default {
           purple: 'rgb(var(--c-brand-purple) / <alpha-value>)',
           cyan: 'rgb(var(--c-brand-cyan) / <alpha-value>)',
           neon: 'rgb(var(--c-brand-neon) / <alpha-value>)',
+          hover: '#155fc6',
         },
         cyan: {
           DEFAULT: 'rgb(var(--c-cyan) / <alpha-value>)',
-        }
+        },
       },
       fontFamily: {
         sans: ['Outfit', 'sans-serif'],
         display: ['Outfit', 'sans-serif'],
       },
       animation: {
-        'phone-float':  'phoneFloat 5s ease-in-out infinite',
+        'phone-float': 'phoneFloat 5s ease-in-out infinite',
         'badge-float1': 'badgeFloat1 4s ease-in-out infinite',
         'badge-float2': 'badgeFloat2 4.5s ease-in-out infinite',
-        'pulse-dot':    'pulseDot 2s ease-in-out infinite',
+        'pulse-dot': 'pulseDot 2s ease-in-out infinite',
         'scroll-pulse': 'scrollPulse 2s ease-in-out infinite',
-        'fade-up':      'fadeUp 0.6s cubic-bezier(0.16,1,0.3,1) both',
+        'fade-up': 'fadeUp 0.6s cubic-bezier(0.16,1,0.3,1) both',
       },
       keyframes: {
-        phoneFloat:   { '0%,100%': { transform: 'translateY(0)' },        '50%': { transform: 'translateY(-14px)' } },
-        badgeFloat1:  { '0%,100%': { transform: 'translateY(0)' },        '50%': { transform: 'translateY(-6px)' } },
-        badgeFloat2:  { '0%,100%': { transform: 'translateY(0)' },        '50%': { transform: 'translateY(6px)' } },
-        pulseDot:     { '0%,100%': { opacity: '1', transform: 'scale(1)' },'50%': { opacity: '0.3', transform: 'scale(0.75)' } },
-        scrollPulse:  { '0%,100%': { opacity: '0.3' }, '50%': { opacity: '0.9' } },
-        fadeUp:       { from: { opacity: '0', transform: 'translateY(20px)' }, to: { opacity: '1', transform: 'translateY(0)' } },
+        phoneFloat: {
+          '0%,100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-14px)' },
+        },
+        badgeFloat1: {
+          '0%,100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-6px)' },
+        },
+        badgeFloat2: {
+          '0%,100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(6px)' },
+        },
+        pulseDot: {
+          '0%,100%': { opacity: '1', transform: 'scale(1)' },
+          '50%': { opacity: '0.3', transform: 'scale(0.75)' },
+        },
+        scrollPulse: { '0%,100%': { opacity: '0.3' }, '50%': { opacity: '0.9' } },
+        fadeUp: {
+          from: { opacity: '0', transform: 'translateY(20px)' },
+          to: { opacity: '1', transform: 'translateY(0)' },
+        },
       },
       boxShadow: {
-        'navy-sm':   '0 2px 14px rgba(0,0,0,0.25)',
-        'navy-md':   '0 8px 32px rgba(0,0,0,0.3)',
-        'navy-lg':   '0 20px 60px rgba(0,0,0,0.4)',
-        'cyan-glow': '0 0 24px rgba(100,255,218,0.2)',
+        'navy-sm': '0 2px 14px rgba(0,0,0,0.25)',
+        'navy-md': '0 8px 32px rgba(0,0,0,0.3)',
+        'navy-lg': '0 20px 60px rgba(0,0,0,0.4)',
+        'cyan-glow': '0 0 24px rgb(var(--c-brand-blue) / .12)',
         'blue-glow': '0 4px 20px rgba(0,113,227,0.35)',
       },
       backgroundImage: {

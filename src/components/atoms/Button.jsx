@@ -13,28 +13,24 @@ import { MagneticButton } from '@/lib/reactbits/MagneticButton';
  */
 export function Button({
   children,
-  variant   = 'primary',
+  variant = 'primary',
   href,
   onClick,
   className = '',
-  disabled  = false,
-  magnetic  = true,
-  type      = 'button',
+  disabled = false,
+  magnetic = true,
+  type = 'button',
 }) {
   const base =
     'inline-flex items-center justify-center gap-2 font-bold rounded-full cursor-pointer transition-all duration-200 select-none whitespace-nowrap';
 
   const variants = {
     primary: `
-      text-navy bg-brand-blue px-7 py-3.5 text-sm
-      shadow-blue-glow hover:-translate-y-0.5
-      hover:bg-brand-hover hover:shadow-[0_8px_28px_rgba(0,113,227,0.4)]
+      btn-primary
       disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none
     `,
     cyan: `
-      text-navy bg-cyan px-7 py-3.5 text-sm font-extrabold
-      shadow-cyan-glow hover:-translate-y-0.5
-      hover:shadow-[0_8px_28px_rgba(100,255,218,0.35)]
+      btn-primary
       disabled:opacity-50
     `,
     outline: `
@@ -57,6 +53,8 @@ export function Button({
         onClick={onClick}
         className={classes}
         strength={0.3}
+        disabled={disabled}
+        type={type}
       >
         {children}
       </MagneticButton>
@@ -64,7 +62,11 @@ export function Button({
   }
 
   if (href) {
-    return <a href={href} className={classes} onClick={onClick}>{children}</a>;
+    return (
+      <a href={href} className={classes} onClick={onClick}>
+        {children}
+      </a>
+    );
   }
 
   return (

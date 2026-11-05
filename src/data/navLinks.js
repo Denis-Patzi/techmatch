@@ -1,8 +1,8 @@
 export const navLinks = [
-  { href: '#features',  label: 'Características' },
-  { href: '#sellers',   label: 'Para Vendedores' },
-  { href: '#buyers',    label: 'Para Compradores' },
-  { href: '#about',     label: 'Nosotros' },
-  { href: '#plans',     label: 'Planes' },
-  { href: '#contact',   label: 'Contacto' },
+  { href: '#features', label: 'El feed' },
+  { href: '#profiles', label: 'Perfiles' },
+  { href: '#ai-assistant', label: 'Tasador IA' },
+  { href: '#auctions', label: 'Subastas' },
+  { href: '#how', label: 'Cómo funciona' },
+  { href: '#contact', label: 'Contacto' },
 ];

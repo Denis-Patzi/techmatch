@@ -1,0 +1,63 @@
+{
+  "date": "2026-11-05T23:02:15.004Z",
+  "checks": [
+    "Ambos tipos de cuenta: categorías Todos=4, Computación=2, Celulares=1 y Audio=1; publicaciones en tres columnas."
+  ],
+  "layouts": [
+    {
+      "width": 320,
+      "documentWidth": 320,
+      "phoneRatio": 0.5622489959839357,
+      "columns": 2,
+      "gap": "8px",
+      "galleryOverflow": false,
+      "previewOnLeft": false
+    },
+    {
+      "width": 375,
+      "documentWidth": 375,
+      "phoneRatio": 0.5620805369127517,
+      "columns": 2,
+      "gap": "8px",
+      "galleryOverflow": false,
+      "previewOnLeft": false
+    },
+    {
+      "width": 768,
+      "documentWidth": 768,
+      "phoneRatio": 0.562268803945746,
+      "columns": 2,
+      "gap": "8px",
+      "galleryOverflow": false,
+      "previewOnLeft": false
+    },
+    {
+      "width": 1100,
+      "documentWidth": 1100,
+      "phoneRatio": 0.562268803945746,
+      "columns": 2,
+      "gap": "8px",
+      "galleryOverflow": false,
+      "previewOnLeft": true
+    },
+    {
+      "width": 1440,
+      "documentWidth": 1440,
+      "phoneRatio": 0.562268803945746,
+      "columns": 2,
+      "gap": "8px",
+      "galleryOverflow": false,
+      "previewOnLeft": true
+    },
+    {
+      "width": 1920,
+      "documentWidth": 1920,
+      "phoneRatio": 0.562268803945746,
+      "columns": 2,
+      "gap": "8px",
+      "galleryOverflow": false,
+      "previewOnLeft": true
+    }
+  ],
+  "runtimeErrors": []
+}

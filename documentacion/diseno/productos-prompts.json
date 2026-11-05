@@ -1,0 +1,18 @@
+{
+  "tool": "image_gen (herramienta integrada)",
+  "assets": [
+    {
+      "file": "public/images/product-headphones.webp",
+      "prompt": "Use case: product-mockup. Asset type: portrait product photograph for a technology marketplace auction and catalog preview. Create one premium photorealistic product photo of dark graphite over-ear wireless headphones with soft padded earcups, a brushed metal headband and restrained blue accent light. Product fully visible, upright three-quarter view, centered in the upper-middle 55% of the composition, resting on a matte navy desk. Vertical portrait 9:16 composition with generous clear space at bottom for HTML listing details. Background softly blurred modern blue studio, refined light gradient, realistic soft shadows, tactile materials, bright clear product edges. No text, no logos, no interface, no watermark, no extra devices."
+    },
+    {
+      "file": "public/images/product-laptop.webp",
+      "prompt": "Use case: product-mockup. Asset type: portrait product photograph for a social technology marketplace catalog. One premium photorealistic photograph of a slim silver laptop open at 110 degrees on a simple cool gray desk, screen showing abstract blue waves without text, keyboard and screen clearly visible, three-quarter front view. Vertical portrait 9:16 composition. Entire laptop fits comfortably in central 65% width and upper-middle 55% height; generous clear space below for HTML product details. Soft daylight, light icy blue studio background, realistic metal texture and shadows, modern understated aesthetic. No logos, no text, no interface, no watermark, no other products."
+    },
+    {
+      "file": "public/images/product-phone.webp",
+      "prompt": "Use case: product-mockup. Asset type: portrait product photograph for a social technology marketplace catalog. One modern midnight-blue smartphone, rear triple camera side facing viewer, standing upright at a slight diagonal on a matte navy studio surface. Realistic premium product photography with soft blue edge lighting and tactile metal and glass, phone entirely visible and easy to identify. Vertical portrait 9:16, centered in upper-middle area, product fills 65% of the image height with comfortable margins, clear bottom area for HTML listing overlay. Gradient midnight blue background, elegant soft shadows. No logo, no text, no watermark, no UI, no extra devices."
+    }
+  ],
+  "note": "Imágenes ilustrativas generadas para la portada. Se conservan los PNG originales en el directorio de generación; las versiones WebP optimizadas se incluyen en el proyecto."
+}

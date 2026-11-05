@@ -1,0 +1,29 @@
+{
+  "sections": [
+    "hero",
+    "features",
+    "profiles",
+    "ai-assistant",
+    "auctions",
+    "how",
+    "contact"
+  ],
+  "allAnchorTargetsExist": true,
+  "feedPhotoVideoPreview": true,
+  "personalAndStoreProfiles": true,
+  "catalogAndAuctionViews": true,
+  "aiDescriptionEditable": true,
+  "aiPriceDemoRetained": true,
+  "mobileNavigation": true,
+  "widths": [
+    320,
+    375,
+    768,
+    1100,
+    1440,
+    1920
+  ],
+  "reducedMotion": true,
+  "runtimeErrors": [],
+  "failedMedia": []
+}

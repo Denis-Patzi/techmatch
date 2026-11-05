@@ -1,134 +1,68 @@
-import { motion } from 'framer-motion';
-import { SectionLabel } from '@/components/atoms/SectionLabel';
+import { Link } from 'react-router-dom';
+import { Icon } from '@/components/atoms/Icon';
+import { NavBrand } from '@/components/molecules/NavBrand';
+import { ScrollScene } from '@/components/molecules/ScrollScene';
+import { ScrollBackdrop } from '@/components/molecules/ScrollBackdrop';
 
-/**
- * DownloadSection — Organismo (actualizado)
- * Badges de App Store y Google Play ahora son rectangulares y más grandes,
- * con un diseño estilizado que imita el look oficial de cada tienda.
- */
 export function DownloadSection() {
   return (
-    <section id="download" className="min-h-screen flex flex-col justify-center py-16 bg-navy-light border-t border-cyan/8">
-      <div className="max-w-[1080px] mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-
-          {/* ── Left ── */}
-          <motion.div
-            initial={{ opacity: 0, x: -24 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <SectionLabel>Disponible ahora</SectionLabel>
-            <h2 className="font-display text-[clamp(1.9rem,4vw,2.7rem)] font-extrabold text-slate-body tracking-tight mb-4">
-              Lleváte TechMatch en tu bolsillo
+    <section id="download" className="scene-section">
+      <ScrollBackdrop image="/images/tech-circuits.webp" variant="circuits" />
+      <div className="page-container">
+        <div className="glass-panel liquid-glass download-panel">
+          <div className="max-w-lg">
+            <span className="eyebrow mb-5">Tu mundo tech, con vos</span>
+            <h2 className="section-title">
+              Buenas conexiones.
+              <br />
+              Desde cualquier pantalla.
             </h2>
-            <p className="text-sm text-slate-sub leading-relaxed mb-10 max-w-md">
-              Disponible como app web en cualquier navegador y próximamente en Google Play y App Store. Sin instalar nada, funciona directo desde tu celular.
+            <p className="section-copy">
+              Llevá TechMatch con vos. Encontrá tu próximo equipo y conectá con tu comunidad desde
+              el navegador de tu celular.
             </p>
-
-            {/* ── Store Badges (rectangulares y grandes) ── */}
-            <div className="flex flex-col sm:flex-row gap-4 mb-8">
-
-              {/* Google Play */}
-              <motion.a
-                href="#"
-                whileHover={{ y: -3, scale: 1.02 }}
-                whileTap={{ scale: 0.97 }}
-                transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-                className="
-                  flex items-center gap-4 px-5 py-4 rounded-2xl
-                  bg-navy border border-cyan/20
-                  hover:border-cyan/45 hover:shadow-[0_8px_32px_rgba(0,0,0,0.3)]
-                  transition-colors duration-200 group flex-1 min-w-[200px]
-                "
-              >
-                {/* Play Store logo */}
-                <div className="w-12 h-12 flex-shrink-0 flex items-center justify-center">
-                  <img src="/playstore.png" alt="" className="w-full h-full object-contain" />
-                </div>
-                <div className="text-left">
-                  <div className="text-[0.65rem] text-slate-muted uppercase tracking-widest font-semibold leading-none mb-1">
-                    Disponible en
-                  </div>
-                  <div className="font-display text-lg font-bold text-slate-body leading-tight group-hover:text-cyan transition-colors duration-200">
-                    Google Play
-                  </div>
-                </div>
-                <svg
-                  width="16" height="16"
-                  viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-                  className="ml-auto text-slate-muted group-hover:text-cyan transition-colors duration-200 flex-shrink-0"
-                >
-                  <path d="M5 12h14M12 5l7 7-7 7"/>
-                </svg>
-              </motion.a>
-
-              {/* App Store */}
-              <motion.a
-                href="#"
-                whileHover={{ y: -3, scale: 1.02 }}
-                whileTap={{ scale: 0.97 }}
-                transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-                className="
-                  flex items-center gap-4 px-5 py-4 rounded-2xl
-                  bg-navy border border-cyan/20
-                  hover:border-cyan/45 hover:shadow-[0_8px_32px_rgba(0,0,0,0.3)]
-                  transition-colors duration-200 group flex-1 min-w-[200px]
-                "
-              >
-                {/* App Store logo */}
-                <div className="w-12 h-12 flex-shrink-0 flex items-center justify-center">
-                  <img src="/appstore.png" alt="" className="w-full h-full object-contain" />
-                </div>
-                <div className="text-left">
-                  <div className="text-[0.65rem] text-slate-muted uppercase tracking-widest font-semibold leading-none mb-1">
-                    Próximamente en
-                  </div>
-                  <div className="font-display text-lg font-bold text-slate-body leading-tight group-hover:text-cyan transition-colors duration-200">
-                    App Store
-                  </div>
-                </div>
-                <svg
-                  width="16" height="16"
-                  viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-                  className="ml-auto text-slate-muted group-hover:text-cyan transition-colors duration-200 flex-shrink-0"
-                >
-                  <path d="M5 12h14M12 5l7 7-7 7"/>
-                </svg>
-              </motion.a>
+            <Link to="/signup" className="btn-primary mt-7">
+              Empezar ahora
+              <Icon name="arrow" size={17} />
+            </Link>
+            <div className="flex items-center gap-3 mt-6 text-xs text-slate-muted">
+              <Icon name="phone" size={16} />
+              <span>App para iOS y Android · Próximamente</span>
             </div>
-
-            {/* Web availability note */}
-            <div className="flex items-center gap-2.5">
-              <div className="w-5 h-5 rounded-full bg-brand-green/15 text-brand-green flex items-center justify-center text-[10px] font-bold flex-shrink-0">
-                ✓
-              </div>
-              <span className="text-xs text-slate-muted">
-                App web disponible ahora mismo — funcioná directo desde tu navegador sin instalar nada
-              </span>
+          </div>
+          <ScrollScene className="phone-scene" surfaceClassName="phone-preview" variant="phone">
+            <span className="sr-only">Vista previa ilustrativa de TechMatch en un celular</span>
+            <div className="phone-island" />
+            <div className="flex justify-between items-center mb-6">
+              <NavBrand />
+              <Icon name="search" size={17} />
             </div>
-          </motion.div>
-
-          {/* ── Right — Phone mockup ── */}
-          <motion.div
-            initial={{ opacity: 0, x: 24 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-            className="flex justify-center"
-          >
-            <div className="relative">
-              {/* Glow detrás del celular */}
-              <div className="absolute inset-0 bg-gradient-radial from-cyan/10 to-transparent blur-2xl scale-110 pointer-events-none" />
-              <img
-                src="/phone_mockup.png"
-                alt="TechMatch en tu celular"
-                className="relative max-h-[380px] w-auto object-contain drop-shadow-[0_24px_48px_rgba(0,0,0,0.5)] animate-phone-float"
-              />
+            <p className="text-xs text-slate-muted">Hola, comunidad.</p>
+            <h3 className="text-2xl font-medium tracking-tight leading-tight mt-1 mb-5">
+              Tu próximo
+              <br />
+              <span className="text-cyan">gran match.</span>
+            </h3>
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { icon: 'laptop', name: 'Laptops' },
+                { icon: 'cpu', name: 'Hardware' },
+                { icon: 'phone', name: 'Celulares' },
+                { icon: 'headphones', name: 'Audio' },
+              ].map((item) => (
+                <div key={item.name} className="rounded-2xl bg-cyan/5 border border-cyan/10 p-4">
+                  <Icon name={item.icon} size={30} className="text-cyan mx-auto my-3" />
+                  <p className="text-[.6rem] text-center text-slate-sub">{item.name}</p>
+                </div>
+              ))}
             </div>
-          </motion.div>
-
+            <div className="flex justify-around border-t border-cyan/10 pt-4 mt-5 text-cyan">
+              <Icon name="grid" size={17} />
+              <Icon name="heart" size={17} />
+              <Icon name="chat" size={17} />
+              <Icon name="user" size={17} />
+            </div>
+          </ScrollScene>
         </div>
       </div>
     </section>

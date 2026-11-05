@@ -1,0 +1,64 @@
+{
+  "date": "2026-11-05T23:10:21.527Z",
+  "checks": [
+    "Avatar ampliado, puntuación, ventas, productos, seguidores y Me gusta de ejemplo presentes; Deseos muestra dos productos.",
+    "Cambiar de Deseos a tienda vuelve al catálogo; Deseos desaparece y las métricas cambian. El total de productos no cambia al filtrar."
+  ],
+  "layouts": [
+    {
+      "width": 320,
+      "documentWidth": 320,
+      "phoneRatio": 0.5622489959839357,
+      "avatarSize": 54,
+      "avatarRadius": "50%",
+      "tabsOverflow": false,
+      "heartDisplay": "block"
+    },
+    {
+      "width": 375,
+      "documentWidth": 375,
+      "phoneRatio": 0.5620805369127517,
+      "avatarSize": 54,
+      "avatarRadius": "50%",
+      "tabsOverflow": false,
+      "heartDisplay": "block"
+    },
+    {
+      "width": 768,
+      "documentWidth": 768,
+      "phoneRatio": 0.562268803945746,
+      "avatarSize": 64,
+      "avatarRadius": "50%",
+      "tabsOverflow": false,
+      "heartDisplay": "block"
+    },
+    {
+      "width": 1100,
+      "documentWidth": 1100,
+      "phoneRatio": 0.562268803945746,
+      "avatarSize": 64,
+      "avatarRadius": "50%",
+      "tabsOverflow": false,
+      "heartDisplay": "block"
+    },
+    {
+      "width": 1440,
+      "documentWidth": 1440,
+      "phoneRatio": 0.562268803945746,
+      "avatarSize": 64,
+      "avatarRadius": "50%",
+      "tabsOverflow": false,
+      "heartDisplay": "block"
+    },
+    {
+      "width": 1920,
+      "documentWidth": 1920,
+      "phoneRatio": 0.562268803945746,
+      "avatarSize": 64,
+      "avatarRadius": "50%",
+      "tabsOverflow": false,
+      "heartDisplay": "block"
+    }
+  ],
+  "runtimeErrors": []
+}

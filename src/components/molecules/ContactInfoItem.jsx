@@ -10,13 +10,18 @@
 export function ContactInfoItem({ icon, label, value, href }) {
   return (
     <div className="flex items-start gap-4">
-      <div className="w-10 h-10 rounded-xl bg-cyan/10 border border-cyan/20 flex items-center justify-center flex-shrink-0 text-cyan mt-0.5">
+      <div className="bare-icon w-10 h-10 flex items-center justify-center flex-shrink-0 text-cyan mt-0.5">
         {icon}
       </div>
       <div>
-        <div className="text-xs text-slate-muted font-semibold uppercase tracking-wider mb-0.5">{label}</div>
+        <div className="text-xs text-slate-muted font-semibold uppercase tracking-wider mb-0.5">
+          {label}
+        </div>
         {href ? (
-          <a href={href} className="text-slate-body hover:text-cyan transition-colors duration-150 font-medium text-sm">
+          <a
+            href={href}
+            className="text-slate-body hover:text-cyan transition-colors duration-150 font-medium text-sm"
+          >
             {value}
           </a>
         ) : (

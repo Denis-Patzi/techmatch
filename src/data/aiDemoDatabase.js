@@ -6,6 +6,7 @@
 export const demoDatabase = {
   laptop: {
     name: 'Laptop ASUS VivoBook 15',
+    description: 'Laptop ASUS VivoBook 15 con Intel Core i5, 16 GB de RAM y SSD de 512 GB. Pantalla Full HD de 15,6 pulgadas. Equipo usado en buen estado.',
     category: 'Laptop',
     condition: 'Buen estado',
     priceBase: 4200,
@@ -24,6 +25,7 @@ export const demoDatabase = {
   },
   phone: {
     name: 'iPhone 14 Pro 256GB',
+    description: 'iPhone 14 Pro con 256 GB de almacenamiento, chip A16 Bionic y cámara principal de 48 MP. Equipo usado en excelente estado.',
     category: 'Celular',
     condition: 'Excelente estado',
     priceBase: 6300,
@@ -42,6 +44,7 @@ export const demoDatabase = {
   },
   gpu: {
     name: 'NVIDIA RTX 4060 Ti 8GB',
+    description: 'Tarjeta gráfica NVIDIA RTX 4060 Ti con 8 GB GDDR6, soporte para DLSS 3 y conexión PCIe 4.0. Componente usado en buen estado.',
     category: 'Componente GPU',
     condition: 'Usado · Buen estado',
     priceBase: 2900,
@@ -60,6 +63,7 @@ export const demoDatabase = {
   },
   tablet: {
     name: 'iPad Air 5 Wi-Fi 256GB',
+    description: 'iPad Air de quinta generación con chip Apple M1, 256 GB de almacenamiento y pantalla de 10,9 pulgadas. Versión Wi-Fi en estado como nuevo.',
     category: 'Tablet',
     condition: 'Como nuevo',
     priceBase: 5100,
@@ -79,17 +83,18 @@ export const demoDatabase = {
 };
 
 export const genericDemoData = {
-  name: 'Producto Tecnológico Detectado',
+  name: 'Producto de ejemplo',
+  description: 'Descripción de ejemplo. Agregá la marca, el modelo, las características y el estado de tu producto antes de publicar.',
   category: 'Electrónico',
-  condition: 'Buen estado',
+  condition: 'Estado por confirmar',
   priceBase: 3500,
   priceMin: 2800,
   priceMax: 4200,
   range: 'Bs. 2.800 — Bs. 4.200',
   chars: [
-    { key: 'Marca',    val: 'Detectada por IA' },
-    { key: 'Modelo',   val: 'Verificado' },
-    { key: 'Estado',   val: 'Buen estado general' },
+    { key: 'Marca',    val: 'Por completar' },
+    { key: 'Modelo',   val: 'Por completar' },
+    { key: 'Estado',   val: 'Por confirmar' },
     { key: 'Tipo',     val: 'Electrónico' },
     { key: 'Garantía', val: 'Consultar con el vendedor' },
   ],

@@ -1,0 +1,102 @@
+{
+  "date": "2026-11-05T23:15:35.937Z",
+  "layouts": [
+    {
+      "account": "Cuenta personal",
+      "width": 320,
+      "documentWidth": 320,
+      "avatarSize": 72,
+      "socialCountsRemoved": true,
+      "statsBesideAvatar": true,
+      "bioBelowHeader": true,
+      "bioVisible": true,
+      "headerOverflow": false,
+      "phoneRatio": 0.5622489959839357
+    },
+    {
+      "account": "Cuenta personal",
+      "width": 375,
+      "documentWidth": 375,
+      "avatarSize": 72,
+      "socialCountsRemoved": true,
+      "statsBesideAvatar": true,
+      "bioBelowHeader": true,
+      "bioVisible": true,
+      "headerOverflow": false,
+      "phoneRatio": 0.5620805369127517
+    },
+    {
+      "account": "Cuenta personal",
+      "width": 768,
+      "documentWidth": 768,
+      "avatarSize": 88,
+      "socialCountsRemoved": true,
+      "statsBesideAvatar": true,
+      "bioBelowHeader": true,
+      "bioVisible": true,
+      "headerOverflow": false,
+      "phoneRatio": 0.562268803945746
+    },
+    {
+      "account": "Cuenta personal",
+      "width": 1440,
+      "documentWidth": 1440,
+      "avatarSize": 88,
+      "socialCountsRemoved": true,
+      "statsBesideAvatar": true,
+      "bioBelowHeader": true,
+      "bioVisible": true,
+      "headerOverflow": false,
+      "phoneRatio": 0.562268803945746
+    },
+    {
+      "account": "Cuenta de tienda",
+      "width": 320,
+      "documentWidth": 320,
+      "avatarSize": 72,
+      "socialCountsRemoved": true,
+      "statsBesideAvatar": true,
+      "bioBelowHeader": true,
+      "bioVisible": true,
+      "headerOverflow": false,
+      "phoneRatio": 0.5622489959839357
+    },
+    {
+      "account": "Cuenta de tienda",
+      "width": 375,
+      "documentWidth": 375,
+      "avatarSize": 72,
+      "socialCountsRemoved": true,
+      "statsBesideAvatar": true,
+      "bioBelowHeader": true,
+      "bioVisible": true,
+      "headerOverflow": false,
+      "phoneRatio": 0.5620805369127517
+    },
+    {
+      "account": "Cuenta de tienda",
+      "width": 768,
+      "documentWidth": 768,
+      "avatarSize": 88,
+      "socialCountsRemoved": true,
+      "statsBesideAvatar": true,
+      "bioBelowHeader": true,
+      "bioVisible": true,
+      "headerOverflow": false,
+      "phoneRatio": 0.562268803945746
+    },
+    {
+      "account": "Cuenta de tienda",
+      "width": 1440,
+      "documentWidth": 1440,
+      "avatarSize": 88,
+      "socialCountsRemoved": true,
+      "statsBesideAvatar": true,
+      "bioBelowHeader": true,
+      "bioVisible": true,
+      "headerOverflow": false,
+      "phoneRatio": 0.562268803945746
+    }
+  ],
+  "runtimeErrors": []
+}

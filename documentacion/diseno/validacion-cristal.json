@@ -1,0 +1,17 @@
+{
+  "material": {
+    "backdrop": "blur(26px) saturate(1.55)",
+    "edge": "exclude, exclude",
+    "overlayEvents": "none"
+  },
+  "pointerReflection": true,
+  "reducedMotionStatic": true,
+  "mobileMenuAndKeyboard": true,
+  "widths": [
+    320,
+    375,
+    768,
+    1440
+  ],
+  "runtimeErrors": []
+}

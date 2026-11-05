@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { motion, useMotionValue, useSpring } from 'framer-motion';
+import { motion, useMotionValue, useSpring, useReducedMotion } from 'framer-motion';
 
 /**
  * MagneticButton — React Bits
@@ -14,8 +14,17 @@ import { motion, useMotionValue, useSpring } from 'framer-motion';
  * @param {function}   onClick    - Handler de click
  * @param {string}     href       - Si se provee, renderiza un <a>
  */
-export function MagneticButton({ children, strength = 0.35, className = '', onClick, href }) {
+export function MagneticButton({
+  children,
+  strength = 0.35,
+  className = '',
+  onClick,
+  href,
+  disabled = false,
+  type = 'button',
+}) {
   const ref = useRef(null);
+  const reducedMotion = useReducedMotion();
 
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -24,10 +33,10 @@ export function MagneticButton({ children, strength = 0.35, className = '', onCl
 
   const handleMouseMove = (e) => {
     const el = ref.current;
-    if (!el) return;
+    if (!el || reducedMotion || disabled || !window.matchMedia('(pointer: fine)').matches) return;
     const rect = el.getBoundingClientRect();
-    const cx = rect.left + rect.width  / 2;
-    const cy = rect.top  + rect.height / 2;
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
     x.set((e.clientX - cx) * strength);
     y.set((e.clientY - cy) * strength);
   };
@@ -43,12 +52,14 @@ export function MagneticButton({ children, strength = 0.35, className = '', onCl
     <Tag
       ref={ref}
       href={href}
+      type={href ? undefined : type}
+      disabled={href ? undefined : disabled}
       onClick={onClick}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={{ x: springX, y: springY }}
       className={className}
-      whileTap={{ scale: 0.96 }}
+      whileTap={reducedMotion || disabled ? undefined : { scale: 0.98 }}
     >
       {children}
     </Tag>

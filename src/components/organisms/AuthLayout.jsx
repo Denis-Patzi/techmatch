@@ -1,74 +1,123 @@
 import { Link } from 'react-router-dom';
+import { NavBrand } from '@/components/molecules/NavBrand';
+import { ThemeToggle } from '@/components/atoms/ThemeToggle';
+import { Icon } from '@/components/atoms/Icon';
+import { useTheme } from '@/contexts/ThemeContext';
 
-/**
- * AuthLayout — Organismo compartido entre SignUp y Login
- * Desktop: panel izquierdo decorativo + panel derecho con formulario
- * Mobile: solo formulario con logo pequeño arriba
- */
 export function AuthLayout({ children, title, subtitle, footerText, footerLink, footerLinkTo }) {
+  const { isDark, toggleTheme } = useTheme();
   return (
-    <div className="min-h-screen bg-navy flex">
-
-      {/* ── Panel Izquierdo — Decorativo (solo desktop) ── */}
-      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden flex-col items-center justify-center p-12">
-        {/* Glows de fondo */}
-        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] glow-purple opacity-40 blur-[100px] pointer-events-none" />
-        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] glow-blue opacity-40 blur-[100px] pointer-events-none" />
-
-        <div className="relative z-10 text-center max-w-md">
-          {/* Logo */}
-          <Link to="/">
-            <img src="/logo.png" alt="TechMatch Bolivia" className="w-20 h-20 mx-auto mb-8 rounded-2xl" />
-          </Link>
-
-          <h2 className="font-display text-3xl font-black text-slate-body mb-4 leading-tight">
-            El marketplace de tecnología
-            <span className="text-cyan block">más inteligente de Bolivia</span>
+    <div className="auth-page">
+      <aside className="auth-story">
+        <Link to="/" aria-label="Volver a TechMatch">
+          <NavBrand />
+        </Link>
+        <div className="py-10">
+          <span className="text-[.65rem] uppercase tracking-[.18em] text-blue-200 block mb-7">
+            Tu comunidad tech en Bolivia
+          </span>
+          <h2>
+            Las buenas
+            <br />
+            conexiones
+            <br />
+            <span>empiezan acá.</span>
           </h2>
-          <p className="text-slate-sub text-base leading-relaxed mb-10">
-            Compra, vende y conectá con compradores y vendedores reales usando inteligencia artificial.
+          <p>
+            Un equipo para tu próximo proyecto. Una nueva oportunidad para el que ya tenés. Encontrá
+            tu lugar en TechMatch.
           </p>
-
-          {/* Stats */}
-          <div className="grid grid-cols-3 gap-4">
-            {[
-              { value: '8.500+', label: 'Usuarios' },
-              { value: '23.000+', label: 'Productos' },
-              { value: '3', label: 'Sucursales' },
-            ].map(stat => (
-              <div key={stat.label} className="bg-navy-light/60 border border-cyan/15 rounded-2xl p-4">
-                <div className="font-display text-xl font-black text-cyan">{stat.value}</div>
-                <div className="text-xs text-slate-muted mt-0.5">{stat.label}</div>
-              </div>
-            ))}
+          <div className="auth-story-art" aria-hidden="true">
+            <svg viewBox="0 0 400 170" fill="none">
+              <rect
+                x="60"
+                y="10"
+                width="280"
+                height="145"
+                rx="24"
+                stroke="currentColor"
+                strokeOpacity=".2"
+              />
+              <rect
+                x="90"
+                y="28"
+                width="220"
+                height="110"
+                rx="18"
+                fill="currentColor"
+                fillOpacity=".07"
+                stroke="currentColor"
+                strokeOpacity=".3"
+              />
+              <rect
+                x="120"
+                y="46"
+                width="160"
+                height="73"
+                rx="14"
+                fill="currentColor"
+                fillOpacity=".12"
+                stroke="currentColor"
+                strokeOpacity=".6"
+              />
+              <path
+                d="m180 82 14 14 28-29"
+                stroke="currentColor"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <circle
+                cx="73"
+                cy="117"
+                r="25"
+                fill="#153b68"
+                stroke="currentColor"
+                strokeOpacity=".5"
+              />
+              <circle
+                cx="323"
+                cy="46"
+                r="25"
+                fill="#153b68"
+                stroke="currentColor"
+                strokeOpacity=".5"
+              />
+              <path
+                d="M64 117h18m-9-9v18M314 46h18m-9-9v18"
+                stroke="currentColor"
+                strokeWidth="2"
+              />
+            </svg>
           </div>
         </div>
-      </div>
-
-      {/* ── Panel Derecho — Formulario ── */}
-      <div className="flex-1 flex flex-col items-center justify-center p-6 lg:p-12">
-        {/* Logo mobile */}
-        <Link to="/" className="lg:hidden mb-8">
-          <img src="/logo.png" alt="TechMatch Bolivia" className="w-14 h-14 rounded-xl" />
-        </Link>
-
-        <div className="w-full max-w-md">
-          <h1 className="font-display text-2xl font-extrabold text-slate-body mb-1">{title}</h1>
-          {subtitle && <p className="text-slate-sub text-sm mb-8">{subtitle}</p>}
-
+        <div className="auth-story-footer">
+          <span>Hecho en Bolivia.</span>
+          <span className="ml-auto">Pensado para conectar.</span>
+          <Icon name="arrowUp" size={16} />
+        </div>
+      </aside>
+      <main className="auth-form-side">
+        <div className="glass-panel auth-form-card">
+          <div className="flex items-center justify-between gap-4">
+            <Link to="/" aria-label="TechMatch, volver al inicio">
+              <NavBrand />
+            </Link>
+            <ThemeToggle isDark={isDark} onToggle={toggleTheme} />
+          </div>
+          <h1>{title}</h1>
+          {subtitle && <p className="text-slate-sub text-sm mb-7">{subtitle}</p>}
           {children}
-
           {footerText && (
-            <p className="text-center text-sm text-slate-muted mt-6">
+            <p className="text-center text-sm text-slate-sub mt-6">
               {footerText}{' '}
-              <Link to={footerLinkTo} className="text-cyan font-semibold hover:opacity-80 transition-opacity">
+              <Link to={footerLinkTo} className="text-cyan font-medium hover:underline">
                 {footerLink}
               </Link>
             </p>
           )}
         </div>
-      </div>
-
+      </main>
     </div>
   );
 }

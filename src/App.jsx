@@ -1,32 +1,33 @@
-import { useState, useEffect, lazy, Suspense } from 'react';
+import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Toaster } from 'react-hot-toast';
+import { useTheme } from '@/contexts/ThemeContext';
+import { useScrollReveal } from '@/hooks/useScrollReveal';
+import { useLiquidGlass } from '@/hooks/useLiquidGlass';
+import { ScrollProgress } from '@/components/atoms/ScrollProgress';
 
 /* ── Auth ── */
 import { AuthProvider } from '@/contexts/AuthContext';
 import { ProtectedRoute } from '@/components/organisms/ProtectedRoute';
 
 /* ── Organisms (Landing) ── */
-import { Navbar }            from '@/components/organisms/Navbar';
-import { HeroSection }       from '@/components/organisms/HeroSection';
-import { FeaturesSection }   from '@/components/organisms/FeaturesSection';
-import { SellersSection }    from '@/components/organisms/SellersSection';
-import { BuyersSection }     from '@/components/organisms/BuyersSection';
+import { Navbar } from '@/components/organisms/Navbar';
+import { HeroSection } from '@/components/organisms/HeroSection';
+import { SocialFeedSection } from '@/components/organisms/SocialFeedSection';
+import { ProfilesSection } from '@/components/organisms/ProfilesSection';
+import { AIAssistantSection } from '@/components/organisms/AIAssistantSection';
+import { AuctionsSection } from '@/components/organisms/AuctionsSection';
 import { HowItWorksSection } from '@/components/organisms/HowItWorksSection';
-import { AboutSection }      from '@/components/organisms/AboutSection';
-import { PlansSection }      from '@/components/organisms/PlansSection';
-import { DownloadSection }   from '@/components/organisms/DownloadSection';
-import { LocationsSection }  from '@/components/organisms/LocationsSection';
-import { ContactSection }    from '@/components/organisms/ContactSection';
-import { Footer }            from '@/components/organisms/Footer';
+import { LandingJoinSection } from '@/components/organisms/LandingJoinSection';
+import { Footer } from '@/components/organisms/Footer';
 
 /* ── Pages (lazy load) ── */
-const SignUpPage  = lazy(() => import('@/pages/SignUpPage'));
-const LoginPage   = lazy(() => import('@/pages/LoginPage'));
+const SignUpPage = lazy(() => import('@/pages/SignUpPage'));
+const LoginPage = lazy(() => import('@/pages/LoginPage'));
 const ProfilePage = lazy(() => import('@/pages/ProfilePage'));
-const AdminPage   = lazy(() => import('@/pages/AdminPage'));
-const SellerPage  = lazy(() => import('@/pages/SellerPage'));
+const AdminPage = lazy(() => import('@/pages/AdminPage'));
+const SellerPage = lazy(() => import('@/pages/SellerPage'));
 const OnboardingPage = lazy(() => import('@/pages/OnboardingPage'));
 const ForgotPasswordPage = lazy(() => import('@/pages/ForgotPasswordPage'));
 const UpdatePasswordPage = lazy(() => import('@/pages/UpdatePasswordPage'));
@@ -59,14 +60,20 @@ function BackToTop() {
           aria-label="Volver arriba"
           className="
             fixed bottom-6 right-6 z-50
-            w-11 h-11 rounded-full bg-navy-light border border-cyan/25
+            w-11 h-11 icon-button
             flex items-center justify-center text-cyan
-            shadow-navy-md hover:bg-navy-lighter hover:border-cyan/50
             transition-colors duration-150
           "
         >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-            <path d="M18 15l-6-6-6 6"/>
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+          >
+            <path d="M18 15l-6-6-6 6" />
           </svg>
         </motion.button>
       )}
@@ -76,36 +83,31 @@ function BackToTop() {
 
 /* ── Landing Page ── */
 function LandingPage({ isDark, onToggleTheme }) {
+  const rootRef = useRef(null);
+  useScrollReveal(rootRef);
+  useLiquidGlass(rootRef);
   return (
-    <>
+    <div className="landing-page" ref={rootRef}>
+      <ScrollProgress />
       <Navbar isDark={isDark} onToggleTheme={onToggleTheme} />
-      <main>
+      <main id="main-content">
         <HeroSection />
-        <FeaturesSection />
-        <SellersSection />
-        <BuyersSection />
+        <SocialFeedSection />
+        <ProfilesSection />
+        <AIAssistantSection />
+        <AuctionsSection />
         <HowItWorksSection />
-        <AboutSection />
-        <PlansSection />
-        <DownloadSection />
-        <LocationsSection />
-        <ContactSection />
+        <LandingJoinSection />
       </main>
       <Footer />
       <BackToTop />
-    </>
+    </div>
   );
 }
 
 /* ── App Root ── */
 export default function App() {
-  const [isDark, setIsDark] = useState(false);
-
-  useEffect(() => {
-    const root = document.documentElement;
-    if (isDark) root.classList.remove('light');
-    else root.classList.add('light');
-  }, [isDark]);
+  const { isDark, toggleTheme } = useTheme();
 
   return (
     <BrowserRouter>
@@ -116,41 +118,61 @@ export default function App() {
           toastOptions={{
             duration: 4000,
             style: {
-              background: 'rgb(20 16 51)',
-              color: '#ffffff',
-              border: '1px solid rgba(42,255,204,0.2)',
+              background: 'rgb(var(--c-navy-light))',
+              color: 'rgb(var(--c-slate-body))',
+              border: '1px solid rgb(var(--c-cyan) / .2)',
               borderRadius: '12px',
               fontSize: '0.9rem',
             },
-            success: { iconTheme: { primary: '#2AFFCC', secondary: '#0D1118' } },
-            error:   { iconTheme: { primary: '#f87171', secondary: '#0D1118' } },
+            success: { iconTheme: { primary: '#1C75E8', secondary: '#ffffff' } },
+            error: { iconTheme: { primary: '#f87171', secondary: '#0D1118' } },
           }}
         />
 
         <Suspense fallback={<PageSpinner />}>
           <Routes>
             {/* Landing */}
-            <Route path="/" element={<LandingPage isDark={isDark} onToggleTheme={() => setIsDark(d => !d)} />} />
+            <Route path="/" element={<LandingPage isDark={isDark} onToggleTheme={toggleTheme} />} />
 
             {/* Auth */}
             <Route path="/signup" element={<SignUpPage />} />
-            <Route path="/login"  element={<LoginPage />} />
+            <Route path="/login" element={<LoginPage />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             <Route path="/update-password" element={<UpdatePasswordPage />} />
 
             {/* Protegidas */}
-            <Route path="/onboarding" element={
-              <ProtectedRoute requiredRole="buyer"><OnboardingPage /></ProtectedRoute>
-            } />
-            <Route path="/profile" element={
-              <ProtectedRoute><ProfilePage /></ProtectedRoute>
-            } />
-            <Route path="/admin" element={
-              <ProtectedRoute requiredRole="admin"><AdminPage /></ProtectedRoute>
-            } />
-            <Route path="/seller" element={
-              <ProtectedRoute requiredRole="seller"><SellerPage /></ProtectedRoute>
-            } />
+            <Route
+              path="/onboarding"
+              element={
+                <ProtectedRoute requiredRole="buyer">
+                  <OnboardingPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <ProfilePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute requiredRole="admin">
+                  <AdminPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/seller"
+              element={
+                <ProtectedRoute requiredRole="seller">
+                  <SellerPage />
+                </ProtectedRoute>
+              }
+            />
 
             {/* Fallback */}
             <Route path="*" element={<Navigate to="/" replace />} />

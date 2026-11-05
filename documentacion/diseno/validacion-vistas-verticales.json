@@ -1,0 +1,463 @@
+{
+  "date": "2026-11-05T22:53:56.312Z",
+  "checks": [
+    "Video nativo 540 × 960, pausa/reproducción, alternancia a foto y Me gusta comprobados.",
+    "Perfil de tienda, imágenes cargadas, navegación del catálogo y filtro de subastas comprobados.",
+    "Feed, tarjetas de catálogo y subasta conservan 9:16 en seis anchos entre 320 y 1920 px, sin desborde horizontal.",
+    "Navegación interna válida y CTA de subasta abre el registro."
+  ],
+  "layouts": [
+    {
+      "section": "features",
+      "width": 320,
+      "documentWidth": 320,
+      "ratios": [
+        {
+          "selector": ".social-feed-frame",
+          "width": 280,
+          "height": 498,
+          "ratio": 0.5622489959839357
+        },
+        {
+          "selector": ".profile-preview-product",
+          "width": 202,
+          "height": 359,
+          "ratio": 0.5626740947075209
+        },
+        {
+          "selector": ".auction-preview-panel",
+          "width": 280,
+          "height": 498,
+          "ratio": 0.5622489959839357
+        }
+      ]
+    },
+    {
+      "section": "profiles",
+      "width": 320,
+      "documentWidth": 320,
+      "ratios": [
+        {
+          "selector": ".social-feed-frame",
+          "width": 280,
+          "height": 498,
+          "ratio": 0.5622489959839357
+        },
+        {
+          "selector": ".profile-preview-product",
+          "width": 202,
+          "height": 359,
+          "ratio": 0.5626740947075209
+        },
+        {
+          "selector": ".auction-preview-panel",
+          "width": 280,
+          "height": 498,
+          "ratio": 0.5622489959839357
+        }
+      ]
+    },
+    {
+      "section": "auctions",
+      "width": 320,
+      "documentWidth": 320,
+      "ratios": [
+        {
+          "selector": ".social-feed-frame",
+          "width": 280,
+          "height": 498,
+          "ratio": 0.5622489959839357
+        },
+        {
+          "selector": ".profile-preview-product",
+          "width": 202,
+          "height": 359,
+          "ratio": 0.5626740947075209
+        },
+        {
+          "selector": ".auction-preview-panel",
+          "width": 280,
+          "height": 498,
+          "ratio": 0.5622489959839357
+        }
+      ]
+    },
+    {
+      "section": "features",
+      "width": 375,
+      "documentWidth": 375,
+      "ratios": [
+        {
+          "selector": ".social-feed-frame",
+          "width": 335,
+          "height": 596,
+          "ratio": 0.5620805369127517
+        },
+        {
+          "selector": ".profile-preview-product",
+          "width": 247,
+          "height": 439,
+          "ratio": 0.5626423690205011
+        },
+        {
+          "selector": ".auction-preview-panel",
+          "width": 335,
+          "height": 596,
+          "ratio": 0.5620805369127517
+        }
+      ]
+    },
+    {
+      "section": "profiles",
+      "width": 375,
+      "documentWidth": 375,
+      "ratios": [
+        {
+          "selector": ".social-feed-frame",
+          "width": 335,
+          "height": 596,
+          "ratio": 0.5620805369127517
+        },
+        {
+          "selector": ".profile-preview-product",
+          "width": 247,
+          "height": 439,
+          "ratio": 0.5626423690205011
+        },
+        {
+          "selector": ".auction-preview-panel",
+          "width": 335,
+          "height": 596,
+          "ratio": 0.5620805369127517
+        }
+      ]
+    },
+    {
+      "section": "auctions",
+      "width": 375,
+      "documentWidth": 375,
+      "ratios": [
+        {
+          "selector": ".social-feed-frame",
+          "width": 335,
+          "height": 596,
+          "ratio": 0.5620805369127517
+        },
+        {
+          "selector": ".profile-preview-product",
+          "width": 247,
+          "height": 439,
+          "ratio": 0.5626423690205011
+        },
+        {
+          "selector": ".auction-preview-panel",
+          "width": 335,
+          "height": 596,
+          "ratio": 0.5620805369127517
+        }
+      ]
+    },
+    {
+      "section": "features",
+      "width": 768,
+      "documentWidth": 768,
+      "ratios": [
+        {
+          "selector": ".social-feed-frame",
+          "width": 432,
+          "height": 768,
+          "ratio": 0.5625
+        },
+        {
+          "selector": ".profile-preview-product",
+          "width": 319,
+          "height": 567,
+          "ratio": 0.562610229276896
+        },
+        {
+          "selector": ".auction-preview-panel",
+          "width": 432,
+          "height": 768,
+          "ratio": 0.5625
+        }
+      ]
+    },
+    {
+      "section": "profiles",
+      "width": 768,
+      "documentWidth": 768,
+      "ratios": [
+        {
+          "selector": ".social-feed-frame",
+          "width": 432,
+          "height": 768,
+          "ratio": 0.5625
+        },
+        {
+          "selector": ".profile-preview-product",
+          "width": 319,
+          "height": 567,
+          "ratio": 0.562610229276896
+        },
+        {
+          "selector": ".auction-preview-panel",
+          "width": 432,
+          "height": 768,
+          "ratio": 0.5625
+        }
+      ]
+    },
+    {
+      "section": "auctions",
+      "width": 768,
+      "documentWidth": 768,
+      "ratios": [
+        {
+          "selector": ".social-feed-frame",
+          "width": 432,
+          "height": 768,
+          "ratio": 0.5625
+        },
+        {
+          "selector": ".profile-preview-product",
+          "width": 319,
+          "height": 567,
+          "ratio": 0.562610229276896
+        },
+        {
+          "selector": ".auction-preview-panel",
+          "width": 432,
+          "height": 768,
+          "ratio": 0.5625
+        }
+      ]
+    },
+    {
+      "section": "features",
+      "width": 1100,
+      "documentWidth": 1100,
+      "ratios": [
+        {
+          "selector": ".social-feed-frame",
+          "width": 432,
+          "height": 768,
+          "ratio": 0.5625
+        },
+        {
+          "selector": ".profile-preview-product",
+          "width": 283,
+          "height": 503,
+          "ratio": 0.562624254473161
+        },
+        {
+          "selector": ".auction-preview-panel",
+          "width": 432,
+          "height": 768,
+          "ratio": 0.5625
+        }
+      ]
+    },
+    {
+      "section": "profiles",
+      "width": 1100,
+      "documentWidth": 1100,
+      "ratios": [
+        {
+          "selector": ".social-feed-frame",
+          "width": 432,
+          "height": 768,
+          "ratio": 0.5625
+        },
+        {
+          "selector": ".profile-preview-product",
+          "width": 283,
+          "height": 503,
+          "ratio": 0.562624254473161
+        },
+        {
+          "selector": ".auction-preview-panel",
+          "width": 432,
+          "height": 768,
+          "ratio": 0.5625
+        }
+      ]
+    },
+    {
+      "section": "auctions",
+      "width": 1100,
+      "documentWidth": 1100,
+      "ratios": [
+        {
+          "selector": ".social-feed-frame",
+          "width": 432,
+          "height": 768,
+          "ratio": 0.5625
+        },
+        {
+          "selector": ".profile-preview-product",
+          "width": 283,
+          "height": 503,
+          "ratio": 0.562624254473161
+        },
+        {
+          "selector": ".auction-preview-panel",
+          "width": 432,
+          "height": 768,
+          "ratio": 0.5625
+        }
+      ]
+    },
+    {
+      "section": "features",
+      "width": 1440,
+      "documentWidth": 1440,
+      "ratios": [
+        {
+          "selector": ".social-feed-frame",
+          "width": 432,
+          "height": 768,
+          "ratio": 0.5625
+        },
+        {
+          "selector": ".profile-preview-product",
+          "width": 329,
+          "height": 585,
+          "ratio": 0.5623931623931624
+        },
+        {
+          "selector": ".auction-preview-panel",
+          "width": 432,
+          "height": 768,
+          "ratio": 0.5625
+        }
+      ]
+    },
+    {
+      "section": "profiles",
+      "width": 1440,
+      "documentWidth": 1440,
+      "ratios": [
+        {
+          "selector": ".social-feed-frame",
+          "width": 432,
+          "height": 768,
+          "ratio": 0.5625
+        },
+        {
+          "selector": ".profile-preview-product",
+          "width": 329,
+          "height": 585,
+          "ratio": 0.5623931623931624
+        },
+        {
+          "selector": ".auction-preview-panel",
+          "width": 432,
+          "height": 768,
+          "ratio": 0.5625
+        }
+      ]
+    },
+    {
+      "section": "auctions",
+      "width": 1440,
+      "documentWidth": 1440,
+      "ratios": [
+        {
+          "selector": ".social-feed-frame",
+          "width": 432,
+          "height": 768,
+          "ratio": 0.5625
+        },
+        {
+          "selector": ".profile-preview-product",
+          "width": 329,
+          "height": 585,
+          "ratio": 0.5623931623931624
+        },
+        {
+          "selector": ".auction-preview-panel",
+          "width": 432,
+          "height": 768,
+          "ratio": 0.5625
+        }
+      ]
+    },
+    {
+      "section": "features",
+      "width": 1920,
+      "documentWidth": 1920,
+      "ratios": [
+        {
+          "selector": ".social-feed-frame",
+          "width": 432,
+          "height": 768,
+          "ratio": 0.5625
+        },
+        {
+          "selector": ".profile-preview-product",
+          "width": 329,
+          "height": 585,
+          "ratio": 0.5623931623931624
+        },
+        {
+          "selector": ".auction-preview-panel",
+          "width": 432,
+          "height": 768,
+          "ratio": 0.5625
+        }
+      ]
+    },
+    {
+      "section": "profiles",
+      "width": 1920,
+      "documentWidth": 1920,
+      "ratios": [
+        {
+          "selector": ".social-feed-frame",
+          "width": 432,
+          "height": 768,
+          "ratio": 0.5625
+        },
+        {
+          "selector": ".profile-preview-product",
+          "width": 329,
+          "height": 585,
+          "ratio": 0.5623931623931624
+        },
+        {
+          "selector": ".auction-preview-panel",
+          "width": 432,
+          "height": 768,
+          "ratio": 0.5625
+        }
+      ]
+    },
+    {
+      "section": "auctions",
+      "width": 1920,
+      "documentWidth": 1920,
+      "ratios": [
+        {
+          "selector": ".social-feed-frame",
+          "width": 432,
+          "height": 768,
+          "ratio": 0.5625
+        },
+        {
+          "selector": ".profile-preview-product",
+          "width": 329,
+          "height": 585,
+          "ratio": 0.5623931623931624
+        },
+        {
+          "selector": ".auction-preview-panel",
+          "width": 432,
+          "height": 768,
+          "ratio": 0.5625
+        }
+      ]
+    }
+  ],
+  "runtimeErrors": [],
+  "failedMedia": []
+}

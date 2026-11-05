@@ -1,0 +1,97 @@
+{
+  "date": "2026-11-05T22:58:14.605Z",
+  "checks": [
+    {
+      "width": 320,
+      "documentWidth": 320,
+      "phone": {
+        "width": 280,
+        "height": 498
+      },
+      "card": {
+        "width": 141,
+        "height": 250
+      },
+      "previewOnLeft": false,
+      "phoneLeft": 20,
+      "phoneRight": 300
+    },
+    {
+      "width": 375,
+      "documentWidth": 375,
+      "phone": {
+        "width": 335,
+        "height": 596
+      },
+      "card": {
+        "width": 141,
+        "height": 250
+      },
+      "previewOnLeft": false,
+      "phoneLeft": 20,
+      "phoneRight": 355
+    },
+    {
+      "width": 768,
+      "documentWidth": 768,
+      "phone": {
+        "width": 456,
+        "height": 811
+      },
+      "card": {
+        "width": 245,
+        "height": 436
+      },
+      "previewOnLeft": false,
+      "phoneLeft": 156,
+      "phoneRight": 612
+    },
+    {
+      "width": 1100,
+      "documentWidth": 1100,
+      "phone": {
+        "width": 456,
+        "height": 811
+      },
+      "card": {
+        "width": 245,
+        "height": 436
+      },
+      "previewOnLeft": true,
+      "phoneLeft": 44,
+      "phoneRight": 500
+    },
+    {
+      "width": 1440,
+      "documentWidth": 1440,
+      "phone": {
+        "width": 456,
+        "height": 811
+      },
+      "card": {
+        "width": 245,
+        "height": 436
+      },
+      "previewOnLeft": true,
+      "phoneLeft": 178,
+      "phoneRight": 634
+    },
+    {
+      "width": 1920,
+      "documentWidth": 1920,
+      "phone": {
+        "width": 456,
+        "height": 811
+      },
+      "card": {
+        "width": 245,
+        "height": 436
+      },
+      "previewOnLeft": true,
+      "phoneLeft": 418,
+      "phoneRight": 874
+    }
+  ],
+  "interactions": "Cuenta de tienda, galería y filtro de subastas correctos.",
+  "runtimeErrors": []
+}

@@ -19,17 +19,21 @@ const credentialsSchema = z.object({
 const TIMER_SECONDS = 60;
 
 export function LoginForm() {
-  const [step, setStep]       = useState('credentials'); // 'credentials' | 'otp'
+  const [step, setStep] = useState('credentials'); // 'credentials' | 'otp'
   const [otpEmail, setOtpEmail] = useState('');
   const [otpValue, setOtpValue] = useState('');
-  const [timer, setTimer]     = useState(TIMER_SECONDS);
+  const [timer, setTimer] = useState(TIMER_SECONDS);
   const [canResend, setCanResend] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const { signIn, verifyOtp, profile } = useAuth();
   const navigate = useNavigate();
 
-  const { register, handleSubmit, formState: { errors } } = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     resolver: zodResolver(credentialsSchema),
   });
 
@@ -39,8 +43,12 @@ export function LoginForm() {
     setTimer(TIMER_SECONDS);
     setCanResend(false);
     const interval = setInterval(() => {
-      setTimer(t => {
-        if (t <= 1) { clearInterval(interval); setCanResend(true); return 0; }
+      setTimer((t) => {
+        if (t <= 1) {
+          clearInterval(interval);
+          setCanResend(true);
+          return 0;
+        }
         return t - 1;
       });
     }, 1000);
@@ -53,14 +61,14 @@ export function LoginForm() {
     try {
       const authData = await signIn(data.email, data.password);
       toast.success('¡Sesión iniciada!');
-      
+
       // Obtenemos el perfil directamente para saber a dónde redirigir sin esperar al context
       const { data: profileData } = await supabase
         .from('profiles')
         .select('role')
         .eq('id', authData.user.id)
         .single();
-        
+
       if (profileData?.role === 'admin') {
         navigate('/admin');
       } else if (profileData?.role === 'seller') {
@@ -68,7 +76,6 @@ export function LoginForm() {
       } else {
         navigate('/profile');
       }
-      
     } catch (err) {
       console.error(err);
       if (err.message?.includes('Email not confirmed')) {
@@ -123,7 +130,6 @@ export function LoginForm() {
 
   return (
     <AnimatePresence mode="wait">
-
       {/* ── Paso 1: Credenciales ── */}
       {step === 'credentials' && (
         <motion.form
@@ -135,11 +141,28 @@ export function LoginForm() {
           onSubmit={handleSubmit(onCredentials)}
           className="flex flex-col gap-4"
         >
-          <FormField label="Correo Electrónico" name="email" type="email" placeholder="correo@ejemplo.com" register={register} error={errors.email} />
-          <FormField label="Contraseña" name="password" type="password" placeholder="Tu contraseña" register={register} error={errors.password} />
+          <FormField
+            label="Correo Electrónico"
+            name="email"
+            type="email"
+            placeholder="correo@ejemplo.com"
+            register={register}
+            error={errors.email}
+          />
+          <FormField
+            label="Contraseña"
+            name="password"
+            type="password"
+            placeholder="Tu contraseña"
+            register={register}
+            error={errors.password}
+          />
 
           <div className="flex justify-end">
-            <Link to="/forgot-password" className="text-xs text-cyan hover:opacity-75 transition-opacity">
+            <Link
+              to="/forgot-password"
+              className="text-xs text-cyan hover:opacity-75 transition-opacity"
+            >
               ¿Olvidaste tu contraseña?
             </Link>
           </div>
@@ -154,7 +177,9 @@ export function LoginForm() {
               flex items-center justify-center gap-2
             "
           >
-            {loading && <span className="w-4 h-4 border-2 border-navy border-t-transparent rounded-full animate-spin" />}
+            {loading && (
+              <span className="w-4 h-4 border-2 border-navy border-t-transparent rounded-full animate-spin" />
+            )}
             {loading ? 'Verificando...' : 'Continuar'}
           </button>
         </motion.form>
@@ -172,10 +197,18 @@ export function LoginForm() {
         >
           {/* Header */}
           <div className="text-center">
-            <div className="w-14 h-14 bg-cyan/10 border border-cyan/25 rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-cyan">
-                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                <polyline points="22,6 12,13 2,6"/>
+            <div className="bare-icon w-14 h-14 text-cyan flex items-center justify-center mx-auto mb-4">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                className="text-cyan"
+              >
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                <polyline points="22,6 12,13 2,6" />
               </svg>
             </div>
             <p className="text-sm text-slate-sub">
@@ -189,10 +222,11 @@ export function LoginForm() {
 
           {/* Timer */}
           <p className="text-xs text-slate-muted">
-            {canResend
-              ? null
-              : <>El código expira en <span className="text-cyan font-bold">{timer}s</span></>
-            }
+            {canResend ? null : (
+              <>
+                El código expira en <span className="text-cyan font-bold">{timer}s</span>
+              </>
+            )}
           </p>
 
           {/* Verificar */}
@@ -206,25 +240,34 @@ export function LoginForm() {
               flex items-center justify-center gap-2
             "
           >
-            {loading && <span className="w-4 h-4 border-2 border-navy border-t-transparent rounded-full animate-spin" />}
+            {loading && (
+              <span className="w-4 h-4 border-2 border-navy border-t-transparent rounded-full animate-spin" />
+            )}
             {loading ? 'Verificando...' : 'Verificar Código'}
           </button>
 
           {/* Reenviar / Volver */}
           <div className="flex gap-2 text-sm">
             {canResend && (
-              <button onClick={resendCode} className="text-cyan hover:opacity-75 font-medium transition-opacity py-2 px-3 rounded-lg">
+              <button
+                onClick={resendCode}
+                className="text-cyan hover:opacity-75 font-medium transition-opacity py-2 px-3 rounded-lg"
+              >
                 Reenviar código
               </button>
             )}
-            <button onClick={() => { setStep('credentials'); setOtpValue(''); }} className="text-slate-muted hover:text-slate-sub transition-colors py-2 px-3 rounded-lg">
+            <button
+              onClick={() => {
+                setStep('credentials');
+                setOtpValue('');
+              }}
+              className="text-slate-muted hover:text-slate-sub transition-colors py-2 px-3 rounded-lg"
+            >
               ← Volver
             </button>
           </div>
-
         </motion.div>
       )}
-
     </AnimatePresence>
   );
 }

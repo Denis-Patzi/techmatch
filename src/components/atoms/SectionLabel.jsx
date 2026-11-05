@@ -7,7 +7,7 @@ export function SectionLabel({ children, className = '' }) {
   return (
     <p
       className={`
-        text-sm font-bold tracking-widest uppercase text-cyan mb-3 block
+        eyebrow mb-5
         ${className}
       `}
     >

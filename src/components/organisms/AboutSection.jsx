@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { SectionLabel } from '@/components/atoms/SectionLabel';
 
 const PILLARS = [
-  { color: 'bg-brand-blue',   title: 'Disponible en todo Bolivia',  desc: 'Con sucursales en La Paz, Cochabamba y Santa Cruz' },
+  { color: 'bg-brand-blue',   title: 'Desde La Paz, para Bolivia',  desc: 'Oficina de referencia en La Paz. Cochabamba y Santa Cruz, próximamente' },
   { color: 'bg-brand-purple', title: '100% web y mobile',           desc: 'Funciona en cualquier celular sin necesidad de instalar nada' },
   { color: 'bg-brand-green',  title: 'Publicar es gratis',          desc: 'La cuenta básica no tiene costo. Publicar tu primer producto tampoco' },
 ];

@@ -1,0 +1,44 @@
+{
+  "date": "2026-11-05T22:44:50.425Z",
+  "checks": [
+    "Sin carga de archivos; no avanza fuera de pantalla al iniciar.",
+    "Pausar detiene el tiempo, el giro y el barrido.",
+    "Revelado por etapas: producto/características → descripción → precio; resultado permanece visible.",
+    "Repetir reinicia el análisis; salir de la sección detiene la animación.",
+    "Movimiento reducido muestra la ficha terminada sin giro ni barrido.",
+    "Animación y controles móviles comprobados a 320 px; CTA abre /signup."
+  ],
+  "layouts": [
+    {
+      "width": 320,
+      "documentWidth": 320,
+      "overflow": []
+    },
+    {
+      "width": 375,
+      "documentWidth": 375,
+      "overflow": []
+    },
+    {
+      "width": 768,
+      "documentWidth": 768,
+      "overflow": []
+    },
+    {
+      "width": 1100,
+      "documentWidth": 1100,
+      "overflow": []
+    },
+    {
+      "width": 1440,
+      "documentWidth": 1440,
+      "overflow": []
+    },
+    {
+      "width": 1920,
+      "documentWidth": 1920,
+      "overflow": []
+    }
+  ],
+  "runtimeErrors": []
+}

@@ -1,0 +1,15 @@
+{
+  "tool": "image_gen.imagegen (integrada)",
+  "mode": "generate",
+  "images": [
+    {
+      "path": "public/images/tech-workspace.webp",
+      "prompt": "Use case: product-mockup. Asset type: wide premium website background for TechMatch, a technology marketplace. Create a cinematic photorealistic 3D product still life in a dark midnight-blue studio: a minimal unbranded aluminum laptop half open, a graphics card and a few precisely machined computer components floating in a believable exploded arrangement above a reflective dark-blue surface. Product arrangement concentrated on the right third and outer edges, leaving the left half and center spacious and softly blurred for website text overlays. Color palette strictly deep navy #091427, electric blue #1C75E8, steel silver and restrained ice blue rim lighting. Sophisticated studio lighting, fine material detail, realistic depth of field, soft atmospheric reflections, no busy particles. Wide landscape composition, approximately 16:9, high-resolution web background. No people, no hands, no writing, no labels, no logos, no interface, no watermark, no green or purple RGB gaming lighting."
+    },
+    {
+      "path": "public/images/tech-circuits.webp",
+      "prompt": "Use case: stylized-concept. Asset type: wide premium background texture for a blue technology marketplace website. A photorealistic macro 3D landscape of an elegant computer motherboard and a large brushed-silver processor sitting on a precision socket, photographed from a low oblique angle so the circuit traces recede into deep perspective. The detailed processor is in the right third; the left and central area stays softly focused and dark with plenty of negative space for text and glass cards. Deep midnight navy #091427, blue #1C75E8 and fine ice-blue light traveling along a small number of circuit pathways. Subtle neon, premium industrial product photography, restrained glow, realistic metallic materials and depth of field. Wide landscape approximately 16:9. No text, numbers, brand names, logos, interface, watermark, people, or colorful RGB lighting."
+    }
+  ],
+  "note": "Generados como PNG y exportados a WebP de 1600 px para uso web; originales conservados en generated_images. Fondos decorativos de la portada."
+}

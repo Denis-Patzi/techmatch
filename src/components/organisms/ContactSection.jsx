@@ -8,21 +8,35 @@ const CONTACT_ITEMS = [
   {
     label: 'Correo',
     value: 'hola@techmatch.bo',
-    href:  'mailto:hola@techmatch.bo',
+    href: 'mailto:hola@techmatch.bo',
     icon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-        <polyline points="22,6 12,13 2,6"/>
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+      >
+        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+        <polyline points="22,6 12,13 2,6" />
       </svg>
     ),
   },
   {
     label: 'WhatsApp',
     value: '+591 7123-4567',
-    href:  'https://wa.me/59171234567',
+    href: 'https://wa.me/59171234567',
     icon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+      >
+        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
       </svg>
     ),
   },
@@ -30,8 +44,16 @@ const CONTACT_ITEMS = [
     label: 'Horario',
     value: 'Lunes a Viernes, 8:00 — 18:00',
     icon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/>
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+      >
+        <circle cx="12" cy="12" r="10" />
+        <polyline points="12,6 12,12 16,14" />
       </svg>
     ),
   },
@@ -56,10 +78,10 @@ const FORM_STATUS = { IDLE: 'idle', SENDING: 'sending', SUCCESS: 'success' };
  */
 export function ContactSection() {
   const [formData, setFormData] = useState({ name: '', email: '', topic: '', message: '' });
-  const [status, setStatus]     = useState(FORM_STATUS.IDLE);
+  const [status, setStatus] = useState(FORM_STATUS.IDLE);
 
   const handleChange = (e) => {
-    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleSubmit = (e) => {
@@ -84,7 +106,6 @@ export function ContactSection() {
     <section id="contact" className="min-h-screen flex flex-col justify-center py-16 bg-navy">
       <div className="max-w-[1080px] mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
-
           {/* ── Left ── */}
           <div>
             <SectionLabel>Contacto</SectionLabel>
@@ -92,7 +113,8 @@ export function ContactSection() {
               Hablemos
             </h2>
             <p className="text-base text-slate-sub leading-relaxed mb-10">
-              ¿Tenés una consulta, querés ser parte del equipo o simplemente querés saber más? Escribinos.
+              ¿Tenés una consulta, querés ser parte del equipo o simplemente querés saber más?
+              Escribinos.
             </p>
             <div className="flex flex-col gap-6">
               {CONTACT_ITEMS.map((item, i) => (
@@ -115,16 +137,20 @@ export function ContactSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-            className="bg-navy-light border border-cyan/10 rounded-2xl p-5 md:p-8"
-
+            className="glass-panel contact-card"
           >
             <form onSubmit={handleSubmit} noValidate>
               {/* Name + Email */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-
                 <div>
-                  <label className="text-sm text-slate-muted font-semibold block mb-1.5">Nombre completo</label>
+                  <label
+                    htmlFor="contact-name"
+                    className="text-sm text-slate-muted font-semibold block mb-1.5"
+                  >
+                    Nombre completo
+                  </label>
                   <input
+                    id="contact-name"
                     type="text"
                     name="name"
                     value={formData.name}
@@ -135,8 +161,14 @@ export function ContactSection() {
                   />
                 </div>
                 <div>
-                  <label className="text-sm text-slate-muted font-semibold block mb-1.5">Correo electrónico</label>
+                  <label
+                    htmlFor="contact-email"
+                    className="text-sm text-slate-muted font-semibold block mb-1.5"
+                  >
+                    Correo electrónico
+                  </label>
                   <input
+                    id="contact-email"
                     type="email"
                     name="email"
                     value={formData.email}
@@ -150,22 +182,38 @@ export function ContactSection() {
 
               {/* Topic */}
               <div className="mb-4">
-                <label className="text-sm text-slate-muted font-semibold block mb-1.5">Asunto</label>
+                <label
+                  htmlFor="contact-topic"
+                  className="text-sm text-slate-muted font-semibold block mb-1.5"
+                >
+                  Asunto
+                </label>
                 <select
+                  id="contact-topic"
                   name="topic"
                   value={formData.topic}
                   onChange={handleChange}
                   className={`${inputClass} appearance-none`}
                 >
                   <option value="">Seleccioná un asunto</option>
-                  {TOPICS.map(t => <option key={t} value={t}>{t}</option>)}
+                  {TOPICS.map((t) => (
+                    <option key={t} value={t}>
+                      {t}
+                    </option>
+                  ))}
                 </select>
               </div>
 
               {/* Message */}
               <div className="mb-6">
-                <label className="text-sm text-slate-muted font-semibold block mb-1.5">Mensaje</label>
+                <label
+                  htmlFor="contact-message"
+                  className="text-sm text-slate-muted font-semibold block mb-1.5"
+                >
+                  Mensaje
+                </label>
                 <textarea
+                  id="contact-message"
                   name="message"
                   value={formData.message}
                   onChange={handleChange}
@@ -183,7 +231,7 @@ export function ContactSection() {
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0 }}
-                    className="flex items-center gap-3 bg-brand-green/10 border border-brand-green/25 rounded-xl p-4 text-sm text-brand-green font-semibold"
+                    className="flex items-center gap-3 bg-cyan/10 border border-cyan/25 rounded-xl p-4 text-sm text-cyan font-semibold"
                   >
                     <span className="text-lg">✓</span>
                     Mensaje enviado. Te respondemos en menos de 24 horas.
@@ -199,19 +247,28 @@ export function ContactSection() {
                     >
                       {status === FORM_STATUS.SENDING ? (
                         <span className="flex items-center gap-2">
-                          <svg className="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                          <svg
+                            className="animate-spin"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                          >
+                            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
                           </svg>
                           Enviando...
                         </span>
-                      ) : 'Enviar mensaje'}
+                      ) : (
+                        'Enviar mensaje'
+                      )}
                     </Button>
                   </motion.div>
                 )}
               </AnimatePresence>
             </form>
           </motion.div>
-
         </div>
       </div>
     </section>

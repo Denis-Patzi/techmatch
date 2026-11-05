@@ -1,0 +1,75 @@
+{
+  "checks": [
+    {
+      "section": "features",
+      "width": 320,
+      "documentWidth": 321,
+      "previewOnLeft": false,
+      "stacked": true
+    },
+    {
+      "section": "profiles",
+      "width": 320,
+      "documentWidth": 320,
+      "previewOnLeft": false,
+      "stacked": true
+    },
+    {
+      "section": "features",
+      "width": 375,
+      "documentWidth": 375,
+      "previewOnLeft": false,
+      "stacked": true
+    },
+    {
+      "section": "profiles",
+      "width": 375,
+      "documentWidth": 375,
+      "previewOnLeft": false,
+      "stacked": true
+    },
+    {
+      "section": "features",
+      "width": 768,
+      "documentWidth": 768,
+      "previewOnLeft": false,
+      "stacked": true
+    },
+    {
+      "section": "profiles",
+      "width": 768,
+      "documentWidth": 768,
+      "previewOnLeft": false,
+      "stacked": true
+    },
+    {
+      "section": "features",
+      "width": 1100,
+      "documentWidth": 1100,
+      "previewOnLeft": true,
+      "stacked": false
+    },
+    {
+      "section": "profiles",
+      "width": 1100,
+      "documentWidth": 1100,
+      "previewOnLeft": true,
+      "stacked": false
+    },
+    {
+      "section": "features",
+      "width": 1440,
+      "documentWidth": 1440,
+      "previewOnLeft": true,
+      "stacked": false
+    },
+    {
+      "section": "profiles",
+      "width": 1440,
+      "documentWidth": 1440,
+      "previewOnLeft": true,
+      "stacked": false
+    }
+  ],
+  "runtimeErrors": []
+}

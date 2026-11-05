@@ -1,63 +1,59 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { SectionLabel } from '@/components/atoms/SectionLabel';
 import { PlanCard } from '@/components/molecules/PlanCard';
 import { plans } from '@/data/plansData';
+import { ScrollBackdrop } from '@/components/molecules/ScrollBackdrop';
+import { ScrollScene } from '@/components/molecules/ScrollScene';
 
-/**
- * PlansSection — Organismo
- * 3 planes con toggle mensual/anual.
- * `isAnnual` se pasa como prop a cada PlanCard para animar el precio.
- */
 export function PlansSection() {
   const [isAnnual, setIsAnnual] = useState(false);
-
   return (
-    <section id="plans" className="min-h-screen flex flex-col justify-center py-16 bg-navy">
-      <div className="max-w-[1080px] mx-auto px-6">
-        <SectionLabel>Planes</SectionLabel>
-        <h2 className="font-display text-[clamp(1.9rem,4vw,2.7rem)] font-extrabold text-slate-body tracking-tight mb-3">
-          Empezá gratis, crecé cuando quieras
-        </h2>
-        <p className="text-[1.03rem] text-slate-sub max-w-[540px] mb-14 leading-relaxed">
-          Elegí el plan que se adapta a cómo querés vender. Todos incluyen IA de reconocimiento de productos.
-        </p>
-
-        {/* Plans grid — responsive con Tailwind (columna única en mobile, 3 columnas en md+) */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-
-          {plans.map((plan, i) => (
-            <PlanCard key={plan.id} plan={plan} isAnnual={isAnnual} index={i} />
-          ))}
-        </div>
-
-        {/* Billing toggle */}
-        <div className="flex justify-center">
-          <motion.button
-            onClick={() => setIsAnnual(a => !a)}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="flex items-center gap-2 text-sm font-semibold text-slate-sub hover:text-slate-body
-                       border border-cyan/15 hover:border-cyan/35 rounded-full px-5 py-2.5
-                       bg-navy-light transition-colors duration-200"
+    <section id="plans" className="scene-section">
+      <ScrollBackdrop image="/images/tech-workspace.webp" variant="plans" />
+      <div className="page-container">
+        <div className="section-heading">
+          <div>
+            <span className="eyebrow mb-5">Un plan para cada etapa</span>
+            <h2 className="section-title">
+              Empezá gratis.
+              <br />
+              Crecé a tu ritmo.
+            </h2>
+            <p className="section-copy">
+              De tu primera publicación al próximo paso de tu tienda. Elegí el espacio que
+              necesitás.
+            </p>
+          </div>
+          <div
+            className="billing-toggle glass-panel"
+            role="group"
+            aria-label="Período de facturación"
           >
-            <motion.span
-              key={isAnnual ? 'annual' : 'monthly'}
-              initial={{ opacity: 0, y: 4 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.2 }}
+            <button
+              onClick={() => setIsAnnual(false)}
+              aria-pressed={!isAnnual}
+              className={!isAnnual ? 'is-active' : ''}
             >
-              {isAnnual ? 'Ver precios mensuales' : 'Ver precios anuales — Ahorrá un 20%'}
-            </motion.span>
-            <motion.svg
-              animate={{ rotate: isAnnual ? 180 : 0 }}
-              transition={{ duration: 0.25 }}
-              width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+              Mensual
+            </button>
+            <button
+              onClick={() => setIsAnnual(true)}
+              aria-pressed={isAnnual}
+              className={isAnnual ? 'is-active' : ''}
             >
-              <path d="M6 9l6 6 6-6"/>
-            </motion.svg>
-          </motion.button>
+              Anual <span>−20%</span>
+            </button>
+          </div>
         </div>
+        <ScrollScene surfaceClassName="grid grid-cols-1 md:grid-cols-3 gap-5 pt-4" variant="plans">
+          {plans.map((plan, index) => (
+            <PlanCard key={plan.id} plan={plan} isAnnual={isAnnual} index={index} />
+          ))}
+        </ScrollScene>
+        <p className="text-xs text-slate-muted mt-6 text-center">
+          {isAnnual
+            ? 'Precio equivalente por mes con facturación anual.'
+            : 'Precios expresados en bolivianos por mes.'}
+        </p>
       </div>
     </section>
   );

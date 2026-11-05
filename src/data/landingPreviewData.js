@@ -1,0 +1,65 @@
+// Illustrative landing-page content, separate from marketplace data.
+export const previewProducts = [
+  {
+    id: 'gpu',
+    category: 'computacion',
+    name: 'Tarjeta gráfica',
+    icon: 'cpu',
+    image: '/videos/hardware-portrait-poster.webp',
+    price: 'Bs. 2.900',
+    format: 'Video',
+    sale: 'Venta',
+  },
+  {
+    id: 'laptop',
+    category: 'computacion',
+    name: 'Laptop para tu día a día',
+    icon: 'laptop',
+    image: '/images/product-laptop.webp',
+    price: 'Bs. 4.200',
+    format: 'Fotos',
+    sale: 'Venta',
+  },
+  {
+    id: 'audio',
+    category: 'audio',
+    name: 'Auriculares inalámbricos',
+    icon: 'headphones',
+    image: '/images/product-headphones.webp',
+    price: 'Desde Bs. 350',
+    format: 'Fotos',
+    sale: 'Subasta',
+  },
+  {
+    id: 'phone',
+    category: 'celulares',
+    name: 'Celular de segunda mano',
+    icon: 'phone',
+    image: '/images/product-phone.webp',
+    price: 'Bs. 1.800',
+    format: 'Video',
+    sale: 'Venta',
+  },
+];
+
+export const previewAccounts = {
+  personal: {
+    name: 'Valeria',
+    handle: '@valeria.tech',
+    initials: 'VT',
+    type: 'Cuenta personal',
+    bio: 'Tecnología que busca una nueva historia.',
+    rating: 4.9,
+    sales: 24,
+    wishlistIds: ['laptop', 'audio'],
+  },
+  tienda: {
+    name: 'NovaTech',
+    handle: '@novatech',
+    initials: 'NT',
+    type: 'Cuenta de tienda',
+    bio: 'Nuestro catálogo, en un solo lugar.',
+    rating: 4.8,
+    sales: 186,
+  },
+};

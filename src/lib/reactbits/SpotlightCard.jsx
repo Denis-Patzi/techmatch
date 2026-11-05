@@ -11,7 +11,11 @@ import { useRef } from 'react';
  * @param {string}      spotColor   - Color del spotlight (default cian)
  * @param {ReactNode}   children    - Contenido interno
  */
-export function SpotlightCard({ children, className = '', spotColor = 'rgba(100,255,218,0.07)' }) {
+export function SpotlightCard({
+  children,
+  className = '',
+  spotColor = 'rgb(var(--c-brand-blue) / .12)',
+}) {
   const cardRef = useRef(null);
 
   const handleMouseMove = (e) => {

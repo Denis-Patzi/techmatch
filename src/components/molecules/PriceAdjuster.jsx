@@ -33,6 +33,7 @@ export function PriceAdjuster({ price, priceMin, priceMax, range, onChange }) {
       <div className="flex items-center gap-3 mb-3">
         <button
           onClick={handleDown}
+          aria-label="Reducir precio sugerido"
           className="w-9 h-9 rounded-full border border-cyan/20 flex items-center justify-center
                      text-slate-sub hover:border-cyan/50 hover:text-cyan transition-colors duration-150"
           type="button"
@@ -62,6 +63,7 @@ export function PriceAdjuster({ price, priceMin, priceMax, range, onChange }) {
 
         <button
           onClick={handleUp}
+          aria-label="Aumentar precio sugerido"
           className="w-9 h-9 rounded-full border border-cyan/20 flex items-center justify-center
                      text-slate-sub hover:border-cyan/50 hover:text-cyan transition-colors duration-150"
           type="button"

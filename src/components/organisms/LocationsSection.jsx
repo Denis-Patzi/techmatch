@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { motion, useAnimationControls } from 'framer-motion';
+import { motion, useAnimationControls, useReducedMotion } from 'framer-motion';
 import { SectionLabel } from '@/components/atoms/SectionLabel';
 
 /* ══════════════════════════════════════════════════════
@@ -9,12 +9,20 @@ import { SectionLabel } from '@/components/atoms/SectionLabel';
 const LOCATIONS = [
   {
     city: 'La Paz',
-    type: 'Oficina Central',
-    address: 'Av. 16 de Julio #1456, Edif. TechMatch, Piso 3',
-    zone: 'El Prado',
-    gradient: 'from-blue-600 via-indigo-500 to-purple-600',
+    type: 'Oficina de referencia',
+    address: 'Escuela Militar de Ingeniería (EMI)',
+    zone: 'Av. Rafael Pabón',
     icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg
+        width="28"
+        height="28"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
         <path d="M3 21h18" />
         <path d="M5 21V7l8-4v18" />
         <path d="M19 21V11l-6-4" />
@@ -24,12 +32,18 @@ const LOCATIONS = [
   },
   {
     city: 'Santa Cruz',
-    type: 'Punto de Entrega',
-    address: 'Av. Monseñor Rivero #340',
-    zone: 'Zona Equipetrol',
-    gradient: 'from-emerald-500 via-teal-500 to-cyan-500',
+    type: 'Próximamente',
     icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg
+        width="28"
+        height="28"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
         <path d="M3 21h18" />
         <path d="M9 21V9h6v12" />
         <path d="M5 21V5a2 2 0 012-2h10a2 2 0 012 2v16" />
@@ -39,12 +53,18 @@ const LOCATIONS = [
   },
   {
     city: 'Cochabamba',
-    type: 'Punto de Entrega',
-    address: 'Calle Nataniel Aguirre #425',
-    zone: 'Zona Central',
-    gradient: 'from-orange-500 via-amber-500 to-yellow-500',
+    type: 'Próximamente',
     icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg
+        width="28"
+        height="28"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
         <path d="M3 21h18" />
         <path d="M12 3l8 6v12H4V9z" />
         <path d="M9 21v-6h6v6" />
@@ -65,17 +85,14 @@ function LocationCard({ location }) {
     <div
       className="
         flex items-center gap-4 px-5 py-4
-        bg-white/95 dark:bg-white rounded-full
-        shadow-[0_4px_24px_rgba(0,0,0,0.12)]
+        glass-panel location-card !rounded-full
         min-w-[280px] flex-shrink-0 select-none
       "
     >
       {/* Circular city thumbnail */}
       <div
         className={`
-          w-14 h-14 rounded-full flex-shrink-0 flex items-center justify-center
-          bg-gradient-to-br ${location.gradient}
-          shadow-lg
+          bare-icon w-12 h-12 flex-shrink-0 flex items-center justify-center text-cyan
         `}
       >
         {location.icon}
@@ -83,12 +100,8 @@ function LocationCard({ location }) {
 
       {/* Text */}
       <div>
-        <div className="text-base font-bold text-gray-900 leading-tight">
-          {location.city}
-        </div>
-        <div className="text-sm text-gray-500 leading-snug">
-          {location.type}
-        </div>
+        <div className="text-base font-medium text-slate-body leading-tight">{location.city}</div>
+        <div className="text-sm text-slate-sub leading-snug">{location.type}</div>
       </div>
     </div>
   );
@@ -102,10 +115,15 @@ function InfiniteMarquee() {
   const trackRef = useRef(null);
   const controls = useAnimationControls();
   const animRef = useRef(null);
+  const reducedMotion = useReducedMotion();
 
   useEffect(() => {
     const track = trackRef.current;
     if (!track) return;
+    if (reducedMotion) {
+      controls.set({ x: 0 });
+      return;
+    }
 
     /* Medimos el ancho de un set de 3 tarjetas (1/3 del track) */
     const oneSetWidth = track.scrollWidth / 3;
@@ -128,11 +146,12 @@ function InfiniteMarquee() {
     startAnimation();
 
     return () => {
+      controls.stop();
       if (animRef.current && animRef.current.stop) {
         animRef.current.stop();
       }
     };
-  }, [controls]);
+  }, [controls, reducedMotion]);
 
   return (
     <div className="overflow-hidden w-full">
@@ -142,6 +161,7 @@ function InfiniteMarquee() {
         className="flex gap-6"
         onHoverStart={() => controls.stop()}
         onHoverEnd={() => {
+          if (reducedMotion) return;
           const track = trackRef.current;
           if (!track) return;
           const oneSetWidth = track.scrollWidth / 3;
@@ -171,19 +191,18 @@ function InfiniteMarquee() {
 export function LocationsSection() {
   return (
     <section id="locations" className="py-20 bg-navy-light border-t border-cyan/15 overflow-hidden">
-
       <div className="max-w-[1080px] mx-auto px-6 mb-10">
-        <SectionLabel>Presencia Nacional</SectionLabel>
+        <SectionLabel>Nuestra ubicación</SectionLabel>
         <h2 className="font-display text-[clamp(1.9rem,4vw,2.7rem)] font-extrabold text-slate-body tracking-tight mb-3">
           Nuestras Sucursales
         </h2>
         <p className="text-lg text-slate-sub max-w-[520px] leading-relaxed">
-          Operamos en las 3 ciudades principales de Bolivia con oficinas y puntos de entrega.
+          Ubicación de referencia en La Paz. Santa Cruz y Cochabamba, próximamente.
         </p>
       </div>
 
       {/* Marquee/Ruleta */}
-      <div className="mb-12">
+      <div className="mb-12 location-marquee">
         <InfiniteMarquee />
       </div>
 
@@ -199,14 +218,28 @@ export function LocationsSection() {
               transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: i * 0.1 }}
               className="flex items-start gap-3"
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-cyan flex-shrink-0 mt-0.5">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                className="text-cyan flex-shrink-0 mt-0.5"
+              >
                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
                 <circle cx="12" cy="10" r="3" />
               </svg>
               <div>
-                <div className="text-sm font-bold text-slate-body">{loc.type} — {loc.city}</div>
-                <div className="text-sm text-slate-sub">{loc.address}</div>
-                <div className="text-sm text-slate-muted">{loc.zone}, {loc.city}</div>
+                <div className="text-sm font-bold text-slate-body">
+                  {loc.type} — {loc.city}
+                </div>
+                {loc.address && <div className="text-sm text-slate-sub">{loc.address}</div>}
+                {loc.zone && (
+                  <div className="text-sm text-slate-muted">
+                    {loc.zone}, {loc.city}
+                  </div>
+                )}
               </div>
             </motion.div>
           ))}

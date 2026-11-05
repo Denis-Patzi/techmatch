@@ -1,16 +1,29 @@
-<!DOCTYPE html>
-<html lang="es">
+<!doctype html>
+<html lang="es" class="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TechMatch Bolivia — Compra y vende tecnología en segundos</title>
-    <meta name="description" content="TechMatch Bolivia es el marketplace de tecnología número uno en Bolivia. Compra y vende laptops, celulares, componentes y más con inteligencia artificial." />
-    <meta name="theme-color" content="#0A192F" />
+    <title>TechMatch Bolivia — Descubrí, publicá y vendé tecnología</title>
+    <meta
+      name="description"
+      content="Descubrí tecnología en un feed de fotos y videos. Publicá desde tu perfil personal o de tienda, mostrala en tu catálogo y explorá subastas, con IA para describir y tasar tus productos."
+    />
+    <meta name="theme-color" content="#edf4fc" />
+    <script>
+      try {
+        document.documentElement.classList.toggle(
+          'light',
+          localStorage.getItem('techmatch-theme') !== 'dark'
+        );
+      } catch {}
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="icon" type="image/png" href="/logo.png" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" type="image/png" href="/logo-blue.png" />
   </head>
   <body>
     <div id="root"></div>

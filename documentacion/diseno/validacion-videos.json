@@ -1,0 +1,35 @@
+{
+  "media": {
+    "duration": 8,
+    "width": 960,
+    "height": 600,
+    "muted": true,
+    "loop": true,
+    "inline": true
+  },
+  "scroll3d": true,
+  "demoStillWorks": true,
+  "visibilityAndPlaybackControls": true,
+  "widths": [
+    320,
+    375,
+    768,
+    1100,
+    1440,
+    1920
+  ],
+  "runtimeErrors": [],
+  "failedMediaRequests": [],
+  "reducedMotion": {
+    "staticPosters": true,
+    "videoRequests": 0
+  },
+  "saveData": {
+    "staticPosters": true,
+    "videoRequests": 0
+  },
+  "failure": {
+    "staticPosters": true,
+    "videoRequests": 2
+  }
+}

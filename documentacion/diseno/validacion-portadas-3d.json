@@ -1,0 +1,24 @@
+{
+  "variants": [
+    "orbita",
+    "particulas",
+    "portal"
+  ],
+  "themes": [
+    "light",
+    "dark"
+  ],
+  "widths": [
+    320,
+    375,
+    768,
+    1100,
+    1440,
+    1920
+  ],
+  "pauseAndVisibility": true,
+  "reducedMotionStatic": true,
+  "navigationAndCleanup": true,
+  "runtimeErrors": [],
+  "noWebGLFallback": true
+}
