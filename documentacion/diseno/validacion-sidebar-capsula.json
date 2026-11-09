@@ -1,0 +1,29 @@
+{
+  "environment": "Chrome con SDK Supabase simulado; no modifica registros reales",
+  "checks": [
+    "Contracción/expansión por teclado, iconos con etiquetas, ancho 248/84 px, persistencia al recargar, búsqueda compacta y navegación con acciones CRUD disponibles. Fondo de feed, visor y márgenes idéntico; cápsula con vidrio y temas claro/oscuro.",
+    "320–1440 px sin desbordes, navegación móvil flotante y controles accesibles en pantalla de 600 px de alto."
+  ],
+  "layouts": [
+    {
+      "width": 320,
+      "overflow": false
+    },
+    {
+      "width": 375,
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "width": 1100,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "overflow": false
+    }
+  ]
+}

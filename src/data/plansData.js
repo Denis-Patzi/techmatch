@@ -1,69 +1,79 @@
-/* ─────────────────────────────────────────────────
-   PLANS DATA — TechMatch Bolivia
-   ───────────────────────────────────────────────── */
-
-export const plans = [
+// Product definition. Quotas must be enforced by the database when publishing is connected.
+// priceAnnual is the monthly equivalent with annual billing; it is not the annual total.
+const definitions = [
   {
-    id:           'free',
-    name:         'Básico',
+    id: 'free',
+    name: 'Básico',
     priceMonthly: 0,
-    priceAnnual:  0,
-    tagline:      'Para empezar a comprar y vender sin costo.',
-    limitChip:    'Hasta 25 productos activos',
-    cta:          'Crear cuenta gratis',
-    variant:      'free',
-    features: [
-      { text: 'Cuenta personal o de negocio',        included: true },
-      { text: '25 productos activos',                 included: true },
-      { text: 'IA de reconocimiento de producto',     included: true },
-      { text: 'Chat con compradores',                 included: true },
-      { text: 'Precio promedio sugerido por IA',      included: true },
-      { text: 'Catálogo ampliado',                    included: false },
-      { text: 'Insignia de verificación',             included: false },
-      { text: 'Videos y Reels del producto',          included: false },
-      { text: 'Mayor alcance de público',             included: false },
-    ],
+    priceAnnual: 0,
+    accountTypes: ['personal', 'store'],
+    audience: 'Para personas y tiendas',
+    tagline: 'Tu primer catálogo, con fotos y videos para empezar a vender.',
+    variant: 'free',
+    limits: {
+      activeListings: 25,
+      videosPerMonth: 5,
+      videoDurationSeconds: 60,
+      photosPerListing: 5,
+      activeAuctions: 1,
+    },
+    extraFeatures: [],
   },
   {
-    id:           'personal',
-    name:         'Personal Pro',
+    id: 'personal',
+    name: 'Personal Pro',
     priceMonthly: 99,
-    priceAnnual:  79,
-    tagline:      'Para personas que venden seguido y quieren llegar a más compradores.',
-    limitChip:    'Catálogo ampliado ilimitado',
-    cta:          'Activar Personal Pro',
-    variant:      'personal',
-    features: [
-      { text: 'Todo lo del plan Básico',              included: true },
-      { text: 'Productos ilimitados',                 included: true },
-      { text: 'Insignia de usuario verificado',       included: true },
-      { text: 'Tus productos llegan a más personas',  included: true },
-      { text: 'Publicar videos y Reels del producto', included: true },
-      { text: 'Alerta de precio dinámico inteligente',included: true },
-      { text: 'Comparador avanzado de productos',     included: true },
-      { text: 'Perfil de tienda oficial',             included: false },
-      { text: 'Publicidad en tiendas destacadas',     included: false },
-    ],
+    priceAnnual: 79,
+    accountTypes: ['personal'],
+    audience: 'Para cuentas personales',
+    tagline: 'Más espacio para quienes publican y venden con frecuencia.',
+    variant: 'personal',
+    limits: {
+      activeListings: 100,
+      videosPerMonth: 30,
+      videoDurationSeconds: 90,
+      photosPerListing: 10,
+      activeAuctions: 5,
+    },
+    extraFeatures: ['Estadísticas de tus publicaciones'],
   },
   {
-    id:           'business',
-    name:         'Negocio',
+    id: 'business',
+    name: 'Tienda Pro',
     priceMonthly: 249,
-    priceAnnual:  199,
-    tagline:      'Para tiendas y negocios que quieren máxima visibilidad y ventas.',
-    limitChip:    'Perfil de tienda oficial + publicidad',
-    cta:          'Activar Plan Negocio',
-    variant:      'business',
-    featured:     true,
-    features: [
-      { text: 'Todo lo del plan Personal Pro',                    included: true },
-      { text: 'Perfil de tienda oficial con logo y banner',       included: true },
-      { text: 'Insignia de Tienda Verificada',                    included: true },
-      { text: 'Publicidad en el apartado de Tiendas Destacadas',  included: true },
-      { text: 'Máxima visibilidad en búsquedas y feed',           included: true },
-      { text: 'Reels y videos del catálogo de productos',         included: true },
-      { text: 'Estadísticas avanzadas de visitas y ventas',       included: true },
-      { text: 'Soporte prioritario 24/7',                         included: true },
-    ],
+    priceAnnual: 199,
+    accountTypes: ['store'],
+    audience: 'Para cuentas de tienda',
+    tagline: 'Un catálogo más amplio y más contenido para mostrar tu negocio.',
+    variant: 'business',
+    featured: true,
+    limits: {
+      activeListings: 500,
+      videosPerMonth: 100,
+      videoDurationSeconds: 120,
+      photosPerListing: 15,
+      activeAuctions: 20,
+    },
+    extraFeatures: ['Perfil de tienda con logo y portada', 'Estadísticas de tu catálogo'],
   },
 ];
+
+export const plans = definitions.map(({ extraFeatures, ...plan }) => ({
+  ...plan,
+  annualTotal: plan.priceAnnual * 12,
+  limitChip: `${plan.limits.activeListings} productos · ${plan.limits.videosPerMonth} videos al mes`,
+  cta: plan.id === 'free' ? 'Crear cuenta gratis' : 'Crear mi cuenta',
+  features: [
+    `${plan.limits.activeListings} productos activos en tu catálogo`,
+    `${plan.limits.videosPerMonth} videos al mes · hasta ${plan.limits.videoDurationSeconds} s`,
+    `Hasta ${plan.limits.photosPerListing} fotos por publicación`,
+    `${plan.limits.activeAuctions} ${plan.limits.activeAuctions === 1 ? 'subasta activa' : 'subastas activas'}`,
+    'Descripción y precio sugeridos con IA',
+    'Feed, catálogo y chat',
+    ...extraFeatures,
+  ].map((text) => ({ text, included: true })),
+}));
+
+export function getPlansForAccount(accountType) {
+  return plans.filter((plan) => plan.accountTypes.includes(accountType));
+}

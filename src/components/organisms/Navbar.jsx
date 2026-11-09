@@ -7,6 +7,8 @@ import { Icon } from '@/components/atoms/Icon';
 import { useScrollAware } from '@/hooks/useScrollAware';
 import { useScrollSpy } from '@/hooks/useScrollSpy';
 import { useAuth } from '@/hooks/useAuth';
+import { getAccountHome } from '@/lib/account';
+import toast from 'react-hot-toast';
 
 const LINKS = [
   { href: '#features', label: 'El feed' },
@@ -14,8 +16,9 @@ const LINKS = [
   { href: '#ai-assistant', label: 'Tasador IA' },
   { href: '#auctions', label: 'Subastas' },
   { href: '#how', label: 'Cómo funciona' },
+  { href: '#plans', label: 'Planes' },
 ];
-const IDS = ['hero', 'features', 'profiles', 'ai-assistant', 'auctions', 'how'];
+const IDS = ['hero', 'features', 'profiles', 'ai-assistant', 'auctions', 'how', 'plans'];
 
 export function Navbar({ isDark, onToggleTheme }) {
   const { scrolled, scrollingDown } = useScrollAware(12);
@@ -25,8 +28,7 @@ export function Navbar({ isDark, onToggleTheme }) {
   const navigate = useNavigate();
   const menuRef = useRef(null);
   const triggerRef = useRef(null);
-  const profilePath =
-    profile?.role === 'admin' ? '/admin' : profile?.role === 'seller' ? '/seller' : '/profile';
+  const profilePath = getAccountHome(profile);
 
   useEffect(() => {
     if (!open) return;
@@ -54,9 +56,13 @@ export function Navbar({ isDark, onToggleTheme }) {
   }, [open]);
 
   const handleSignOut = async () => {
-    await signOut();
-    setOpen(false);
-    navigate('/');
+    try {
+      await signOut();
+      setOpen(false);
+      navigate('/');
+    } catch {
+      toast.error('No pudimos cerrar la sesión. Intentá de nuevo.');
+    }
   };
 
   return (
@@ -136,10 +142,7 @@ export function Navbar({ isDark, onToggleTheme }) {
             exit={{ opacity: 0, y: -8 }}
             className="nav-links-mobile liquid-glass min-[1100px]:hidden"
           >
-            {[
-              ...LINKS,
-              { href: '#contact', label: 'Contacto' },
-            ].map((link) => (
+            {[...LINKS, { href: '#contact', label: 'Contacto' }].map((link) => (
               <a
                 key={link.href}
                 href={link.href}

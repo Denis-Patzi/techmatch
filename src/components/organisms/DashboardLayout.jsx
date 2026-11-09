@@ -5,6 +5,8 @@ import { Icon } from '@/components/atoms/Icon';
 import { ThemeToggle } from '@/components/atoms/ThemeToggle';
 import { useAuth } from '@/hooks/useAuth';
 import { useTheme } from '@/contexts/ThemeContext';
+import { getAccountType } from '@/lib/account';
+import toast from 'react-hot-toast';
 
 export function DashboardLayout({
   children,
@@ -13,27 +15,40 @@ export function DashboardLayout({
   onSectionChange,
   roleLabel,
   profileSection,
+  mobileItemIds,
 }) {
   const { user, profile, signOut } = useAuth();
   const { isDark, toggleTheme } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false);
+  const moreRef = useRef(null);
+  const moreTriggerRef = useRef(null);
   const popoverRef = useRef(null);
   const triggerRef = useRef(null);
   const contentRef = useRef(null);
   const navigate = useNavigate();
   const name =
-    profile?.store_name || profile?.full_name || user?.email?.split('@')[0] || 'Mi cuenta';
+    (getAccountType(profile) === 'store' && profile?.store_name) ||
+    profile?.full_name ||
+    user?.email?.split('@')[0] ||
+    'Mi cuenta';
   const currentItem = items.find((item) => item.id === section);
+  const mobileItems = mobileItemIds
+    ? items.filter((item) => mobileItemIds.includes(item.id))
+    : items;
+  const extraItems = mobileItemIds ? items.filter((item) => !mobileItemIds.includes(item.id)) : [];
 
   useEffect(() => {
-    if (!menuOpen) return;
+    if (!menuOpen && !moreOpen) return;
     const onOutside = (event) => {
       if (!popoverRef.current?.contains(event.target)) setMenuOpen(false);
+      if (!moreRef.current?.contains(event.target)) setMoreOpen(false);
     };
     const onKey = (event) => {
       if (event.key === 'Escape') {
         setMenuOpen(false);
-        triggerRef.current?.focus();
+        setMoreOpen(false);
+        (moreOpen ? moreTriggerRef : triggerRef).current?.focus();
       }
     };
     document.addEventListener('pointerdown', onOutside);
@@ -42,16 +57,21 @@ export function DashboardLayout({
       document.removeEventListener('pointerdown', onOutside);
       document.removeEventListener('keydown', onKey);
     };
-  }, [menuOpen]);
+  }, [menuOpen, moreOpen]);
 
   const changeSection = (id) => {
     onSectionChange(id);
     setMenuOpen(false);
+    setMoreOpen(false);
     contentRef.current?.scrollIntoView({ block: 'start', behavior: 'instant' });
   };
   const handleSignOut = async () => {
-    await signOut();
-    navigate('/');
+    try {
+      await signOut();
+      navigate('/');
+    } catch {
+      toast.error('No pudimos cerrar la sesión. Intentá de nuevo.');
+    }
   };
   const avatar = (
     <span className="user-avatar">
@@ -153,7 +173,7 @@ export function DashboardLayout({
         <div className="workspace-content">{children}</div>
       </main>
       <nav className="mobile-workspace-nav" aria-label="Secciones del panel">
-        {items.map((item) => (
+        {mobileItems.map((item) => (
           <button
             key={item.id}
             className={section === item.id ? 'is-active' : ''}
@@ -165,6 +185,41 @@ export function DashboardLayout({
             <span>{item.shortLabel || item.label}</span>
           </button>
         ))}
+        {extraItems.length > 0 && (
+          <div ref={moreRef} className="workspace-more-container">
+            <button
+              ref={moreTriggerRef}
+              type="button"
+              aria-label="Más opciones"
+              aria-expanded={moreOpen}
+              aria-controls="workspace-more-menu"
+              className={extraItems.some((item) => item.id === section) ? 'is-active' : ''}
+              onClick={() => setMoreOpen((value) => !value)}
+            >
+              <Icon name="menu" size={20} />
+              <span>Más</span>
+            </button>
+            {moreOpen && (
+              <div
+                id="workspace-more-menu"
+                className="workspace-more-menu"
+                aria-label="Más secciones"
+              >
+                {extraItems.map((item) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => changeSection(item.id)}
+                    aria-current={section === item.id ? 'page' : undefined}
+                  >
+                    <Icon name={item.icon} size={18} />
+                    <span>{item.label}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </nav>
     </div>
   );

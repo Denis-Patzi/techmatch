@@ -1,6 +1,12 @@
 import { Icon } from '@/components/atoms/Icon';
 
-export function ComingSoon({ title, description, icon = 'sparkles', onBack }) {
+export function ComingSoon({
+  title,
+  description,
+  icon = 'sparkles',
+  onBack,
+  backLabel = 'Volver al resumen',
+}) {
   return (
     <div className="glass-panel empty-state">
       <Icon name={icon} size={42} />
@@ -8,7 +14,7 @@ export function ComingSoon({ title, description, icon = 'sparkles', onBack }) {
       <h1>{title}</h1>
       <p>{description}</p>
       <button className="btn-secondary" onClick={onBack}>
-        Volver al resumen
+        {backLabel}
         <Icon name="arrow" size={16} />
       </button>
     </div>

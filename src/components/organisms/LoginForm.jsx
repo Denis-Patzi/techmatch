@@ -6,7 +6,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useAuth } from '@/hooks/useAuth';
-import { supabase } from '@/lib/supabaseClient';
 import { FormField } from '@/components/atoms/FormField';
 import { TwoFactorInput } from '@/components/molecules/TwoFactorInput';
 
@@ -59,23 +58,11 @@ export function LoginForm() {
   const onCredentials = async (data) => {
     setLoading(true);
     try {
-      const authData = await signIn(data.email, data.password);
+      await signIn(data.email, data.password);
       toast.success('¡Sesión iniciada!');
 
-      // Obtenemos el perfil directamente para saber a dónde redirigir sin esperar al context
-      const { data: profileData } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', authData.user.id)
-        .single();
-
-      if (profileData?.role === 'admin') {
-        navigate('/admin');
-      } else if (profileData?.role === 'seller') {
-        navigate('/seller');
-      } else {
-        navigate('/profile');
-      }
+      // El guard espera el perfil y envía al administrador a su propio espacio.
+      navigate('/app');
     } catch (err) {
       console.error(err);
       if (err.message?.includes('Email not confirmed')) {
@@ -99,7 +86,7 @@ export function LoginForm() {
       await verifyOtp(otpEmail, otpValue.trim());
       // Redirige según el rol
       if (profile?.role === 'admin') navigate('/admin');
-      else navigate('/profile');
+      else navigate('/app');
     } catch (err) {
       if (err.message?.includes('expired')) {
         toast.error('Código expirado. Solicitá uno nuevo.');

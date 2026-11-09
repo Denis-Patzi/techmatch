@@ -1,15 +1,23 @@
 import { useState } from 'react';
 import { Icon } from '@/components/atoms/Icon';
-import { plans } from '@/data/plansData';
+import { getPlansForAccount } from '@/data/plansData';
+import { PlanCard } from '@/components/molecules/PlanCard';
+import { useAuth } from '@/hooks/useAuth';
+import { getAccountType } from '@/lib/account';
 
 export default function SellerSubscriptionTab() {
   const [isAnnual, setIsAnnual] = useState(false);
+  const { profile } = useAuth();
+  const accountType = getAccountType(profile);
+  const accountPlans = getPlansForAccount(accountType);
   return (
     <div>
       <span className="eyebrow mb-3">Un espacio para cada etapa</span>
-      <h1 className="mb-2">Tu tienda. Tu siguiente paso.</h1>
+      <h1 className="mb-2">Tu cuenta. Tu siguiente paso.</h1>
       <p className="text-sm text-slate-sub mb-7">
-        Conocé las opciones disponibles para acompañar el crecimiento de tu tienda.
+        {accountType === 'store' ? 'Planes para tu tienda.' : 'Planes para tu cuenta personal.'} El
+        Básico también incluye videos. En esta versión podés mantener 25 publicaciones activas,
+        incluidas hasta 5 con video. Los cupos mensuales y las prestaciones Pro están en preparación.
       </p>
       <div className="glass-panel p-6 flex flex-col sm:flex-row gap-5 sm:items-center justify-between mb-8">
         <div className="flex items-center gap-4">
@@ -33,6 +41,7 @@ export default function SellerSubscriptionTab() {
           aria-label="Período de suscripción"
         >
           <button
+            type="button"
             onClick={() => setIsAnnual(false)}
             aria-pressed={!isAnnual}
             className={!isAnnual ? 'is-active' : ''}
@@ -40,41 +49,18 @@ export default function SellerSubscriptionTab() {
             Mensual
           </button>
           <button
+            type="button"
             onClick={() => setIsAnnual(true)}
             aria-pressed={isAnnual}
             className={isAnnual ? 'is-active' : ''}
           >
-            Anual <span>−20%</span>
+            Anual <span>Ahorrá</span>
           </button>
         </div>
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-        {plans.map((plan) => (
-          <article
-            className={`plan-card rounded-[28px] p-6 flex flex-col ${plan.featured ? 'is-featured' : ''}`}
-            key={plan.id}
-          >
-            <p className="text-xs uppercase tracking-widest opacity-70 mb-4">{plan.name}</p>
-            <p className="text-4xl font-medium tracking-tight mb-2">
-              Bs. {isAnnual ? plan.priceAnnual : plan.priceMonthly}
-              <span className="text-xs ml-1 opacity-60 font-normal">/mes</span>
-            </p>
-            <p className="text-xs opacity-70 mb-6 leading-relaxed">{plan.tagline}</p>
-            <ul className="space-y-3 mb-7 flex-1">
-              {plan.features
-                .filter((feature) => feature.included)
-                .slice(0, 5)
-                .map((feature) => (
-                  <li key={feature.text} className="flex items-start gap-2 text-xs leading-relaxed">
-                    <Icon name="check" size={14} className="shrink-0 mt-1" />
-                    {feature.text}
-                  </li>
-                ))}
-            </ul>
-            <span className="text-center text-xs rounded-full border border-current/20 px-4 py-3 opacity-70">
-              {plan.id === 'free' ? 'Sin costo' : 'Disponible próximamente'}
-            </span>
-          </article>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 pt-4">
+        {accountPlans.map((plan, index) => (
+          <PlanCard key={plan.id} plan={plan} isAnnual={isAnnual} index={index} showCta={false} />
         ))}
       </div>
     </div>

@@ -1,0 +1,32 @@
+{
+  "environment": "Chrome con componentes reales y SDK Supabase de prueba; sin credenciales ni modificaciones al proyecto real",
+  "manual_confirmation": "El usuario confirmó que el Resumen muestra sus usuarios y publicaciones actuales en Supabase real. Las mutaciones del nuevo panel se probaron con el SDK simulado.",
+  "checks": [
+    "Usuarios actuales: búsqueda y filtros, edición persistida de nombre/ciudad, verificación real con confirmación, conservación ante fallo, exportación CSV y protección del propio administrador.",
+    "Publicaciones y subastas: edición de precio, retiro a borrador, publicación desde Revisión, creación de anuncio de subasta y eliminación; estadísticas reflejan cambios y verificación filtra perfiles verdaderos.",
+    "Datos conservados ante fallo de actualización y recuperación; perfiles eliminados retiran sus productos en cascada. Diseño 320–1440 px sin desbordes; temas claro y oscuro.",
+    "Estadísticas recuperan más de 1000 publicaciones y 500 perfiles por páginas completas; no se limitan a las primeras filas."
+  ],
+  "layouts": [
+    {
+      "width": 320,
+      "overflow": false
+    },
+    {
+      "width": 375,
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "width": 1100,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "overflow": false
+    }
+  ]
+}

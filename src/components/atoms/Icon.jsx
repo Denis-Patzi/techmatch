@@ -1,4 +1,16 @@
 const paths = {
+  panelClose: (
+    <>
+      <rect x="3" y="3" width="18" height="18" rx="3" />
+      <path d="M9 3v18m7-13-4 4 4 4" />
+    </>
+  ),
+  panelOpen: (
+    <>
+      <rect x="3" y="3" width="18" height="18" rx="3" />
+      <path d="M9 3v18m4-13 4 4-4 4" />
+    </>
+  ),
   star: (
     <path d="m12 3 2.8 5.7 6.3.9-4.6 4.5 1.1 6.2-5.6-2.9-5.6 2.9 1.1-6.2L2.9 9.6l6.3-.9L12 3Z" />
   ),
@@ -129,6 +141,12 @@ const paths = {
   heart: <path d="M20 4a5 5 0 0 0-8 2 5 5 0 0 0-8-2c-5 5 0 10 8 16 8-6 13-11 8-16Z" />,
   menu: <path d="M4 6h16M4 12h16M4 18h16" />,
   close: <path d="m6 6 12 12M6 18 18 6" />,
+  play: <path d="m8 4 12 8-12 8V4Z" />,
+  pause: <path d="M8 4v16M16 4v16" />,
+  volume: <path d="m11 4-6 5H2v6h3l6 5V4ZM15 8a6 6 0 0 1 0 8M18 4a11 11 0 0 1 0 16" />,
+  muted: <path d="m11 4-6 5H2v6h3l6 5V4ZM16 9l6 6m0-6-6 6" />,
+  fullscreen: <path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5" />,
+  share: <path d="M15 8V3l7 9-7 9v-5C7 16 3 20 3 20S2 8 15 8Z" />,
 };
 export function Icon({ name, size = 20, className = '', ...props }) {
   return (

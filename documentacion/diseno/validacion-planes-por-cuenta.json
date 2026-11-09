@@ -1,0 +1,29 @@
+{
+  "environment": "Chrome con hook de sesión simulado, sin acceder a datos reales",
+  "checks": [
+    {
+      "account": "personal con esquema actual",
+      "visiblePlans": [
+        "Básico",
+        "Personal Pro"
+      ],
+      "runtimeErrors": []
+    },
+    {
+      "account": "tienda con esquema actual",
+      "visiblePlans": [
+        "Básico",
+        "Tienda Pro"
+      ],
+      "runtimeErrors": []
+    },
+    {
+      "account": "tipo explícito futuro",
+      "visiblePlans": [
+        "Básico",
+        "Personal Pro"
+      ],
+      "runtimeErrors": []
+    }
+  ]
+}

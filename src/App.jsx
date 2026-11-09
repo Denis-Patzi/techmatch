@@ -19,16 +19,15 @@ import { ProfilesSection } from '@/components/organisms/ProfilesSection';
 import { AIAssistantSection } from '@/components/organisms/AIAssistantSection';
 import { AuctionsSection } from '@/components/organisms/AuctionsSection';
 import { HowItWorksSection } from '@/components/organisms/HowItWorksSection';
+import { PlansSection } from '@/components/organisms/PlansSection';
 import { LandingJoinSection } from '@/components/organisms/LandingJoinSection';
 import { Footer } from '@/components/organisms/Footer';
 
 /* ── Pages (lazy load) ── */
 const SignUpPage = lazy(() => import('@/pages/SignUpPage'));
 const LoginPage = lazy(() => import('@/pages/LoginPage'));
-const ProfilePage = lazy(() => import('@/pages/ProfilePage'));
+const UserPage = lazy(() => import('@/pages/UserPage'));
 const AdminPage = lazy(() => import('@/pages/AdminPage'));
-const SellerPage = lazy(() => import('@/pages/SellerPage'));
-const OnboardingPage = lazy(() => import('@/pages/OnboardingPage'));
 const ForgotPasswordPage = lazy(() => import('@/pages/ForgotPasswordPage'));
 const UpdatePasswordPage = lazy(() => import('@/pages/UpdatePasswordPage'));
 
@@ -97,6 +96,7 @@ function LandingPage({ isDark, onToggleTheme }) {
         <AIAssistantSection />
         <AuctionsSection />
         <HowItWorksSection />
+        <PlansSection />
         <LandingJoinSection />
       </main>
       <Footer />
@@ -144,16 +144,16 @@ export default function App() {
             <Route
               path="/onboarding"
               element={
-                <ProtectedRoute requiredRole="buyer">
-                  <OnboardingPage />
+                <ProtectedRoute requiredRole="user">
+                  <Navigate to="/app" replace />
                 </ProtectedRoute>
               }
             />
             <Route
-              path="/profile"
+              path="/app"
               element={
-                <ProtectedRoute>
-                  <ProfilePage />
+                <ProtectedRoute requiredRole="user">
+                  <UserPage />
                 </ProtectedRoute>
               }
             />
@@ -168,8 +168,17 @@ export default function App() {
             <Route
               path="/seller"
               element={
-                <ProtectedRoute requiredRole="seller">
-                  <SellerPage />
+                <ProtectedRoute requiredRole="user">
+                  <Navigate to="/app?section=catalog" replace />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute requiredRole="user">
+                  <Navigate to="/app?section=profile" replace />
                 </ProtectedRoute>
               }
             />

@@ -6,11 +6,12 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useAuth } from '@/hooks/useAuth';
-import { RoleSelector } from '@/components/molecules/RoleSelector';
+import { AccountTypeSelector } from '@/components/molecules/AccountTypeSelector';
 import { FormField } from '@/components/atoms/FormField';
 
 /* ── Esquema de validación con Zod ── */
 const baseSchema = z.object({
+  accountType: z.enum(['personal', 'store']),
   fullName: z.string().min(3, 'El nombre debe tener al menos 3 caracteres'),
   email: z.string().email('Ingresá un correo electrónico válido'),
   password: z
@@ -24,34 +25,45 @@ const baseSchema = z.object({
   nit: z.string().optional(),
 });
 
-const signUpSchema = baseSchema.refine(d => d.password === d.confirmPassword, {
-  message: 'Las contraseñas no coinciden',
-  path: ['confirmPassword'],
-});
+const signUpSchema = baseSchema
+  .refine((d) => d.accountType !== 'store' || d.storeName?.trim().length >= 2, {
+    message: 'Ingresá el nombre de tu tienda.',
+    path: ['storeName'],
+  })
+  .refine((d) => d.password === d.confirmPassword, {
+    message: 'Las contraseñas no coinciden',
+    path: ['confirmPassword'],
+  });
 
 const CITIES = ['La Paz', 'Santa Cruz', 'Cochabamba'];
 
 export function SignUpForm() {
-  const [role, setRole] = useState('buyer');
   const [loading, setLoading] = useState(false);
   const { signUp } = useAuth();
   const navigate = useNavigate();
 
-  const { register, handleSubmit, formState: { errors } } = useForm({
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm({
     resolver: zodResolver(signUpSchema),
+    defaultValues: { accountType: 'personal' },
   });
+  const accountType = watch('accountType');
 
   const onSubmit = async (data) => {
     setLoading(true);
     try {
-      await signUp({ ...data, role });
-      toast.success('¡Cuenta creada correctamente!');
-      
-      // Dependiendo del rol, lo mandamos al flujo correcto
-      if (role === 'seller') {
-        navigate('/seller');
+      const result = await signUp(data);
+      if (result.session) {
+        toast.success('¡Cuenta creada correctamente!');
+        navigate('/app');
       } else {
-        navigate('/onboarding');
+        toast.success('Revisá tu correo para confirmar la cuenta y luego ingresá.');
+        navigate('/login');
       }
     } catch (err) {
       toast.error(err.message || 'Error al crear la cuenta');
@@ -62,15 +74,55 @@ export function SignUpForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-      {/* Selector de Rol */}
-      <RoleSelector value={role} onChange={setRole} />
+      <p className="text-sm text-slate-sub">
+        Elegí cómo querés presentarte. Con ambas cuentas podés comprar y vender.
+      </p>
+      <input type="hidden" {...register('accountType')} />
+      <AccountTypeSelector
+        value={accountType}
+        onChange={(value) => setValue('accountType', value, { shouldValidate: true })}
+        disabled={loading}
+      />
 
       {/* Campos base */}
-      <FormField label="Nombre Completo" name="fullName" placeholder="Denis Patzi" register={register} error={errors.fullName} />
-      <FormField label="Correo Electrónico" name="email" type="email" placeholder="correo@ejemplo.com" register={register} error={errors.email} />
-      <FormField label="Contraseña" name="password" type="password" placeholder="Mín. 8 caracteres con números" register={register} error={errors.password} />
-      <FormField label="Confirmar Contraseña" name="confirmPassword" type="password" placeholder="Repetí tu contraseña" register={register} error={errors.confirmPassword} />
-      <FormField label="Teléfono (opcional)" name="phone" placeholder="+591 7xxxxxxx" register={register} error={errors.phone} />
+      <FormField
+        label="Nombre Completo"
+        name="fullName"
+        placeholder="Denis Patzi"
+        register={register}
+        error={errors.fullName}
+      />
+      <FormField
+        label="Correo Electrónico"
+        name="email"
+        type="email"
+        placeholder="correo@ejemplo.com"
+        register={register}
+        error={errors.email}
+      />
+      <FormField
+        label="Contraseña"
+        name="password"
+        type="password"
+        placeholder="Mín. 8 caracteres con números"
+        register={register}
+        error={errors.password}
+      />
+      <FormField
+        label="Confirmar Contraseña"
+        name="confirmPassword"
+        type="password"
+        placeholder="Repetí tu contraseña"
+        register={register}
+        error={errors.confirmPassword}
+      />
+      <FormField
+        label="Teléfono (opcional)"
+        name="phone"
+        placeholder="+591 7xxxxxxx"
+        register={register}
+        error={errors.phone}
+      />
 
       {/* Selector de Ciudad */}
       <FormField label="Ciudad" name="city" error={errors.city}>
@@ -79,13 +131,17 @@ export function SignUpForm() {
           className="w-full px-4 py-3 rounded-xl bg-navy-light border border-cyan/15 text-slate-body text-sm focus:outline-none focus:border-cyan/50 focus:ring-2 focus:ring-cyan/10 transition-all duration-150"
         >
           <option value="">Seleccioná tu ciudad</option>
-          {CITIES.map(c => <option key={c} value={c}>{c}</option>)}
+          {CITIES.map((c) => (
+            <option key={c} value={c}>
+              {c}
+            </option>
+          ))}
         </select>
       </FormField>
 
       {/* Campos extra solo para Vendedores */}
       <AnimatePresence>
-        {role === 'seller' && (
+        {accountType === 'store' && (
           <motion.div
             key="seller-fields"
             initial={{ opacity: 0, height: 0 }}
@@ -95,10 +151,27 @@ export function SignUpForm() {
             className="flex flex-col gap-4 overflow-hidden"
           >
             <div className="border-t border-cyan/10 pt-4">
-              <p className="text-xs text-slate-muted mb-3 font-semibold uppercase tracking-widest">Datos de tu tienda</p>
+              <p className="text-xs text-slate-muted mb-3 font-semibold uppercase tracking-widest">
+                Datos de tu tienda
+              </p>
+              <p className="text-xs text-slate-muted mb-3">
+                El nombre identifica a tu negocio en el perfil y el catálogo. El NIT es opcional.
+              </p>
               <div className="flex flex-col gap-4">
-                <FormField label="Nombre de la Tienda" name="storeName" placeholder="Ej: TechStore Bolivia" register={register} error={errors.storeName} />
-                <FormField label="NIT" name="nit" placeholder="Solo números (7-12 dígitos)" register={register} error={errors.nit} />
+                <FormField
+                  label="Nombre de la Tienda"
+                  name="storeName"
+                  placeholder="Ej: TechStore Bolivia"
+                  register={register}
+                  error={errors.storeName}
+                />
+                <FormField
+                  label="NIT"
+                  name="nit"
+                  placeholder="Solo números (7-12 dígitos)"
+                  register={register}
+                  error={errors.nit}
+                />
               </div>
             </div>
           </motion.div>

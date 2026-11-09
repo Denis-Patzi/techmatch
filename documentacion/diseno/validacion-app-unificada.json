@@ -1,0 +1,33 @@
+{
+  "environment": "Chrome con AuthContext y componentes reales; SDK Supabase simulado para cuentas de prueba, sin datos reales",
+  "checks": [
+    "Sin sesión, /app y /admin redirigen a login.",
+    "Buyer usa explorar, deseos y catálogo en la misma app; edita tipo/teléfono, conserva rol y recarga el perfil. Planes se adaptan al tipo.",
+    "Alias antiguos, rechazo de admin a usuario normal, menú móvil de cinco accesos, Más/Escape y CTA del tasador correctos.",
+    "Seller de tienda recibe la misma app; admin se mantiene en /admin, también desde rutas antiguas.",
+    "Registro por tipo valida tienda, envía role seguro/teléfono y contempla confirmación por correo; login y cierre de sesión usan el flujo común.",
+    "Errores de perfil ofrecen reintento; perfil faltante se recupera con ensure_my_profile, sin bucles de navegación."
+  ],
+  "layouts": [
+    {
+      "width": 320,
+      "documentWidth": 320
+    },
+    {
+      "width": 375,
+      "documentWidth": 375
+    },
+    {
+      "width": 768,
+      "documentWidth": 768
+    },
+    {
+      "width": 1100,
+      "documentWidth": 1100
+    },
+    {
+      "width": 1440,
+      "documentWidth": 1440
+    }
+  ]
+}

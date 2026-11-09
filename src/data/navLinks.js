@@ -4,5 +4,6 @@ export const navLinks = [
   { href: '#ai-assistant', label: 'Tasador IA' },
   { href: '#auctions', label: 'Subastas' },
   { href: '#how', label: 'Cómo funciona' },
+  { href: '#plans', label: 'Planes' },
   { href: '#contact', label: 'Contacto' },
 ];

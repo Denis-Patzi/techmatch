@@ -35,8 +35,8 @@ const ROLES = [
         <polyline points="9 22 9 12 15 12 15 22" />
       </svg>
     ),
-    title: 'Vendedor / Tienda',
-    desc: 'Publicá y gestioná tu catálogo',
+    title: 'Vendedor',
+    desc: 'Vendé como persona o tienda',
   },
 ];
 

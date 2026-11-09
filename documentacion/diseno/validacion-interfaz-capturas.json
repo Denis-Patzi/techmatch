@@ -1,0 +1,41 @@
+{
+  "environment": "Chrome: componentes reales, SDK Supabase simulado con persistencia de prueba; no usa credenciales ni modifica el proyecto real",
+  "checks": [
+    "Desktop: feed vertical con navegación, filtros, detalle, catálogo personal de 4 productos y deseos persistentes entre recargas del SDK de prueba.",
+    "CRUD completo: crea en cuenta propia, consulta detalle, recarga, edita título/precio, cancela borrado, conserva datos ante fallo de delete y elimina con confirmación.",
+    "Multimedia: video MP4 se sube bajo carpeta del propietario; tipo inválido se rechaza. Fallo de guardado mantiene formulario y retira subida nueva sin crear filas.",
+    "Catálogo de otra tienda sin botones de edición ni deseos privados; editor de cuenta conserva guardado de perfil; planes respetan tipo personal.",
+    "Tienda comparte app, conserva plan de tienda. Administrador edita y elimina productos ajenos desde Productos. Móvil 320–1440 px sin desbordes.",
+    "Nuevas referencias: feed ocupa la pantalla; reproducción/pausa/sonido y navegación funcionan. Explorar filtra y busca. Compartir genera un enlace que abre el detalle sin cambiar permisos. Perfil usa tres columnas en Publicaciones móvil y dos en Catálogo."
+  ],
+  "layouts": [
+    {
+      "width": 320,
+      "documentWidth": 320
+    },
+    {
+      "width": 375,
+      "documentWidth": 375
+    },
+    {
+      "width": 400,
+      "documentWidth": 400
+    },
+    {
+      "width": 456,
+      "documentWidth": 456
+    },
+    {
+      "width": 768,
+      "documentWidth": 768
+    },
+    {
+      "width": 1100,
+      "documentWidth": 1100
+    },
+    {
+      "width": 1440,
+      "documentWidth": 1440
+    }
+  ]
+}

@@ -1,0 +1,143 @@
+{
+  "date": "2026-11-09T02:01:11.628Z",
+  "checks": [
+    "Tres planes, precios 0/99/249 y 0/79/199 conservados; totales anuales 948 y 2388; Básico incluye cinco videos.",
+    "Anclas completas; enlace Planes del menú móvil navega y cierra el menú. Sin desbordes entre 320 y 1920 px."
+  ],
+  "layouts": [
+    {
+      "width": 320,
+      "documentWidth": 320,
+      "navOverflow": false,
+      "cards": [
+        {
+          "width": 280,
+          "overflow": false
+        },
+        {
+          "width": 280,
+          "overflow": false
+        },
+        {
+          "width": 280,
+          "overflow": false
+        }
+      ]
+    },
+    {
+      "width": 375,
+      "documentWidth": 375,
+      "navOverflow": false,
+      "cards": [
+        {
+          "width": 335,
+          "overflow": false
+        },
+        {
+          "width": 335,
+          "overflow": false
+        },
+        {
+          "width": 335,
+          "overflow": false
+        }
+      ]
+    },
+    {
+      "width": 768,
+      "documentWidth": 768,
+      "navOverflow": false,
+      "cards": [
+        {
+          "width": 560,
+          "overflow": false
+        },
+        {
+          "width": 560,
+          "overflow": false
+        },
+        {
+          "width": 560,
+          "overflow": false
+        }
+      ]
+    },
+    {
+      "width": 1000,
+      "documentWidth": 1000,
+      "navOverflow": false,
+      "cards": [
+        {
+          "width": 560,
+          "overflow": false
+        },
+        {
+          "width": 560,
+          "overflow": false
+        },
+        {
+          "width": 560,
+          "overflow": false
+        }
+      ]
+    },
+    {
+      "width": 1100,
+      "documentWidth": 1100,
+      "navOverflow": false,
+      "cards": [
+        {
+          "width": 332,
+          "overflow": false
+        },
+        {
+          "width": 332,
+          "overflow": false
+        },
+        {
+          "width": 332,
+          "overflow": false
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "documentWidth": 1440,
+      "navOverflow": false,
+      "cards": [
+        {
+          "width": 380,
+          "overflow": false
+        },
+        {
+          "width": 380,
+          "overflow": false
+        },
+        {
+          "width": 380,
+          "overflow": false
+        }
+      ]
+    },
+    {
+      "width": 1920,
+      "documentWidth": 1920,
+      "navOverflow": false,
+      "cards": [
+        {
+          "width": 380,
+          "overflow": false
+        },
+        {
+          "width": 380,
+          "overflow": false
+        },
+        {
+          "width": 380,
+          "overflow": false
+        }
+      ]
+    }
+  ],
+  "runtimeErrors": []
+}

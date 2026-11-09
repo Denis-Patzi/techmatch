@@ -82,7 +82,7 @@ function ScanningPhone() {
 }
 
 /** Autoplay once on entering the viewport; keep the completed listing available to read. */
-export function AITasadorDemo() {
+export function AITasadorDemo({ publicationHref = '/signup' }) {
   const rootRef = useRef(null);
   const elapsedRef = useRef(0);
   const [elapsed, setElapsed] = useState(0);
@@ -283,7 +283,7 @@ export function AITasadorDemo() {
         <p className="ai-listing-note">
           <Icon name="check" size={16} /> Vos confirmás el estado, los detalles y el precio final.
         </p>
-        <Link to="/signup" className="ai-listing-cta">
+        <Link to={publicationHref} className="ai-listing-cta">
           Crear mi publicación <Icon name="arrow" size={18} />
         </Link>
       </div>

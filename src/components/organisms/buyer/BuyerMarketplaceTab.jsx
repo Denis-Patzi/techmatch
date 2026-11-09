@@ -55,37 +55,52 @@ const CATEGORIES = [
   { id: 'accessories', label: 'Periféricos' },
 ];
 
-export default function BuyerMarketplaceTab() {
+export default function BuyerMarketplaceTab({
+  favorites: controlledFavorites,
+  onToggleFavorite,
+  favoritesOnly = false,
+  onExplore,
+}) {
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('all');
-  const [favorites, setFavorites] = useState([]);
+  const [localFavorites, setLocalFavorites] = useState([]);
+  const favorites = controlledFavorites ?? localFavorites;
   const products = PRODUCTS.filter(
     (product) =>
+      (!favoritesOnly || favorites.includes(product.id)) &&
       (category === 'all' || product.category === category) &&
       `${product.title} ${product.location}`
         .toLocaleLowerCase('es')
         .includes(search.toLocaleLowerCase('es'))
   );
   const toggleFavorite = (id) =>
-    setFavorites((previous) =>
-      previous.includes(id) ? previous.filter((item) => item !== id) : [...previous, id]
-    );
+    onToggleFavorite
+      ? onToggleFavorite(id)
+      : setLocalFavorites((previous) =>
+          previous.includes(id) ? previous.filter((item) => item !== id) : [...previous, id]
+        );
 
   return (
     <div>
       <div className="glass-panel workspace-welcome">
         <div>
-          <span className="eyebrow">Tu próximo gran match</span>
-          <h1>Encontrá tu próxima tecnología.</h1>
+          <span className="eyebrow">
+            {favoritesOnly ? 'Guardados para después' : 'Comprá y vendé desde tu cuenta'}
+          </span>
+          <h1>{favoritesOnly ? 'Tu lista de deseos.' : 'Encontrá tu próxima tecnología.'}</h1>
           <p>
-            Explorá equipos, compará posibilidades y descubrí lo que puede acompañarte en tu próximo
-            proyecto.
+            {favoritesOnly
+              ? 'Los productos que marcás con el corazón al explorar se reúnen acá.'
+              : 'Explorá equipos y descubrí tu próximo match. Tu catálogo, perfil y planes están en el mismo espacio.'}
           </p>
         </div>
         <div className="bare-icon hidden lg:grid place-items-center w-24 h-24 text-cyan shrink-0">
           <Icon name="cpu" size={46} />
         </div>
       </div>
+      <p className="user-demo-note">
+        Catálogo de ejemplo. Los deseos de esta vista se conservan durante la sesión de navegación.
+      </p>
       <div className="flex items-center gap-4 mb-5">
         <div className="relative flex-1">
           <label htmlFor="market-search" className="sr-only">
@@ -176,15 +191,20 @@ export default function BuyerMarketplaceTab() {
         <div className="glass-panel empty-state">
           <Icon name="search" size={32} />
           <h2 className="text-xl font-medium mb-2">Todavía no hay un match por acá.</h2>
-          <p>Probá otra búsqueda o explorá todas las categorías.</p>
+          <p>
+            {favoritesOnly
+              ? 'Marcá el corazón de un producto en Explorar para agregarlo aquí.'
+              : 'Probá otra búsqueda o explorá todas las categorías.'}
+          </p>
           <button
             className="btn-secondary"
             onClick={() => {
               setSearch('');
               setCategory('all');
+              if (favoritesOnly) onExplore?.();
             }}
           >
-            Ver todos los productos
+            {favoritesOnly ? 'Explorar productos' : 'Ver todos los productos'}
           </button>
         </div>
       )}

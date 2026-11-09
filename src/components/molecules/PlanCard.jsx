@@ -11,7 +11,7 @@ import { PlanFeatureItem } from '@/components/atoms/PlanFeatureItem';
  * @param {boolean}  isAnnual   - Controla si se muestra precio anual o mensual
  * @param {number}   index      - Para stagger animation
  */
-export function PlanCard({ plan, isAnnual, index = 0 }) {
+export function PlanCard({ plan, isAnnual, index = 0, showCta = true }) {
   const { name, priceMonthly, priceAnnual, tagline, limitChip, cta, variant, featured, features } =
     plan;
   const displayPrice = isAnnual ? priceAnnual : priceMonthly;
@@ -23,7 +23,7 @@ export function PlanCard({ plan, isAnnual, index = 0 }) {
   };
 
   return (
-    <motion.div
+    <motion.article
       initial={{ opacity: 0, y: 28 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-50px' }}
@@ -43,12 +43,17 @@ export function PlanCard({ plan, isAnnual, index = 0 }) {
         </div>
       )}
 
+      <p
+        className={`text-xs mb-2 ${variant === 'business' ? 'text-white/70' : 'text-slate-muted'}`}
+      >
+        {plan.audience}
+      </p>
       {/* Plan type */}
-      <div
+      <h3
         className={`text-xs font-bold uppercase tracking-widest mb-4 ${variant === 'business' ? 'text-white/60' : 'text-slate-sub'}`}
       >
         {name}
-      </div>
+      </h3>
 
       {/* Price */}
       <div className="flex items-baseline gap-1 mb-2">
@@ -72,6 +77,16 @@ export function PlanCard({ plan, isAnnual, index = 0 }) {
           /mes
         </span>
       </div>
+
+      <p
+        className={`plan-billing-detail ${variant === 'business' ? 'text-white/70' : 'text-slate-muted'}`}
+      >
+        {displayPrice === 0
+          ? 'Sin costo'
+          : isAnnual
+            ? `Bs. ${plan.annualTotal.toLocaleString('es-BO')} al año`
+            : 'Facturación mensual'}
+      </p>
 
       {/* Tagline */}
       <p
@@ -109,16 +124,22 @@ export function PlanCard({ plan, isAnnual, index = 0 }) {
       </ul>
 
       {/* CTA */}
-      <Link
-        to="/signup"
-        className={`
+      {showCta ? (
+        <Link
+          to="/signup"
+          className={`
           plan-cta w-full text-center py-3.5 rounded-full text-sm font-medium
           transition-all duration-200 hover:-translate-y-0.5 inline-block
           ${ctaStyles[variant] ?? ctaStyles.free}
         `}
-      >
-        {cta}
-      </Link>
-    </motion.div>
+        >
+          {cta}
+        </Link>
+      ) : (
+        <p className="plan-preview-availability">
+          {plan.id === 'free' ? 'Plan de entrada' : 'Disponible próximamente'}
+        </p>
+      )}
+    </motion.article>
   );
 }

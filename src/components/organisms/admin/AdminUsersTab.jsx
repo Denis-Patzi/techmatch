@@ -1,140 +1,246 @@
-import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabaseClient';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
+import { Icon } from '@/components/atoms/Icon';
+import { useAuth } from '@/hooks/useAuth';
+import { getAccountType } from '@/lib/account';
+import { accountName, dateLabel, downloadCsv } from '@/lib/adminAnalytics';
+import { AdminConfirm, AdminHeading, AdminPagination } from './AdminUi';
+import AdminUserEditor from './AdminUserEditor';
 
-const ROLES = ['buyer', 'seller', 'admin'];
-const ROLE_LABEL = { buyer: 'Comprador', seller: 'Vendedor', admin: 'Admin' };
-const ROLE_COLOR = {
-  buyer: 'bg-brand-blue/20 text-brand-blue',
-  seller: 'bg-brand-neon/20 text-brand-neon',
-  admin: 'bg-brand-purple/20 text-brand-purple',
-};
-
-export default function AdminUsersTab() {
-  const [users, setUsers] = useState([]);
-  const [loadingData, setLoadingData] = useState(false);
-
-  const fetchUsers = async () => {
-    setLoadingData(true);
-    const { data, error } = await supabase.from('profiles').select('*').order('created_at', { ascending: false });
-    if (error) { toast.error('Error al cargar usuarios'); }
-    else { setUsers(data); }
-    setLoadingData(false);
+export default function AdminUsersTab({ data, verifications = false, initialQuery = '' }) {
+  const { user, refreshProfile } = useAuth();
+  const [query, setQuery] = useState(initialQuery),
+    [type, setType] = useState('all'),
+    [verification, setVerification] = useState(verifications ? 'pending' : 'all');
+  const [page, setPage] = useState(1),
+    [editing, setEditing] = useState(null),
+    [action, setAction] = useState(null);
+  const rows = data.profiles
+    .filter(
+      (item) =>
+        (!verifications || item.role !== 'admin') &&
+        (type === 'all' || getAccountType(item) === type) &&
+        (verification === 'all' || Boolean(item.is_verified) === (verification === 'verified')) &&
+        `${item.full_name || ''} ${item.store_name || ''} ${item.city || ''} ${item.phone || ''}`
+          .toLocaleLowerCase()
+          .includes(query.toLocaleLowerCase())
+    )
+    .sort((a, b) => (b.created_at || '').localeCompare(a.created_at || ''));
+  const currentPage = Math.min(page, Math.max(1, Math.ceil(rows.length / 10)));
+  const changeFilter = (setter) => (event) => {
+    setter(event.target.value);
+    setPage(1);
   };
-
-  useEffect(() => { fetchUsers(); }, []);
-
-  const changeRole = async (userId, newRole) => {
-    const { error } = await supabase.from('profiles').update({ role: newRole }).eq('id', userId);
-    if (error) toast.error('Error al cambiar rol');
-    else { toast.success('Rol actualizado'); fetchUsers(); }
-  };
-
-  const toggleVerified = async (userId, current) => {
-    const { error } = await supabase.from('profiles').update({ is_verified: !current }).eq('id', userId);
-    if (error) toast.error('Error al actualizar verificación');
-    else fetchUsers();
-  };
-
-  const deleteUser = async (userId) => {
-    if (!window.confirm('¿Eliminar usuario definitivamente?')) return;
-    const { error } = await supabase.from('profiles').delete().eq('id', userId);
-    if (error) toast.error('Error al eliminar');
-    else { toast.success('Usuario eliminado'); fetchUsers(); }
-  };
-
+  const exportUsers = () =>
+    downloadCsv(
+      'techmatch-usuarios.csv',
+      [
+        { label: 'Nombre', value: (r) => r.full_name },
+        { label: 'Nombre comercial', value: (r) => r.store_name },
+        { label: 'Cuenta', value: (r) => (getAccountType(r) === 'store' ? 'Tienda' : 'Personal') },
+        { label: 'Acceso', value: (r) => (r.role === 'admin' ? 'Administrador' : 'Usuario') },
+        { label: 'Ciudad', value: (r) => r.city },
+        { label: 'Teléfono', value: (r) => r.phone },
+        { label: 'Verificado', value: (r) => (r.is_verified ? 'Sí' : 'No') },
+        { label: 'Registro', value: (r) => r.created_at },
+      ],
+      rows
+    );
   return (
-    <div>
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="font-display text-2xl font-bold text-slate-body">Usuarios (CU05)</h1>
-        <button onClick={fetchUsers} className="text-sm text-cyan hover:opacity-75 transition-opacity flex items-center gap-1.5">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><polyline points="3 3 3 8 8 8"></polyline></svg>
-          Actualizar
+    <section>
+      <AdminHeading
+        eyebrow={verifications ? 'Confianza de la comunidad' : 'Gestión de la comunidad'}
+        title={verifications ? 'Verificaciones' : 'Usuarios'}
+        description={
+          verifications
+            ? 'Revisá los perfiles actuales y otorgá o retirá su verificación manual.'
+            : 'Consultá y editá las cuentas personales, tiendas y administradores registrados.'
+        }
+      >
+        <button className="market-secondary" onClick={exportUsers}>
+          <Icon name="file" size={17} />
+          Exportar CSV
         </button>
-      </div>
-
-      {loadingData ? (
-        <div className="flex justify-center py-12">
-          <div className="w-8 h-8 border-2 border-cyan border-t-transparent rounded-full animate-spin" />
-        </div>
-      ) : (
-        <div className="bg-navy-light border border-cyan/10 rounded-2xl overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm min-w-[700px]">
-              <thead>
-                <tr className="border-b border-cyan/10 bg-navy-lighter/10">
-                  <th className="text-left px-4 py-3 text-slate-muted font-semibold">Nombre</th>
-                  <th className="text-left px-4 py-3 text-slate-muted font-semibold">Ciudad</th>
-                  <th className="text-left px-4 py-3 text-slate-muted font-semibold">Rol</th>
-                  <th className="text-left px-4 py-3 text-slate-muted font-semibold">Verificado</th>
-                  <th className="text-left px-4 py-3 text-slate-muted font-semibold">Registro</th>
-                  <th className="text-left px-4 py-3 text-slate-muted font-semibold">Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {users.map((u, i) => (
-                  <tr key={u.id} className={`border-b border-cyan/5 ${i % 2 === 0 ? '' : 'bg-navy/30'}`}>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-7 h-7 rounded-full bg-cyan/20 flex items-center justify-center text-xs font-bold text-cyan">
-                          {u.full_name?.[0]?.toUpperCase() ?? '?'}
-                        </div>
-                        <div>
-                          <div className="text-slate-body font-medium leading-none">{u.full_name ?? '—'}</div>
-                          {u.store_name && <div className="text-[0.65rem] text-slate-muted mt-0.5">{u.store_name}</div>}
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-4 py-3 text-slate-sub">{u.city ?? '—'}</td>
-                    <td className="px-4 py-3">
-                      <select
-                        value={u.role}
-                        onChange={e => changeRole(u.id, e.target.value)}
-                        className={`text-xs font-bold px-2.5 py-1 rounded-full border-0 cursor-pointer ${ROLE_COLOR[u.role] ?? ''} bg-transparent`}
-                      >
-                        {ROLES.map(r => <option key={r} value={r}>{ROLE_LABEL[r]}</option>)}
-                      </select>
-                    </td>
-                    <td className="px-4 py-3">
-                      <button
-                        onClick={() => toggleVerified(u.id, u.is_verified)}
-                        className={`w-7 h-7 rounded-full border flex items-center justify-center transition-all ${
-                          u.is_verified
-                            ? 'bg-brand-neon/20 border-brand-neon text-brand-neon'
-                            : 'bg-navy border-slate-muted/30 text-slate-muted'
-                        }`}
-                      >
-                        {u.is_verified ? (
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                        ) : (
-                          <span className="text-slate-muted/50">—</span>
-                        )}
-                      </button>
-                    </td>
-                    <td className="px-4 py-3 text-slate-muted text-xs">
-                      {new Date(u.created_at).toLocaleDateString('es-BO')}
-                    </td>
-                    <td className="px-4 py-3">
-                      <button
-                        onClick={() => deleteUser(u.id)}
-                        className="text-red-400/60 hover:text-red-400 transition-colors"
-                        title="Eliminar usuario"
-                      >
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/>
-                        </svg>
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-                {users.length === 0 && (
-                  <tr><td colSpan={6} className="px-4 py-8 text-center text-slate-muted">No hay usuarios registrados aún.</td></tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
+      </AdminHeading>
+      {verifications && (
+        <p className="market-notice">
+          La verificación corresponde al perfil. No certifica documentos, identidad ni procedencia
+          de equipos; no hay una consulta automática de IMEI conectada.
+        </p>
       )}
-    </div>
+      <div className="admin-filters glass-panel">
+        <label className="admin-search-field">
+          <Icon name="search" size={18} />
+          <input
+            aria-label="Buscar usuarios"
+            placeholder="Nombre, tienda, ciudad o teléfono…"
+            value={query}
+            onChange={changeFilter(setQuery)}
+          />
+        </label>
+        <label>
+          Cuenta
+          <select aria-label="Filtrar tipo de cuenta" value={type} onChange={changeFilter(setType)}>
+            <option value="all">Todas</option>
+            <option value="personal">Personales</option>
+            <option value="store">Tiendas</option>
+          </select>
+        </label>
+        <label>
+          Verificación
+          <select
+            aria-label="Filtrar verificación"
+            value={verification}
+            onChange={changeFilter(setVerification)}
+          >
+            <option value="all">Todas</option>
+            <option value="pending">Sin verificar</option>
+            <option value="verified">Verificadas</option>
+          </select>
+        </label>
+      </div>
+      <div className="glass-panel admin-table-panel">
+        <div className="admin-panel-heading">
+          <h2>
+            {rows.length} {verifications ? 'perfiles' : 'usuarios'}
+          </h2>
+          <span className="admin-subtle">Datos de perfiles registrados</span>
+        </div>
+        <div className="admin-table-scroll">
+          <table className="admin-table">
+            <thead>
+              <tr>
+                <th>Usuario</th>
+                <th>Cuenta</th>
+                <th>Ubicación</th>
+                <th>Contacto</th>
+                <th>Acceso</th>
+                <th>Verificación</th>
+                <th>Publicaciones</th>
+                <th>Registro</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.slice((currentPage - 1) * 10, currentPage * 10).map((item) => (
+                <tr key={item.id}>
+                  <td>
+                    <div className="admin-user-cell">
+                      <span className="market-avatar">
+                        {accountName(item).slice(0, 2).toUpperCase()}
+                      </span>
+                      <div>
+                        <strong>{accountName(item)}</strong>
+                        {item.store_name && <small>{item.full_name}</small>}
+                        {verifications && item.nit && <small>NIT: {item.nit}</small>}
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <span className="admin-badge">
+                      {getAccountType(item) === 'store' ? 'Tienda' : 'Personal'}
+                    </span>
+                  </td>
+                  <td>{item.city || 'Sin ciudad'}</td>
+                  <td>{item.phone || 'Sin teléfono'}</td>
+                  <td>{item.role === 'admin' ? 'Administrador' : 'Usuario'}</td>
+                  <td>
+                    <span
+                      className={`admin-badge ${item.is_verified ? 'status-published' : 'status-draft'}`}
+                    >
+                      {item.is_verified ? 'Verificado' : 'Sin verificar'}
+                    </span>
+                  </td>
+                  <td>{data.products.filter((product) => product.owner_id === item.id).length}</td>
+                  <td>{dateLabel(item.created_at)}</td>
+                  <td>
+                    <div className="admin-row-actions">
+                      <button
+                        className="market-text-button"
+                        onClick={() => setEditing(item)}
+                        aria-label={`Editar ${accountName(item)}`}
+                      >
+                        Editar
+                      </button>
+                      <button
+                        className="market-text-button"
+                        onClick={() => setAction({ kind: 'verify', profile: item })}
+                        aria-label={`${item.is_verified ? 'Retirar' : 'Otorgar'} verificación de ${accountName(item)}`}
+                      >
+                        <Icon name="shield" size={17} />
+                        {item.is_verified ? 'Retirar check' : 'Verificar'}
+                      </button>
+                      {!verifications && (
+                        <button
+                          className="market-text-button market-danger"
+                          disabled={item.id === user.id}
+                          title={
+                            item.id === user.id ? 'No podés eliminar tu propio perfil' : undefined
+                          }
+                          onClick={() => setAction({ kind: 'delete', profile: item })}
+                          aria-label={`Eliminar perfil de ${accountName(item)}`}
+                        >
+                          Eliminar
+                        </button>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+              {!rows.length && (
+                <tr>
+                  <td colSpan={9} className="admin-empty-inline">
+                    No hay perfiles que coincidan con los filtros.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+        <AdminPagination count={rows.length} page={currentPage} onChange={setPage} />
+      </div>
+      {editing && (
+        <AdminUserEditor
+          profile={editing}
+          self={editing.id === user.id}
+          onClose={() => setEditing(null)}
+          onSave={async (id, values) => {
+            await data.updateUser(id, values);
+            if (id === user.id) await refreshProfile();
+          }}
+        />
+      )}
+      {action && (
+        <AdminConfirm
+          title={
+            action.kind === 'delete'
+              ? 'Eliminar perfil'
+              : action.profile.is_verified
+                ? 'Retirar verificación'
+                : 'Verificar perfil'
+          }
+          danger={action.kind === 'delete'}
+          label={action.kind === 'delete' ? 'Eliminar perfil' : 'Confirmar verificación'}
+          description={
+            action.kind === 'delete'
+              ? `Se eliminará el perfil de ${accountName(action.profile)} y sus ${data.products.filter((item) => item.owner_id === action.profile.id).length} publicaciones. La cuenta de Supabase Auth seguirá existiendo y podría recrear su perfil al ingresar. Esta acción no se puede deshacer.`
+              : `${action.profile.is_verified ? 'Se retirará' : 'Se otorgará'} el check de verificación del perfil de ${accountName(action.profile)}. Esta acción es una revisión manual del administrador.`
+          }
+          onClose={() => setAction(null)}
+          onConfirm={async () => {
+            if (action.kind === 'delete') {
+              await data.removeUser(action.profile.id);
+              toast.success('Perfil eliminado.');
+            } else {
+              await data.updateUser(action.profile.id, {
+                is_verified: !action.profile.is_verified,
+              });
+              if (action.profile.id === user.id) await refreshProfile();
+              toast.success('Verificación actualizada.');
+            }
+          }}
+        />
+      )}
+    </section>
   );
 }

@@ -1,0 +1,10 @@
+{
+  "environment": "PostgreSQL en memoria con PGlite; sin conexión al Supabase real",
+  "checks": [
+    "Migración idempotente; conserva roles existentes, clasifica tienda y reemplaza políticas antiguas.",
+    "Usuario aislado: edita datos propios y cambia tipo; no modifica otro perfil, rol, verificación, fecha ni propietario. El cambio de identidad retira verificación.",
+    "Perfil faltante: RPC crea solo el propio, ignora privilegios inyectados en metadatos y no sobrescribe cambios posteriores.",
+    "Compatible con alta antigua: el trigger de profiles completa tipo/teléfono y evita crear administradores desde metadatos.",
+    "Administrador: consulta/gestiona perfiles y elimina otro perfil; el borrado del propio administrador está bloqueado."
+  ]
+}

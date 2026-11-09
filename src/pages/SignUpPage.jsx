@@ -8,7 +8,7 @@ export default function SignUpPage() {
   return (
     <AuthLayout
       title="Crear cuenta"
-      subtitle="Elegí tu rol y empezá gratis en segundos."
+      subtitle="Una cuenta para comprar y vender, por tu cuenta o como tienda."
       footerText="¿Ya tenés cuenta?"
       footerLink="Iniciá sesión"
       footerLinkTo="/login"

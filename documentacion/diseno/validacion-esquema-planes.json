@@ -1,0 +1,9 @@
+{
+  "date": "2026-11-09T02:01:02.026Z",
+  "environment": "PGlite, PostgreSQL en memoria; ninguna conexión a Supabase real",
+  "checks": [
+    "SQL ejecutable e idempotente sobre una base PostgreSQL en memoria con el esquema profiles informado.",
+    "Precios y los cinco límites coinciden entre SQL y frontend; cada tipo de cuenta recibe Básico y su Pro correspondiente.",
+    "RLS de la propuesta: catálogo público legible, suscripciones privadas por propietario y escrituras desde clientes denegadas."
+  ]
+}

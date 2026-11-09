@@ -1,0 +1,10 @@
+{
+  "environment": "PostgreSQL en memoria (PGlite), con auth y catálogo storage simulados; sin conexión al proyecto Supabase real",
+  "checks": [
+    "Ambas migraciones compatibles; productos y almacenamiento se pueden aplicar dos veces sin duplicar políticas.",
+    "Propietario crea, consulta y edita; valida precio y medios; no puede cambiar propietario ni adjuntar archivos ajenos.",
+    "Otra cuenta ve publicados, nunca borradores; no edita ni elimina ajenos. RPC de vendedores no expone campos privados y deseos quedan aislados por cuenta.",
+    "Límites Básico en PostgreSQL: 25 publicaciones activas y 5 videos activos; borradores no consumen cupo.",
+    "Administrador consulta borradores, edita y elimina publicaciones de otros; deseos se borran en cascada. Storage permite subir/borrar propios y gestión administrativa."
+  ]
+}

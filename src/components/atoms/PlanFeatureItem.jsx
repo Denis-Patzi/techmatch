@@ -12,17 +12,20 @@ export function PlanFeatureItem({ included, text, white = false }) {
       <span
         className={`
           w-4 h-4 rounded-full flex-shrink-0 mt-0.5 flex items-center justify-center text-xs font-bold
-          ${included
-            ? white ? 'bg-white/20 text-white' : 'bg-cyan/20 text-cyan'
-            : white ? 'bg-white/10 text-white/50' : 'bg-slate-muted/20 text-slate-muted'
+          ${
+            included
+              ? white
+                ? 'text-white'
+                : 'text-cyan'
+              : white
+                ? 'text-white/50'
+                : 'text-slate-muted'
           }
         `}
       >
         {included ? '✓' : '✕'}
       </span>
-      <span className={white ? 'text-white/80' : 'text-slate-sub'}>
-        {text}
-      </span>
+      <span className={white ? 'text-white/80' : 'text-slate-sub'}>{text}</span>
     </li>
   );
 }
