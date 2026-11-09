@@ -1,6 +1,12 @@
 import { supabase } from '@/lib/supabaseClient';
 
-export const CATEGORIES = ['Celulares', 'Computación', 'Audio', 'Componentes', 'Otros'];
+export const CATEGORIES = [
+  'Celulares',
+  'Computación',
+  'Audio',
+  'Componentes',
+  'Otros',
+];
 export const CONDITIONS = ['Nuevo', 'Como nuevo', 'Usado'];
 export const COVERS = {
   phone: { label: 'Celular', src: '/images/product-phone.webp' },
@@ -12,13 +18,21 @@ export const money = (value) =>
   `Bs. ${Number(value).toLocaleString('es-BO', { maximumFractionDigits: 2 })}`;
 export const mediaUrl = (product) =>
   product.media_path
-    ? supabase.storage.from('product-media').getPublicUrl(product.media_path).data.publicUrl
+    ? supabase.storage.from('product-media').getPublicUrl(product.media_path)
+        .data.publicUrl
     : (COVERS[product.cover_key] || COVERS.phone).src;
 
 export function productError(error) {
+  if (error?.code === 'P0001') return error.message;
+  if (
+    ['PGRST204', '42703'].includes(error?.code) &&
+    /auction_duration_days/.test(error.message || '')
+  )
+    return 'Falta activar las subastas. Ejecutá 20261111_auctions_messages.sql en Supabase.';
   if (['42P01', 'PGRST205', 'PGRST202', '42703'].includes(error?.code))
     return 'Falta habilitar el catálogo en Supabase. Ejecutá el SQL de productos indicado en la documentación.';
-  if (error?.code === '23514' && error.message?.includes('Básico')) return error.message;
+  if (error?.code === '23514' && error.message?.includes('Básico'))
+    return error.message;
   if (error?.code === '42501')
     return 'Tu cuenta no tiene permiso para esta acción. Actualizá la página y volvé a intentar.';
   return 'No se pudo completar la operación. Revisá tu conexión y volvé a intentar.';
@@ -49,7 +63,7 @@ export async function saveProduct({ values, file, original, ownerId }) {
       .upload(uploaded, file, { contentType: file.type, upsert: false });
     if (error)
       throw new Error(
-        'No se pudo subir el archivo. Verificá el bucket product-media y tu conexión.'
+        'No se pudo subir el archivo. Verificá el bucket product-media y tu conexión.',
       );
   }
   const payload = {
@@ -60,9 +74,13 @@ export async function saveProduct({ values, file, original, ownerId }) {
     condition: values.condition,
     city: values.city.trim(),
     listing_type: values.listing_type,
+    auction_duration_days: Number(
+      values.auction_duration_days || original?.auction_duration_days || 3,
+    ),
     status: values.status,
     cover_key: values.cover_key,
-    media_path: uploaded || (values.useReference ? null : original?.media_path) || null,
+    media_path:
+      uploaded || (values.useReference ? null : original?.media_path) || null,
     media_type: file
       ? file.type.startsWith('video/')
         ? 'video'
@@ -76,7 +94,8 @@ export async function saveProduct({ values, file, original, ownerId }) {
     : supabase.from('products').insert({ ...payload, owner_id: ownerId });
   const { data, error } = await query.select('*').single();
   if (error) {
-    if (uploaded) await supabase.storage.from('product-media').remove([uploaded]);
+    if (uploaded)
+      await supabase.storage.from('product-media').remove([uploaded]);
     throw error;
   }
   // Old files are retained: another listing may reference them. No shared file is removed.
@@ -90,5 +109,6 @@ export async function deleteProduct(id) {
     .eq('id', id)
     .select('id')
     .single();
-  if (error || !data) throw error || new Error('No se encontró la publicación.');
+  if (error || !data)
+    throw error || new Error('No se encontró la publicación.');
 }

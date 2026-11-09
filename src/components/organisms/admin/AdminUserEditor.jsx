@@ -18,7 +18,8 @@ export default function AdminUserEditor({ profile, self, onSave, onClose }) {
     [error, setError] = useState('');
   const field = (key) => ({
     value: values[key],
-    onChange: (event) => setValues((previous) => ({ ...previous, [key]: event.target.value })),
+    onChange: (event) =>
+      setValues((previous) => ({ ...previous, [key]: event.target.value })),
   });
   return (
     <MarketDialog
@@ -33,9 +34,12 @@ export default function AdminUserEditor({ profile, self, onSave, onClose }) {
           event.preventDefault();
           if (
             values.full_name.trim().length < 3 ||
-            (values.account_type === 'store' && values.store_name.trim().length < 2)
+            (values.account_type === 'store' &&
+              values.store_name.trim().length < 2)
           ) {
-            setError('Completá el nombre y, para tiendas, el nombre comercial.');
+            setError(
+              'Completá el nombre y, para tiendas, el nombre comercial.'
+            );
             return;
           }
           setBusy(true);
@@ -46,8 +50,14 @@ export default function AdminUserEditor({ profile, self, onSave, onClose }) {
               phone: values.phone.trim() || null,
               city: values.city.trim() || null,
               account_type: values.account_type,
-              store_name: values.account_type === 'store' ? values.store_name.trim() : null,
-              nit: values.account_type === 'store' ? values.nit.trim() || null : null,
+              store_name:
+                values.account_type === 'store'
+                  ? values.store_name.trim()
+                  : null,
+              nit:
+                values.account_type === 'store'
+                  ? values.nit.trim() || null
+                  : null,
               ...(!self
                 ? {
                     role:
@@ -73,7 +83,12 @@ export default function AdminUserEditor({ profile, self, onSave, onClose }) {
         <fieldset disabled={busy}>
           <label>
             Nombre completo
-            <input required minLength={3} maxLength={120} {...field('full_name')} />
+            <input
+              required
+              minLength={3}
+              maxLength={120}
+              {...field('full_name')}
+            />
           </label>
           <div className="market-field-row">
             <label>
@@ -88,7 +103,7 @@ export default function AdminUserEditor({ profile, self, onSave, onClose }) {
           <div className="market-field-row">
             <label>
               Tipo de cuenta
-              <select {...field('account_type')}>
+              <select aria-label="Tipo de cuenta" {...field('account_type')}>
                 <option value="personal">Personal</option>
                 <option value="store">Tienda</option>
               </select>
@@ -105,7 +120,12 @@ export default function AdminUserEditor({ profile, self, onSave, onClose }) {
             <>
               <label>
                 Nombre de la tienda
-                <input required minLength={2} maxLength={120} {...field('store_name')} />
+                <input
+                  required
+                  minLength={2}
+                  maxLength={120}
+                  {...field('store_name')}
+                />
               </label>
               <label>
                 NIT
@@ -115,7 +135,8 @@ export default function AdminUserEditor({ profile, self, onSave, onClose }) {
           )}
           {values.access_role === 'admin' && profile.role !== 'admin' && (
             <p className="market-notice">
-              Al guardar, esta cuenta tendrá acceso a la administración de usuarios y publicaciones.
+              Al guardar, esta cuenta tendrá acceso a la administración de
+              usuarios y publicaciones.
             </p>
           )}
           {error && (
@@ -124,7 +145,11 @@ export default function AdminUserEditor({ profile, self, onSave, onClose }) {
             </p>
           )}
           <div className="market-form-actions">
-            <button type="button" className="market-secondary" onClick={onClose}>
+            <button
+              type="button"
+              className="market-secondary"
+              onClick={onClose}
+            >
               Cancelar
             </button>
             <button className="btn-primary" type="submit">

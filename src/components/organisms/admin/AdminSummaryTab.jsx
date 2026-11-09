@@ -15,7 +15,7 @@ export default function AdminSummaryTab({ data, onNavigate }) {
   const [days, setDays] = useState(30);
   const metrics = useMemo(
     () => getAdminAnalytics(data.profiles, data.products, days),
-    [data.profiles, data.products, days]
+    [data.profiles, data.products, days],
   );
   const recent = [...data.products]
     .sort((a, b) => b.created_at.localeCompare(a.created_at))
@@ -34,9 +34,9 @@ export default function AdminSummaryTab({ data, onNavigate }) {
         { label: 'Perfiles verificados', value: metrics.verified },
         { label: 'Publicaciones totales', value: data.products.length },
         { label: 'Publicaciones activas', value: metrics.active.length },
-        { label: 'Anuncios de subasta activos', value: metrics.activeAuctions },
+        { label: 'Subastas publicadas', value: metrics.activeAuctions },
         ...metrics.statuses,
-      ]
+      ],
     );
   return (
     <div className="admin-summary">
@@ -117,7 +117,8 @@ export default function AdminSummaryTab({ data, onNavigate }) {
           </div>
           <ActivityChart data={metrics.activity} />
           <p className="admin-chart-note">
-            Altas por fecha de creación de los registros actuales. Hora de Bolivia.
+            Altas por fecha de creación de los registros actuales. Hora de
+            Bolivia.
           </p>
         </section>
         <section className="glass-panel admin-chart-panel">
@@ -159,7 +160,9 @@ export default function AdminSummaryTab({ data, onNavigate }) {
           <div className="admin-status-bars">
             {metrics.statuses.map((item) => (
               <div key={item.key}>
-                <span className={`admin-badge status-${item.key}`}>{item.label}</span>
+                <span className={`admin-badge status-${item.key}`}>
+                  {item.label}
+                </span>
                 <strong>{item.value}</strong>
                 <div>
                   <span
@@ -172,7 +175,8 @@ export default function AdminSummaryTab({ data, onNavigate }) {
             ))}
           </div>
           <p className="admin-chart-note">
-            Vendido significa marcado por su propietario; no representa un pago registrado.
+            Vendido significa marcado por su propietario; no representa un pago
+            registrado.
           </p>
         </section>
         <section className="admin-review-card glass-panel">
@@ -180,8 +184,14 @@ export default function AdminSummaryTab({ data, onNavigate }) {
           <Icon name="shield" size={37} />
           <h2>Revisión del catálogo</h2>
           <strong>{metrics.review.length}</strong>
-          <p>Borradores y publicaciones de perfiles sin verificar para revisar manualmente.</p>
-          <button className="market-secondary" onClick={() => onNavigate('review')}>
+          <p>
+            Borradores y publicaciones de perfiles sin verificar para revisar
+            manualmente.
+          </p>
+          <button
+            className="market-secondary"
+            onClick={() => onNavigate('review')}
+          >
             Ir a revisión
             <Icon name="arrow" size={16} />
           </button>
@@ -193,7 +203,10 @@ export default function AdminSummaryTab({ data, onNavigate }) {
             <span className="eyebrow">Lo más reciente</span>
             <h2>Últimas publicaciones</h2>
           </div>
-          <button className="market-text-button" onClick={() => onNavigate('products')}>
+          <button
+            className="market-text-button"
+            onClick={() => onNavigate('products')}
+          >
             Ver todas
             <Icon name="arrow" size={16} />
           </button>
@@ -229,7 +242,9 @@ export default function AdminSummaryTab({ data, onNavigate }) {
                     </div>
                   </td>
                   <td>{accountName(metrics.ownerMap[item.owner_id])}</td>
-                  <td>{item.listing_type === 'auction' ? 'Subasta' : 'Venta'}</td>
+                  <td>
+                    {item.listing_type === 'auction' ? 'Subasta' : 'Venta'}
+                  </td>
                   <td className="admin-price">{money(item.price)}</td>
                   <td>
                     <span className={`admin-badge status-${item.status}`}>
@@ -241,9 +256,14 @@ export default function AdminSummaryTab({ data, onNavigate }) {
                     <button
                       className="market-text-button"
                       onClick={() =>
-                        onNavigate(item.listing_type === 'auction' ? 'auctions' : 'products', {
-                          q: item.title,
-                        })
+                        onNavigate(
+                          item.listing_type === 'auction'
+                            ? 'auctions'
+                            : 'products',
+                          {
+                            q: item.title,
+                          },
+                        )
                       }
                     >
                       Gestionar

@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { Icon } from '@/components/atoms/Icon';
 import { CATEGORIES, COVERS, mediaUrl, money } from '@/lib/products';
+import AuctionPanel, { AuctionCountdown } from './AuctionPanel';
+import { AccountStatus } from '@/components/molecules/AccountStatus';
 
 export function EmptyProducts({
   title = 'Tu próximo match está por llegar',
@@ -28,7 +30,11 @@ export function CategoryFilter({ value, onChange }) {
   return (
     <div className="market-categories" aria-label="Filtrar por categoría">
       {['Todos', ...CATEGORIES].map((category) => (
-        <button key={category} aria-pressed={value === category} onClick={() => onChange(category)}>
+        <button
+          key={category}
+          aria-pressed={value === category}
+          onClick={() => onChange(category)}
+        >
           {category}
         </button>
       ))}
@@ -37,14 +43,28 @@ export function CategoryFilter({ value, onChange }) {
 }
 function ProductImage({ product }) {
   return product.media_type === 'video' ? (
-    <video src={`${mediaUrl(product)}#t=0.1`} preload="metadata" muted playsInline />
+    <video
+      src={`${mediaUrl(product)}#t=0.1`}
+      preload="metadata"
+      muted
+      playsInline
+    />
   ) : (
     <img src={mediaUrl(product)} alt={product.title} loading="lazy" />
   );
 }
-export function ProductGrid({ products, onOpen, onEdit, onDelete, publications = false }) {
+export function ProductGrid({
+  products,
+  onOpen,
+  onEdit,
+  onDelete,
+  publications = false,
+  auctions = {},
+}) {
   return (
-    <div className={`market-product-grid ${publications ? 'market-publications-grid' : ''}`}>
+    <div
+      className={`market-product-grid ${publications ? 'market-publications-grid' : ''}`}
+    >
       {products.map((product) => (
         <article className="market-product-card" key={product.id}>
           <button
@@ -63,12 +83,19 @@ export function ProductGrid({ products, onOpen, onEdit, onDelete, publications =
                     : 'Venta'}
             </span>
             <span className="market-media-kind">
-              <Icon name={product.media_type === 'video' ? 'video' : 'image'} size={17} />
+              <Icon
+                name={product.media_type === 'video' ? 'video' : 'image'}
+                size={17}
+              />
             </span>
-            {!product.media_path && <small className="market-reference">Referencia</small>}
+            {!product.media_path && (
+              <small className="market-reference">Referencia</small>
+            )}
             {publications && (
               <span className="market-post-caption">
-                <strong>{money(product.price)}</strong>
+                <strong>
+                  {money(auctions[product.id]?.current_price ?? product.price)}
+                </strong>
                 <span>{product.title}</span>
               </span>
             )}
@@ -77,10 +104,18 @@ export function ProductGrid({ products, onOpen, onEdit, onDelete, publications =
             <button onClick={() => onOpen(product)}>
               <h3>{product.title}</h3>
             </button>
-            <strong>{money(product.price)}</strong>
+            <strong>
+              {money(auctions[product.id]?.current_price ?? product.price)}
+            </strong>
+            {product.listing_type === 'auction' && (
+              <AuctionCountdown auction={auctions[product.id]} />
+            )}
             {onEdit && (
               <div className="market-product-actions">
-                <button onClick={() => onEdit(product)} aria-label={`Editar ${product.title}`}>
+                <button
+                  onClick={() => onEdit(product)}
+                  aria-label={`Editar ${product.title}`}
+                >
                   Editar
                 </button>
                 <button
@@ -110,6 +145,7 @@ export function ProfileCatalog({
   onDelete,
   onCreate,
   defaultTab = 'catalog',
+  auctions = {},
 }) {
   const [tab, setTab] = useState(defaultTab);
   const [category, setCategory] = useState('Todos');
@@ -118,8 +154,12 @@ export function ProfileCatalog({
   const sold = mine.filter((item) => item.status === 'sold').length;
   const list = (
     tab === 'favorites'
-      ? products.filter((item) => favorites.includes(item.id) && item.status === 'published')
-      : mine.filter((item) => tab !== 'auctions' || item.listing_type === 'auction')
+      ? products.filter(
+          (item) => favorites.includes(item.id) && item.status === 'published',
+        )
+      : mine.filter(
+          (item) => tab !== 'auctions' || item.listing_type === 'auction',
+        )
   )
     .filter((item) => category === 'Todos' || item.category === category)
     .sort((a, b) =>
@@ -127,7 +167,7 @@ export function ProfileCatalog({
         ? Number(a.price) - Number(b.price)
         : order === 'oldest'
           ? a.created_at.localeCompare(b.created_at)
-          : b.created_at.localeCompare(a.created_at)
+          : b.created_at.localeCompare(a.created_at),
     );
   const tabs = [
     { id: 'publications', label: 'Publicaciones', icon: 'video' },
@@ -138,9 +178,7 @@ export function ProfileCatalog({
   return (
     <section className="market-profile">
       <div className="market-profile-heading">
-        <span className="eyebrow">
-          {seller?.account_type === 'store' ? 'Cuenta de tienda' : 'Cuenta personal'}
-        </span>
+        <AccountStatus profile={seller} />
       </div>
       <div className="market-profile-identity">
         <span className="market-profile-avatar">
@@ -166,7 +204,9 @@ export function ProfileCatalog({
             </div>
             <div>
               <strong>{own ? sold : '—'}</strong>
-              <span title="Publicaciones que marcaste como vendidas">Vendidos</span>
+              <span title="Publicaciones que marcaste como vendidas">
+                Vendidos
+              </span>
             </div>
             <div>
               <strong>{mine.length}</strong>
@@ -186,7 +226,9 @@ export function ProfileCatalog({
           )}
         </div>
       </div>
-      <p className="market-profile-description">Tecnología que busca una nueva historia.</p>
+      <p className="market-profile-description">
+        Tecnología que busca una nueva historia.
+      </p>
       <nav className="market-profile-tabs" aria-label="Contenido del perfil">
         {tabs.map((item) => (
           <button
@@ -219,12 +261,14 @@ export function ProfileCatalog({
       </div>
       {tab === 'auctions' && (
         <p className="market-notice">
-          Anuncios con precio base. Las pujas todavía no están habilitadas.
+          Subastas de 3 a 5 días. Abrí un producto para ver las ofertas y su
+          contador.
         </p>
       )}
       {list.length ? (
         <ProductGrid
           products={list}
+          auctions={auctions}
           publications={tab === 'publications'}
           onOpen={onOpen}
           onEdit={own && tab !== 'favorites' ? onEdit : undefined}
@@ -233,7 +277,9 @@ export function ProfileCatalog({
       ) : (
         <EmptyProducts
           title={
-            tab === 'favorites' ? 'Tus deseos tienen su lugar' : 'Todavía no hay productos aquí'
+            tab === 'favorites'
+              ? 'Tus deseos tienen su lugar'
+              : 'Todavía no hay productos aquí'
           }
           description={
             tab === 'favorites'
@@ -260,7 +306,7 @@ export function MarketDialog({ title, onClose, children, compact = false }) {
       if (event.key === 'Tab') {
         const controls = [
           ...ref.current.querySelectorAll(
-            'button:not(:disabled),input,select,textarea,a[href],video[controls],[tabindex="0"]'
+            'button:not(:disabled),input,select,textarea,a[href],video[controls],[tabindex="0"]',
           ),
         ];
         const first = controls[0],
@@ -295,7 +341,11 @@ export function MarketDialog({ title, onClose, children, compact = false }) {
         aria-modal="true"
         aria-label={title}
       >
-        <button className="market-icon market-dialog-close" onClick={onClose} aria-label="Cerrar">
+        <button
+          className="market-icon market-dialog-close"
+          onClick={onClose}
+          aria-label="Cerrar"
+        >
           <Icon name="close" />
         </button>
         {children}
@@ -303,7 +353,19 @@ export function MarketDialog({ title, onClose, children, compact = false }) {
     </div>
   );
 }
-export function ProductDetail({ product, seller, favorite, onFavorite, onSeller, onEdit }) {
+export function ProductDetail({
+  product,
+  seller,
+  favorite,
+  onFavorite,
+  onSeller,
+  onEdit,
+  onContact,
+  onContactWinner,
+  auction,
+  auctionError,
+  onAuctionRefresh,
+}) {
   return (
     <div className="market-detail">
       <div className="market-detail-media">
@@ -317,7 +379,7 @@ export function ProductDetail({ product, seller, favorite, onFavorite, onSeller,
       <div className="market-detail-info">
         <span className="eyebrow">
           {product.listing_type === 'auction'
-            ? 'Anuncio de subasta'
+            ? 'Subasta'
             : product.status === 'sold'
               ? 'Vendido'
               : product.status === 'draft'
@@ -325,7 +387,9 @@ export function ProductDetail({ product, seller, favorite, onFavorite, onSeller,
                 : 'En venta'}
         </span>
         <h2>{product.title}</h2>
-        <strong className="market-detail-price">{money(product.price)}</strong>
+        <strong className="market-detail-price">
+          {money(auction?.current_price ?? product.price)}
+        </strong>
         <p className="market-detail-description">{product.description}</p>
         <dl>
           <div>
@@ -341,7 +405,10 @@ export function ProductDetail({ product, seller, favorite, onFavorite, onSeller,
             <dd>{product.city}</dd>
           </div>
         </dl>
-        <button className="market-detail-seller" onClick={() => onSeller(product.owner_id)}>
+        <button
+          className="market-detail-seller"
+          onClick={() => onSeller(product.owner_id)}
+        >
           <Icon name="store" />
           <span>
             {seller?.display_name || 'Ver vendedor'}
@@ -364,10 +431,21 @@ export function ProductDetail({ product, seller, favorite, onFavorite, onSeller,
             Editar publicación
           </button>
         )}
-        {product.listing_type === 'auction' && (
-          <p className="market-notice">
-            Precio base informativo. Las pujas todavía no están habilitadas.
-          </p>
+        {onContact && !onEdit && product.status === 'published' && (
+          <button className="btn-primary" onClick={() => onContact(product)}>
+            <Icon name="chat" size={18} />
+            Contactar al vendedor
+          </button>
+        )}
+        {product.listing_type === 'auction' && onAuctionRefresh && (
+          <AuctionPanel
+            product={product}
+            auction={auction}
+            error={auctionError}
+            onRefresh={onAuctionRefresh}
+            onContactWinner={onContactWinner}
+            onContact={onContact}
+          />
         )}
       </div>
     </div>

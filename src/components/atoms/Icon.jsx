@@ -1,4 +1,15 @@
 const paths = {
+  clock: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 7v5l3 2" />
+    </>
+  ),
+  send: <path d="m3 3 19 9-19 9 4-9-4-9Zm4 9h15" />,
+  back: <path d="M20 12H4m7-7-7 7 7 7" />,
+  refresh: (
+    <path d="M20 7v5h-5M4 17v-5h5M5 8a8 8 0 0 1 13-3l2 2M4 17l2 2a8 8 0 0 0 13-3" />
+  ),
   panelClose: (
     <>
       <rect x="3" y="3" width="18" height="18" rx="3" />
@@ -104,7 +115,9 @@ const paths = {
   ),
   box: <path d="m12 3 9 5-9 5-9-5 9-5ZM3 8v9l9 5 9-5V8M12 13v9M7 5l10 6" />,
   chart: <path d="M4 3v17h17M8 15v-4m5 4V7m5 8v-6" />,
-  chat: <path d="M21 14a3 3 0 0 1-3 3H8l-5 4V6a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v8Z" />,
+  chat: (
+    <path d="M21 14a3 3 0 0 1-3 3H8l-5 4V6a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v8Z" />
+  ),
   users: (
     <>
       <circle cx="9" cy="8" r="4" />
@@ -138,12 +151,16 @@ const paths = {
     </>
   ),
   plus: <path d="M12 5v14M5 12h14" />,
-  heart: <path d="M20 4a5 5 0 0 0-8 2 5 5 0 0 0-8-2c-5 5 0 10 8 16 8-6 13-11 8-16Z" />,
+  heart: (
+    <path d="M20 4a5 5 0 0 0-8 2 5 5 0 0 0-8-2c-5 5 0 10 8 16 8-6 13-11 8-16Z" />
+  ),
   menu: <path d="M4 6h16M4 12h16M4 18h16" />,
   close: <path d="m6 6 12 12M6 18 18 6" />,
   play: <path d="m8 4 12 8-12 8V4Z" />,
   pause: <path d="M8 4v16M16 4v16" />,
-  volume: <path d="m11 4-6 5H2v6h3l6 5V4ZM15 8a6 6 0 0 1 0 8M18 4a11 11 0 0 1 0 16" />,
+  volume: (
+    <path d="m11 4-6 5H2v6h3l6 5V4ZM15 8a6 6 0 0 1 0 8M18 4a11 11 0 0 1 0 16" />
+  ),
   muted: <path d="m11 4-6 5H2v6h3l6 5V4ZM16 9l6 6m0-6-6 6" />,
   fullscreen: <path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5" />,
   share: <path d="M15 8V3l7 9-7 9v-5C7 16 3 20 3 20S2 8 15 8Z" />,

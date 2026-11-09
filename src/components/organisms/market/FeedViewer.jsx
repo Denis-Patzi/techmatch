@@ -2,10 +2,22 @@ import { useEffect, useRef, useState } from 'react';
 import { Icon } from '@/components/atoms/Icon';
 import { COVERS, mediaUrl, money } from '@/lib/products';
 import { EmptyProducts } from './MarketViews';
+import { AuctionCountdown } from './AuctionPanel';
 
 const clock = (seconds) =>
   `${Math.floor((seconds || 0) / 60)}:${String(Math.floor((seconds || 0) % 60)).padStart(2, '0')}`;
-function FeedCard({ product, seller, favorite, onFavorite, onOpen, onSeller, onShare }) {
+function FeedCard({
+  product,
+  seller,
+  favorite,
+  onFavorite,
+  onOpen,
+  onSeller,
+  onShare,
+  onContact,
+  own,
+  auction,
+}) {
   const stage = useRef(null);
   const video = useRef(null);
   const [playing, setPlaying] = useState(false);
@@ -27,7 +39,7 @@ function FeedCard({ product, seller, favorite, onFavorite, onOpen, onSeller, onS
           element.play().catch(() => {});
         else element.pause();
       },
-      { threshold: 0.65 }
+      { threshold: 0.65 },
     );
     const hide = () => {
       if (document.hidden) element.pause();
@@ -71,10 +83,14 @@ function FeedCard({ product, seller, favorite, onFavorite, onOpen, onSeller, onS
             preload="metadata"
             onPlay={() => setPlaying(true)}
             onPause={() => setPlaying(false)}
-            onTimeUpdate={(event) => setProgress(event.currentTarget.currentTime)}
+            onTimeUpdate={(event) =>
+              setProgress(event.currentTarget.currentTime)
+            }
             onLoadedMetadata={(event) =>
               setDuration(
-                Number.isFinite(event.currentTarget.duration) ? event.currentTarget.duration : 0
+                Number.isFinite(event.currentTarget.duration)
+                  ? event.currentTarget.duration
+                  : 0,
               )
             }
             onError={() => setFailed(true)}
@@ -87,7 +103,9 @@ function FeedCard({ product, seller, favorite, onFavorite, onOpen, onSeller, onS
         <button
           className={`market-player-hitarea ${!playing ? 'is-paused' : ''}`}
           onClick={togglePlay}
-          aria-label={playing ? `Pausar ${product.title}` : `Reproducir ${product.title}`}
+          aria-label={
+            playing ? `Pausar ${product.title}` : `Reproducir ${product.title}`
+          }
         >
           <span>
             <Icon name="play" size={52} />
@@ -95,7 +113,10 @@ function FeedCard({ product, seller, favorite, onFavorite, onOpen, onSeller, onS
         </button>
       )}
       <div className="market-feed-caption">
-        <button className="market-feed-seller" onClick={() => onSeller(product.owner_id)}>
+        <button
+          className="market-feed-seller"
+          onClick={() => onSeller(product.owner_id)}
+        >
           <span className="market-avatar">
             {(seller?.display_name || 'TM').slice(0, 2).toUpperCase()}
           </span>
@@ -117,15 +138,29 @@ function FeedCard({ product, seller, favorite, onFavorite, onOpen, onSeller, onS
           </span>
           {!product.media_path && <span>Imagen de referencia</span>}
         </div>
-        <button className="market-feed-product-link" onClick={() => onOpen(product)}>
-          <Icon name={product.listing_type === 'auction' ? 'gavel' : 'bag'} size={18} />
-          <strong>{money(product.price)}</strong>
-          <span>{product.listing_type === 'auction' ? 'Ver precio base' : 'Ver producto'}</span>
+        <button
+          className="market-feed-product-link"
+          onClick={() => onOpen(product)}
+        >
+          <Icon
+            name={product.listing_type === 'auction' ? 'gavel' : 'bag'}
+            size={18}
+          />
+          <strong>{money(auction?.current_price ?? product.price)}</strong>
+          <span>
+            {product.listing_type === 'auction'
+              ? 'Ver subasta'
+              : 'Ver producto'}
+          </span>
           <Icon name="chevron" size={16} />
         </button>
+        {product.listing_type === 'auction' && (
+          <AuctionCountdown auction={auction} />
+        )}
         {failed && (
           <p role="status">
-            No pudimos reproducir este video. Podés consultar los detalles del producto.
+            No pudimos reproducir este video. Podés consultar los detalles del
+            producto.
           </p>
         )}
       </div>
@@ -147,11 +182,26 @@ function FeedCard({ product, seller, favorite, onFavorite, onOpen, onSeller, onS
           <Icon name="heart" size={31} />
           <span>Deseos</span>
         </button>
-        <button onClick={() => onOpen(product)} aria-label={`Detalles de ${product.title}`}>
+        <button
+          onClick={() => onOpen(product)}
+          aria-label={`Detalles de ${product.title}`}
+        >
           <Icon name="bag" size={29} />
           <span>Producto</span>
         </button>
-        <button onClick={() => onShare(product)} aria-label={`Compartir ${product.title}`}>
+        {!own && (
+          <button
+            onClick={() => onContact(product)}
+            aria-label={`Contactar al vendedor de ${product.title}`}
+          >
+            <Icon name="chat" size={29} />
+            <span>Contactar</span>
+          </button>
+        )}
+        <button
+          onClick={() => onShare(product)}
+          aria-label={`Compartir ${product.title}`}
+        >
           <Icon name="share" size={28} />
           <span>Compartir</span>
         </button>
@@ -173,9 +223,14 @@ function FeedCard({ product, seller, favorite, onFavorite, onOpen, onSeller, onS
                   setProgress(Number(event.target.value));
                 }
               }}
-              style={{ '--played': `${duration ? (progress / duration) * 100 : 0}%` }}
+              style={{
+                '--played': `${duration ? (progress / duration) * 100 : 0}%`,
+              }}
             />
-            <button onClick={togglePlay} aria-label={playing ? 'Pausar video' : 'Reproducir video'}>
+            <button
+              onClick={togglePlay}
+              aria-label={playing ? 'Pausar video' : 'Reproducir video'}
+            >
               <Icon name={playing ? 'pause' : 'play'} size={19} />
             </button>
             <span className="market-player-time">
@@ -217,6 +272,9 @@ export default function FeedViewer({
   onSeller,
   onShare,
   onCreate,
+  onContact,
+  userId,
+  auctions = {},
 }) {
   const feed = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -238,7 +296,9 @@ export default function FeedViewer({
         aria-label="Feed de productos"
         onScroll={(event) =>
           setActiveIndex(
-            Math.round(event.currentTarget.scrollTop / event.currentTarget.clientHeight)
+            Math.round(
+              event.currentTarget.scrollTop / event.currentTarget.clientHeight,
+            ),
           )
         }
         onKeyDown={(event) => {
@@ -261,6 +321,9 @@ export default function FeedViewer({
             onOpen={onOpen}
             onSeller={onSeller}
             onShare={onShare}
+            onContact={onContact}
+            own={product.owner_id === userId}
+            auction={auctions[product.id]}
           />
         ))}
       </div>

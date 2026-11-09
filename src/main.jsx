@@ -7,6 +7,8 @@ import './styles/user-app.css';
 import './styles/market-app.css';
 import './styles/social-viewer.css';
 import './styles/admin-dashboard.css';
+import './styles/commerce.css';
+import './styles/account-status.css';
 import App from './App.jsx';
 import { MotionConfig } from 'framer-motion';
 import { ThemeProvider } from './contexts/ThemeContext';
@@ -18,5 +20,5 @@ createRoot(document.getElementById('root')).render(
         <App />
       </MotionConfig>
     </ThemeProvider>
-  </StrictMode>
+  </StrictMode>,
 );

@@ -17,6 +17,7 @@ const MAIN = [
   { id: 'profile', label: 'Mi perfil', mobile: 'Perfil', icon: 'user' },
 ];
 const EXTRA = [
+  { id: 'messages', label: 'Mensajes', icon: 'chat' },
   { id: 'catalog', label: 'Mi catálogo', icon: 'grid' },
   { id: 'favorites', label: 'Deseos', icon: 'heart' },
   { id: 'ai', label: 'Tasador IA', icon: 'sparkles' },
@@ -24,7 +25,14 @@ const EXTRA = [
   { id: 'settings', label: 'Editar mi cuenta', icon: 'settings' },
 ];
 const SIDEBAR_KEY = 'techmatch-sidebar-collapsed';
-export default function SocialLayout({ section, navigate, children, query, setQuery }) {
+export default function SocialLayout({
+  section,
+  navigate,
+  children,
+  query,
+  setQuery,
+  unreadMessages = 0,
+}) {
   const { profile, signOut } = useAuth();
   const { isDark, toggleTheme } = useTheme();
   const routerNavigate = useNavigate();
@@ -46,7 +54,9 @@ export default function SocialLayout({ section, navigate, children, query, setQu
     }
   }, [collapsed]);
   const name =
-    (getAccountType(profile) === 'store' ? profile.store_name : profile.full_name) || 'Mi cuenta';
+    (getAccountType(profile) === 'store'
+      ? profile.store_name
+      : profile.full_name) || 'Mi cuenta';
   const isFeed = section === 'explore';
   const search = (event) => {
     event.preventDefault();
@@ -79,6 +89,11 @@ export default function SocialLayout({ section, navigate, children, query, setQu
     >
       <Icon name={item.icon} size={mobile ? 23 : 22} />
       <span>{mobile ? item.mobile : item.label}</span>
+      {item.id === 'messages' && unreadMessages > 0 && (
+        <b className="market-unread-badge">
+          {unreadMessages > 99 ? '99+' : unreadMessages}
+        </b>
+      )}
     </button>
   );
   return (
@@ -87,17 +102,25 @@ export default function SocialLayout({ section, navigate, children, query, setQu
     >
       <aside className="market-sidebar">
         <div className="market-sidebar-header">
-          <Link to="/" className="market-sidebar-brand" aria-label="TechMatch, inicio">
+          <Link
+            to="/"
+            className="market-sidebar-brand"
+            aria-label="TechMatch, inicio"
+          >
             <NavBrand />
           </Link>
           <button
             className="market-sidebar-toggle"
             type="button"
             onClick={() => setCollapsed((value) => !value)}
-            aria-label={collapsed ? 'Expandir barra lateral' : 'Contraer barra lateral'}
+            aria-label={
+              collapsed ? 'Expandir barra lateral' : 'Contraer barra lateral'
+            }
             aria-expanded={!collapsed}
             aria-controls="market-sidebar-navigation"
-            title={collapsed ? 'Expandir barra lateral' : 'Contraer barra lateral'}
+            title={
+              collapsed ? 'Expandir barra lateral' : 'Contraer barra lateral'
+            }
           >
             <Icon name={collapsed ? 'panelOpen' : 'panelClose'} size={20} />
           </button>
@@ -113,7 +136,11 @@ export default function SocialLayout({ section, navigate, children, query, setQu
             <Icon name="search" size={21} />
           </button>
         ) : (
-          <form className="market-sidebar-search" role="search" onSubmit={search}>
+          <form
+            className="market-sidebar-search"
+            role="search"
+            onSubmit={search}
+          >
             <Icon name="search" size={19} />
             <input
               aria-label="Buscar productos"
@@ -138,7 +165,9 @@ export default function SocialLayout({ section, navigate, children, query, setQu
             aria-label={`Mi perfil de ${name}`}
             title={collapsed ? name : undefined}
           >
-            <span className="market-avatar">{name.slice(0, 2).toUpperCase()}</span>
+            <span className="market-avatar">
+              {name.slice(0, 2).toUpperCase()}
+            </span>
             <span>
               <strong>{name}</strong>
               <small>{getAccountLabel(profile)}</small>
@@ -157,7 +186,9 @@ export default function SocialLayout({ section, navigate, children, query, setQu
         </div>
       </aside>
       <div className="market-main">
-        <header className={`market-topbar ${isFeed ? 'market-feed-topbar' : ''}`}>
+        <header
+          className={`market-topbar ${isFeed ? 'market-feed-topbar' : ''}`}
+        >
           {isFeed ? (
             <>
               <button
@@ -174,6 +205,18 @@ export default function SocialLayout({ section, navigate, children, query, setQu
                 </button>
               </nav>
               <div className="market-feed-topbar-tools">
+                <button
+                  className="market-icon market-messages-shortcut"
+                  onClick={() => change('messages')}
+                  aria-label={`Mensajes${unreadMessages ? `, ${unreadMessages} sin leer` : ''}`}
+                >
+                  <Icon name="chat" size={23} />
+                  {unreadMessages > 0 && (
+                    <b className="market-unread-badge">
+                      {unreadMessages > 99 ? '99+' : unreadMessages}
+                    </b>
+                  )}
+                </button>
                 <ThemeToggle isDark={isDark} onToggle={toggleTheme} />
                 <button
                   className="market-icon"
@@ -194,8 +237,22 @@ export default function SocialLayout({ section, navigate, children, query, setQu
                 {[...MAIN, ...EXTRA].find((item) => item.id === section)?.label}
               </span>
               <div className="market-topbar-tools">
+                <button
+                  className="market-icon market-messages-shortcut"
+                  onClick={() => change('messages')}
+                  aria-label={`Mensajes${unreadMessages ? `, ${unreadMessages} sin leer` : ''}`}
+                >
+                  <Icon name="chat" size={23} />
+                  {unreadMessages > 0 && (
+                    <b className="market-unread-badge">
+                      {unreadMessages > 99 ? '99+' : unreadMessages}
+                    </b>
+                  )}
+                </button>
                 <span className="market-online-dot" />{' '}
-                <span className="market-community-label">Hecho para conectar</span>
+                <span className="market-community-label">
+                  Hecho para conectar
+                </span>
                 <ThemeToggle isDark={isDark} onToggle={toggleTheme} />
                 <button
                   className="market-icon"
@@ -219,12 +276,23 @@ export default function SocialLayout({ section, navigate, children, query, setQu
           {children}
         </main>
       </div>
-      <nav className="market-mobile-nav" aria-label="Secciones de la aplicación">
+      <nav
+        className="market-mobile-nav"
+        aria-label="Secciones de la aplicación"
+      >
         {MAIN.map((item) => navButton(item, true))}
       </nav>
       {searchOpen && (
-        <MarketDialog title="Buscar productos" onClose={() => setSearchOpen(false)} compact>
-          <form className="market-search-dialog" role="search" onSubmit={search}>
+        <MarketDialog
+          title="Buscar productos"
+          onClose={() => setSearchOpen(false)}
+          compact
+        >
+          <form
+            className="market-search-dialog"
+            role="search"
+            onSubmit={search}
+          >
             <h2>Encontrá tu próximo match</h2>
             <label>
               Buscar productos
@@ -243,22 +311,39 @@ export default function SocialLayout({ section, navigate, children, query, setQu
         </MarketDialog>
       )}
       {more && (
-        <MarketDialog title="Opciones de cuenta" onClose={() => setMore(false)} compact>
+        <MarketDialog
+          title="Opciones de cuenta"
+          onClose={() => setMore(false)}
+          compact
+        >
           <div className="market-more-dialog">
             <div className="market-section-heading">
               <h2>Tu espacio</h2>
             </div>
             {EXTRA.map((item) => (
-              <button className="market-more-link" key={item.id} onClick={() => change(item.id)}>
+              <button
+                className="market-more-link"
+                key={item.id}
+                onClick={() => change(item.id)}
+              >
                 <Icon name={item.icon} />
                 {item.label}
+                {item.id === 'messages' && unreadMessages > 0 && (
+                  <b className="market-unread-badge">
+                    {unreadMessages > 99 ? '99+' : unreadMessages}
+                  </b>
+                )}
               </button>
             ))}
             <button className="market-more-link" onClick={toggleTheme}>
               <Icon name="sparkles" />
               {isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
             </button>
-            <button className="market-more-link" onClick={logout} disabled={leaving}>
+            <button
+              className="market-more-link"
+              onClick={logout}
+              disabled={leaving}
+            >
               <Icon name="logout" />
               Cerrar sesión
             </button>

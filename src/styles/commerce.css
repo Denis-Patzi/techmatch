@@ -1,0 +1,572 @@
+/* Subastas y conversaciones: conserva el azul y el glass del espacio social. */
+.auction-countdown {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  font-size: 0.8rem;
+  color: rgb(var(--c-cyan));
+}
+.auction-countdown.is-ended {
+  color: rgb(var(--c-slate-muted));
+}
+.market-feed-caption > .auction-countdown {
+  display: flex;
+  margin-top: 9px;
+  color: #b1d6ff;
+}
+.market-product-info > .auction-countdown {
+  margin-top: 7px;
+  font-size: 0.72rem;
+}
+.auction-panel {
+  margin-top: 22px;
+  padding: 20px;
+  border: 1px solid rgb(var(--c-brand-blue) / 0.25);
+  border-radius: 20px;
+  background: linear-gradient(
+    135deg,
+    rgb(var(--c-brand-blue) / 0.09),
+    rgb(var(--glass) / 0.4)
+  );
+}
+.auction-panel-heading,
+.auction-price {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.auction-price {
+  margin: 20px 0 12px;
+}
+.auction-price small,
+.auction-price strong {
+  display: block;
+}
+.auction-price small {
+  font-size: 0.78rem;
+  color: rgb(var(--c-slate-muted));
+}
+.auction-price strong {
+  font-size: 1.65rem;
+  color: rgb(var(--c-cyan));
+}
+.auction-price > span {
+  font-size: 0.8rem;
+}
+.auction-panel .market-muted {
+  font-size: 0.78rem;
+  line-height: 1.6;
+}
+.auction-bid-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 12px;
+  margin: 18px 0;
+}
+.auction-bid-form label,
+.auction-editor-options label {
+  display: grid;
+  gap: 7px;
+  font-size: 0.85rem;
+}
+.auction-bid-form label {
+  flex: 1;
+  min-width: 130px;
+}
+.auction-bid-form input,
+.auction-editor-options select {
+  width: 100%;
+  padding: 11px 13px;
+  border: 1px solid rgb(var(--c-brand-blue) / 0.3);
+  border-radius: 12px;
+  background: rgb(var(--c-navy) / 0.75);
+  color: rgb(var(--c-slate-body));
+}
+.auction-bid-form > p {
+  flex-basis: 100%;
+}
+.auction-leading {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: rgb(var(--c-cyan));
+  margin: 12px 0;
+  font-size: 0.85rem;
+}
+.auction-result {
+  display: grid;
+  justify-items: start;
+  gap: 10px;
+  margin: 18px 0;
+}
+.auction-result > strong {
+  font-size: 1rem;
+}
+.auction-result > p {
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+.auction-history {
+  margin-top: 18px;
+  border-top: 1px solid var(--market-line);
+  padding-top: 14px;
+}
+.auction-history h3 {
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+.auction-history ol {
+  max-height: 240px;
+  overflow-y: auto;
+}
+.auction-history li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--market-line);
+  font-size: 0.82rem;
+}
+.auction-history small {
+  display: block;
+  color: rgb(var(--c-slate-muted));
+  font-size: 0.7rem;
+  margin-top: 3px;
+}
+.auction-editor-options {
+  display: grid;
+  gap: 12px;
+}
+.market-unread-badge {
+  min-width: 19px;
+  height: 19px;
+  padding: 0 5px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 20px;
+  background: #357bea;
+  color: white;
+  font-size: 10px;
+  line-height: 1;
+}
+.market-messages-shortcut {
+  position: relative;
+}
+.market-messages-shortcut > b {
+  position: absolute;
+  top: -1px;
+  right: -6px;
+}
+.market-sidebar-collapsed .market-sidebar nav button {
+  position: relative;
+}
+.market-sidebar-collapsed .market-sidebar nav button > b {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.messages-shell {
+  margin: 22px;
+  height: calc(100dvh - 122px);
+  min-height: 420px;
+  display: grid;
+  grid-template-columns: minmax(260px, 33%) minmax(0, 1fr);
+  border: 1px solid var(--market-line);
+  border-radius: 24px;
+  overflow: hidden;
+  background: rgb(var(--glass) / 0.6);
+  box-shadow: 0 10px 45px rgb(0 20 55 / 0.08);
+}
+.messages-list {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--market-line);
+  overflow: hidden;
+}
+.messages-list-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 18px 14px;
+  gap: 8px;
+}
+.messages-list-heading .eyebrow {
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+}
+.messages-list-heading h1 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-top: 5px;
+}
+.messages-total {
+  display: inline-grid;
+  place-items: center;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  min-width: 24px;
+  padding: 2px 6px;
+  color: rgb(var(--c-cyan));
+  background: rgb(var(--c-brand-blue) / 0.12);
+  vertical-align: middle;
+}
+.messages-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--market-line);
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin: 0 16px 16px;
+  color: rgb(var(--c-slate-muted));
+}
+.messages-search input {
+  min-width: 0;
+  width: 100%;
+  background: transparent;
+  outline: none;
+  font-size: 0.8rem;
+}
+.messages-list > nav {
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+.messages-conversation {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  text-align: left;
+  gap: 10px;
+  padding: 16px;
+  border-left: 3px solid transparent;
+  border-bottom: 1px solid var(--market-line);
+  transition: background 0.2s;
+}
+.messages-conversation:hover {
+  background: rgb(var(--c-brand-blue) / 0.05);
+}
+.messages-conversation.is-selected {
+  border-left-color: #528fff;
+  background: linear-gradient(
+    110deg,
+    rgb(var(--c-brand-blue) / 0.13),
+    transparent
+  );
+}
+.messages-conversation-text {
+  flex: 1;
+  min-width: 0;
+}
+.messages-conversation-text > * {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.messages-conversation-text strong {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.messages-conversation-text > span {
+  font-size: 0.75rem;
+  color: rgb(var(--c-cyan));
+  margin: 3px 0;
+}
+.messages-conversation-text small {
+  font-size: 0.74rem;
+  color: rgb(var(--c-slate-muted));
+}
+.messages-conversation-meta {
+  display: grid;
+  justify-items: end;
+  gap: 8px;
+}
+.messages-conversation-meta time {
+  font-size: 0.64rem;
+  color: rgb(var(--c-slate-muted));
+  white-space: nowrap;
+}
+.messages-conversation-meta b {
+  display: grid;
+  place-items: center;
+  background: #357bea;
+  color: white;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 4px;
+  border-radius: 20px;
+  font-size: 0.65rem;
+}
+.messages-list-notice {
+  padding: 20px;
+  font-size: 0.85rem;
+  line-height: 1.7;
+}
+.messages-list-notice svg {
+  margin-bottom: 12px;
+  color: rgb(var(--c-cyan));
+}
+.messages-thread {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  background: radial-gradient(
+    ellipse at top right,
+    rgb(var(--c-brand-blue) / 0.065),
+    transparent 70%
+  );
+}
+.messages-thread-header {
+  padding: 17px 22px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--market-line);
+}
+.messages-thread-header h2 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.messages-thread-header div > span {
+  font-size: 0.72rem;
+  color: rgb(var(--c-slate-muted));
+}
+.messages-back {
+  display: none;
+}
+.messages-product {
+  display: flex;
+  align-items: center;
+  text-align: left;
+  gap: 12px;
+  margin: 14px 22px 0;
+  padding: 12px 14px;
+  border: 1px solid var(--market-line);
+  border-radius: 14px;
+  background: rgb(var(--glass) / 0.6);
+}
+.messages-product > span {
+  flex: 1;
+  min-width: 0;
+}
+.messages-product small {
+  display: block;
+  font-size: 0.67rem;
+  color: rgb(var(--c-slate-muted));
+}
+.messages-product strong {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.messages-timeline {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overscroll-behavior: contain;
+}
+.message-bubble {
+  max-width: 82%;
+  align-self: flex-start;
+  border: 1px solid var(--market-line);
+  border-radius: 18px 18px 18px 4px;
+  padding: 12px 16px 8px;
+  background: rgb(var(--glass) / 0.75);
+}
+.message-bubble.is-own {
+  align-self: flex-end;
+  background: linear-gradient(135deg, #3274d7, #245bb2);
+  border-color: rgb(134 184 255 / 0.28);
+  border-radius: 18px 18px 4px 18px;
+  color: #fff;
+  box-shadow: 0 3px 16px rgb(28 90 190 / 0.1);
+}
+.message-bubble p {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+.message-bubble time {
+  display: block;
+  text-align: right;
+  font-size: 0.62rem;
+  margin-top: 5px;
+  opacity: 0.72;
+}
+.messages-load-older {
+  align-self: center;
+  flex-shrink: 0;
+}
+.messages-composer {
+  flex-shrink: 0;
+  padding: 14px 20px 12px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px 10px;
+  border-top: 1px solid var(--market-line);
+}
+.messages-composer textarea {
+  width: 100%;
+  background: rgb(var(--c-navy) / 0.6);
+  color: rgb(var(--c-slate-body));
+  border: 1px solid var(--market-line);
+  border-radius: 15px;
+  padding: 12px 14px;
+  font-size: 0.85rem;
+  resize: none;
+  min-height: 54px;
+  max-height: 120px;
+}
+.messages-composer small {
+  grid-column: 1 / -1;
+  color: rgb(var(--c-slate-muted));
+  font-size: 0.62rem;
+}
+.messages-composer > p {
+  grid-column: 1 / -1;
+}
+.messages-error {
+  padding-inline: 22px;
+  font-size: 0.75rem;
+}
+.messages-placeholder,
+.messages-start {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 15px;
+  padding: 28px;
+}
+.messages-placeholder > span {
+  display: grid;
+  place-items: center;
+  width: 100px;
+  height: 100px;
+  border: 1px solid rgb(var(--c-brand-blue) / 0.2);
+  border-radius: 32px;
+  background: rgb(var(--c-brand-blue) / 0.07);
+  color: rgb(var(--c-cyan));
+  box-shadow: 0 0 45px rgb(var(--c-brand-blue) / 0.06);
+}
+.messages-placeholder h2 {
+  font-size: 1.35rem;
+  font-weight: 600;
+}
+.messages-placeholder p,
+.messages-start p {
+  color: rgb(var(--c-slate-muted));
+  font-size: 0.85rem;
+  line-height: 1.7;
+  max-width: 340px;
+}
+.messages-start {
+  flex: 1;
+}
+.messages-start h3 {
+  font-weight: 600;
+}
+@media (max-width: 1100px) {
+  .messages-shell {
+    margin: 16px;
+    grid-template-columns: minmax(230px, 35%) minmax(0, 1fr);
+  }
+  .messages-conversation {
+    padding-inline: 12px;
+  }
+  .messages-conversation .market-avatar {
+    width: 32px;
+    height: 32px;
+  }
+  .messages-list-heading .eyebrow {
+    display: none;
+  }
+  .messages-conversation-meta time {
+    display: none;
+  }
+}
+@media (max-width: 900px) {
+  .messages-shell {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .messages-shell:not(.has-selection) > .messages-placeholder,
+  .messages-shell.has-selection > .messages-list {
+    display: none;
+  }
+  .messages-back {
+    display: inline-flex;
+  }
+}
+@media (max-width: 767px) {
+  .messages-shell {
+    margin: 0;
+    height: calc(100dvh - 145px - max(12px, env(safe-area-inset-bottom, 0px)));
+    min-height: 260px;
+    border-radius: 0;
+    border-inline: 0;
+  }
+  .messages-thread-header {
+    padding: 12px;
+  }
+  .messages-product {
+    margin: 10px 12px 0;
+  }
+  .messages-timeline {
+    padding: 16px 12px;
+  }
+  .messages-composer {
+    padding: 10px 12px;
+  }
+  .messages-composer .btn-primary {
+    padding: 12px;
+  }
+  .messages-composer .btn-primary span {
+    display: none;
+  }
+  .messages-composer small {
+    font-size: 0.57rem;
+  }
+  .message-bubble {
+    max-width: 90%;
+  }
+  .auction-panel {
+    padding: 16px;
+  }
+  .auction-countdown {
+    font-size: 0.76rem;
+  }
+  .market-feed-topbar-tools {
+    gap: 7px;
+  }
+  .market-feed-page .market-topbar {
+    grid-template-columns: 36px minmax(0, 1fr) 76px;
+    gap: 4px;
+  }
+  .market-feed-tabs {
+    gap: 16px;
+  }
+  .market-section-heading > .btn-primary {
+    font-size: 0.76rem;
+    padding: 10px 12px;
+  }
+}

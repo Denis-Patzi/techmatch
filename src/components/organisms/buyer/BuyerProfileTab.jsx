@@ -6,22 +6,26 @@ import toast from 'react-hot-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { FormField } from '@/components/atoms/FormField';
 import { Icon } from '@/components/atoms/Icon';
-import { AccountTypeSelector } from '@/components/molecules/AccountTypeSelector';
-import { getAccountType } from '@/lib/account';
+import { AccountStatus } from '@/components/molecules/AccountStatus';
+import { getAccountLabel, getAccountType } from '@/lib/account';
 
-const schema = z
-  .object({
-    account_type: z.enum(['personal', 'store']),
-    full_name: z.string().trim().min(3, 'Ingresá al menos 3 caracteres.').max(120),
-    phone: z.string().trim().max(30).optional(),
-    city: z.string().trim().max(80).optional(),
-    store_name: z.string().trim().max(120).optional(),
-    nit: z.string().trim().max(30).optional(),
-  })
-  .refine((values) => values.account_type !== 'store' || values.store_name?.length >= 2, {
-    message: 'Ingresá el nombre de tu tienda.',
-    path: ['store_name'],
-  });
+const schema = (store) =>
+  z
+    .object({
+      full_name: z
+        .string()
+        .trim()
+        .min(3, 'Ingresá al menos 3 caracteres.')
+        .max(120),
+      phone: z.string().trim().max(30).optional(),
+      city: z.string().trim().max(80).optional(),
+      store_name: z.string().trim().max(120).optional(),
+      nit: z.string().trim().max(30).optional(),
+    })
+    .refine((values) => !store || values.store_name?.length >= 2, {
+      message: 'Ingresá el nombre de tu tienda.',
+      path: ['store_name'],
+    });
 const CITIES = [
   'La Paz',
   'Santa Cruz',
@@ -36,7 +40,6 @@ const CITIES = [
 
 function defaults(profile) {
   return {
-    account_type: getAccountType(profile),
     full_name: profile?.full_name ?? '',
     phone: profile?.phone ?? '',
     city: profile?.city ?? '',
@@ -47,21 +50,24 @@ function defaults(profile) {
 
 export default function BuyerProfileTab() {
   const { user, profile, updateProfile } = useAuth();
+  const store = getAccountType(profile) === 'store';
   const [saving, setSaving] = useState(false);
   const {
     register,
     handleSubmit,
-    watch,
-    setValue,
     reset,
     formState: { errors, isDirty },
-  } = useForm({ resolver: zodResolver(schema), defaultValues: defaults(profile) });
+  } = useForm({
+    resolver: zodResolver(schema(store)),
+    defaultValues: defaults(profile),
+  });
   useEffect(() => {
     reset(defaults(profile));
   }, [profile, reset]);
-  const accountType = watch('account_type');
-  const store = accountType === 'store';
-  const publicName = getAccountType(profile) === 'store' ? profile?.store_name : profile?.full_name;
+  const publicName =
+    getAccountType(profile) === 'store'
+      ? profile?.store_name
+      : profile?.full_name;
 
   const save = async (data) => {
     setSaving(true);
@@ -89,7 +95,8 @@ export default function BuyerProfileTab() {
       <span className="eyebrow mb-4">Tu identidad en TechMatch</span>
       <h1>Mi perfil.</h1>
       <p className="text-sm text-slate-sub mt-3 mb-6">
-        Una misma cuenta para comprar y vender. Elegí cómo querés presentarte a la comunidad.
+        Una misma cuenta para comprar y vender. Actualizá tus datos de contacto
+        y presentación.
       </p>
       <div className="glass-panel user-profile-summary">
         <span className="user-profile-monogram" aria-hidden="true">
@@ -98,9 +105,7 @@ export default function BuyerProfileTab() {
         <div>
           <h2>{publicName || 'Tu perfil'}</h2>
           <p>{user?.email}</p>
-          <span>
-            {getAccountType(profile) === 'store' ? 'Cuenta de tienda' : 'Cuenta personal'}
-          </span>
+          <AccountStatus profile={profile} />
         </div>
         {profile?.is_verified && (
           <span className="user-verified">
@@ -108,16 +113,24 @@ export default function BuyerProfileTab() {
           </span>
         )}
       </div>
-      <form onSubmit={handleSubmit(save)} className="glass-panel user-profile-form">
+      <form
+        onSubmit={handleSubmit(save)}
+        className="glass-panel user-profile-form"
+      >
         <fieldset disabled={saving}>
-          <legend className="text-sm font-medium mb-4">Tipo de cuenta</legend>
-          <input type="hidden" {...register('account_type')} />
-          <AccountTypeSelector
-            value={accountType}
-            onChange={(value) =>
-              setValue('account_type', value, { shouldDirty: true, shouldValidate: true })
-            }
-          />
+          <legend className="text-sm font-medium mb-4">
+            Datos de tu perfil
+          </legend>
+          <div className="account-type-fixed">
+            <Icon name={store ? 'store' : 'user'} size={21} />
+            <div>
+              <strong>{getAccountLabel(profile)}</strong>
+              <p>
+                El tipo de cuenta se eligió al registrarte. Solo el
+                administrador puede modificarlo.
+              </p>
+            </div>
+          </div>
           <div className="user-form-fields">
             <FormField
               label="Nombre completo"
@@ -162,15 +175,18 @@ export default function BuyerProfileTab() {
             {store
               ? 'Tu tienda también puede comprar y participar en la comunidad.'
               : 'Podés publicar y vender con tu nombre personal.'}{' '}
-            Cambiar a cuenta personal retira el nombre comercial y el NIT del perfil.
           </p>
-          <button className="btn-primary" type="submit" disabled={saving || !isDirty}>
+          <button
+            className="btn-primary"
+            type="submit"
+            disabled={saving || !isDirty}
+          >
             {saving ? 'Guardando…' : 'Guardar cambios'}
           </button>
           {profile?.is_verified && (
             <p className="text-xs text-slate-muted mt-4">
-              Si cambiás tu nombre o los datos de identidad comercial, tu verificación necesitará
-              una nueva revisión.
+              Si cambiás tu nombre o los datos de identidad comercial, tu
+              verificación necesitará una nueva revisión.
             </p>
           )}
         </fieldset>

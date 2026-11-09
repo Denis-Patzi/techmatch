@@ -1,0 +1,63 @@
+.account-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.account-status > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 11px;
+  border: 1px solid rgb(var(--c-brand-blue) / 0.2);
+  border-radius: 30px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.4;
+  color: rgb(var(--c-slate-sub));
+  background: rgb(var(--glass) / 0.5);
+}
+.account-status > .account-status-plan {
+  color: rgb(var(--c-cyan));
+  background: rgb(var(--c-brand-blue) / 0.08);
+}
+.account-status svg,
+.account-type-fixed > svg {
+  flex-shrink: 0;
+}
+.user-profile-summary .account-status {
+  margin-top: 12px;
+}
+.user-profile-summary .account-status > span {
+  margin: 0;
+  font-size: 0.75rem;
+}
+.account-type-fixed {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+  border: 1px solid rgb(var(--c-brand-blue) / 0.18);
+  border-radius: 15px;
+  background: rgb(var(--c-brand-blue) / 0.05);
+  color: rgb(var(--c-cyan));
+}
+.account-type-fixed strong {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.account-type-fixed p {
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: rgb(var(--c-slate-muted));
+  margin-top: 5px;
+}
+@media (max-width: 767px) {
+  .market-profile-heading .account-status {
+    justify-content: center;
+  }
+  .account-status > span {
+    font-size: 0.7rem;
+  }
+}

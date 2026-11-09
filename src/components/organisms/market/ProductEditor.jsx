@@ -11,7 +11,12 @@ import { Icon } from '@/components/atoms/Icon';
 import { useAuth } from '@/hooks/useAuth';
 import toast from 'react-hot-toast';
 
-export default function ProductEditor({ original, onSave, onCancel, listingType = 'sale' }) {
+export default function ProductEditor({
+  original,
+  onSave,
+  onCancel,
+  listingType = 'sale',
+}) {
   const { profile } = useAuth();
   const [values, setValues] = useState(() => ({
     title: original?.title || '',
@@ -21,6 +26,7 @@ export default function ProductEditor({ original, onSave, onCancel, listingType 
     condition: original?.condition || 'Usado',
     city: original?.city || profile?.city || 'La Paz',
     listing_type: original?.listing_type || listingType,
+    auction_duration_days: original?.auction_duration_days || 3,
     status: original?.status || 'published',
     cover_key: original?.cover_key || 'phone',
     useReference: !original?.media_path,
@@ -40,7 +46,8 @@ export default function ProductEditor({ original, onSave, onCancel, listingType 
   }, [file]);
   const field = (key) => ({
     value: values[key],
-    onChange: (event) => setValues((previous) => ({ ...previous, [key]: event.target.value })),
+    onChange: (event) =>
+      setValues((previous) => ({ ...previous, [key]: event.target.value })),
   });
   const submit = async (event) => {
     event.preventDefault();
@@ -50,15 +57,23 @@ export default function ProductEditor({ original, onSave, onCancel, listingType 
       values.description.trim().length < 10 ||
       values.city.trim().length < 2
     ) {
-      setError('Completá el título (3 caracteres), la descripción (10 caracteres) y la ciudad.');
+      setError(
+        'Completá el título (3 caracteres), la descripción (10 caracteres) y la ciudad.',
+      );
       return;
     }
     setSaving(true);
     try {
       await onSave({ values, file, original });
-      toast.success(original ? 'Publicación actualizada.' : 'Publicación creada.');
+      toast.success(
+        original ? 'Publicación actualizada.' : 'Publicación creada.',
+      );
     } catch (failure) {
-      setError(failure.code ? productError(failure) : failure.message || productError(failure));
+      setError(
+        failure.code
+          ? productError(failure)
+          : failure.message || productError(failure),
+      );
     } finally {
       setSaving(false);
     }
@@ -79,7 +94,11 @@ export default function ProductEditor({ original, onSave, onCancel, listingType 
           <h1>{original ? 'Editar publicación' : 'Publicar un producto'}</h1>
           <p>Mostrá lo que vendés. Cada detalle cuenta.</p>
         </div>
-        <button className="market-icon" onClick={onCancel} aria-label="Cancelar edición">
+        <button
+          className="market-icon"
+          onClick={onCancel}
+          aria-label="Cancelar edición"
+        >
           <Icon name="close" />
         </button>
       </div>
@@ -92,7 +111,9 @@ export default function ProductEditor({ original, onSave, onCancel, listingType 
               ) : (
                 <img src={source} alt="Vista previa del producto" />
               )}
-              {!file && values.useReference && <span>Imagen de referencia</span>}
+              {!file && values.useReference && (
+                <span>Imagen de referencia</span>
+              )}
             </div>
             <label className="market-upload-label">
               Elegir foto o video
@@ -104,7 +125,8 @@ export default function ProductEditor({ original, onSave, onCancel, listingType 
                   try {
                     validateMedia(selected);
                     setFile(selected || null);
-                    if (selected) setValues((v) => ({ ...v, useReference: false }));
+                    if (selected)
+                      setValues((v) => ({ ...v, useReference: false }));
                     setError('');
                   } catch (failure) {
                     setError(failure.message);
@@ -161,7 +183,9 @@ export default function ProductEditor({ original, onSave, onCancel, listingType 
             </label>
             <div className="market-field-row">
               <label>
-                Precio en bolivianos
+                {values.listing_type === 'auction'
+                  ? 'Precio base en bolivianos'
+                  : 'Precio en bolivianos'}
                 <input
                   required
                   type="number"
@@ -173,7 +197,12 @@ export default function ProductEditor({ original, onSave, onCancel, listingType 
               </label>
               <label>
                 Ciudad
-                <input required minLength={2} maxLength={80} {...field('city')} />
+                <input
+                  required
+                  minLength={2}
+                  maxLength={80}
+                  {...field('city')}
+                />
               </label>
             </div>
             <div className="market-field-row">
@@ -197,9 +226,16 @@ export default function ProductEditor({ original, onSave, onCancel, listingType 
             <div className="market-field-row">
               <label>
                 Tipo
-                <select {...field('listing_type')}>
+                <select
+                  aria-label="Tipo"
+                  {...field('listing_type')}
+                  disabled={
+                    original?.listing_type === 'auction' &&
+                    original?.status !== 'draft'
+                  }
+                >
                   <option value="sale">Venta</option>
-                  <option value="auction">Subasta · anuncio</option>
+                  <option value="auction">Subasta</option>
                 </select>
               </label>
               <label>
@@ -212,13 +248,34 @@ export default function ProductEditor({ original, onSave, onCancel, listingType 
               </label>
             </div>
             {values.listing_type === 'auction' && (
-              <p className="market-notice">
-                Se mostrará como anuncio de subasta con precio base. Las pujas y el cierre
-                automático todavía no están habilitados.
-              </p>
+              <div className="auction-editor-options">
+                <label>
+                  Duración de la subasta
+                  <select
+                    aria-label="Duración de la subasta"
+                    {...field('auction_duration_days')}
+                    disabled={
+                      original?.listing_type === 'auction' &&
+                      original?.status !== 'draft'
+                    }
+                  >
+                    <option value="3">3 días</option>
+                    <option value="4">4 días</option>
+                    <option value="5">5 días</option>
+                  </select>
+                </label>
+                <p className="market-notice">
+                  El contador empieza al publicar. La oferta más alta gana al
+                  terminar el plazo; si nadie puja, finaliza sin ganador. El
+                  tiempo no se extiende al recibir ofertas. Después de la
+                  primera puja, el producto, el precio base y el plazo quedan
+                  fijos.
+                </p>
+              </div>
             )}
             <p className="market-muted">
-              Plan Básico: hasta 25 publicaciones activas, incluidas 5 con video.
+              Plan Básico: hasta 25 publicaciones activas, incluidas 5 con
+              video.
             </p>
             {error && (
               <p className="market-error" role="alert">
@@ -226,11 +283,19 @@ export default function ProductEditor({ original, onSave, onCancel, listingType 
               </p>
             )}
             <div className="market-form-actions">
-              <button type="button" className="market-secondary" onClick={onCancel}>
+              <button
+                type="button"
+                className="market-secondary"
+                onClick={onCancel}
+              >
                 Cancelar
               </button>
               <button className="btn-primary" type="submit">
-                {saving ? 'Guardando…' : original ? 'Guardar cambios' : 'Crear publicación'}
+                {saving
+                  ? 'Guardando…'
+                  : original
+                    ? 'Guardar cambios'
+                    : 'Crear publicación'}
               </button>
             </div>
           </div>

@@ -11,10 +11,17 @@ import {
 } from '@/lib/adminAnalytics';
 import { deleteProduct, mediaUrl, money, saveProduct } from '@/lib/products';
 import ProductEditor from '@/components/organisms/market/ProductEditor';
-import { MarketDialog, ProductDetail } from '@/components/organisms/market/MarketViews';
+import {
+  MarketDialog,
+  ProductDetail,
+} from '@/components/organisms/market/MarketViews';
 import { AdminConfirm, AdminHeading, AdminPagination } from './AdminUi';
 
-export default function AdminProductsTab({ data, mode = 'products', initialQuery = '' }) {
+export default function AdminProductsTab({
+  data,
+  mode = 'products',
+  initialQuery = '',
+}) {
   const { user } = useAuth();
   const [query, setQuery] = useState(initialQuery),
     [status, setStatus] = useState('all'),
@@ -26,7 +33,11 @@ export default function AdminProductsTab({ data, mode = 'products', initialQuery
     [action, setAction] = useState(null);
   const metrics = getAdminAnalytics(data.profiles, data.products, 7);
   const source =
-    mode === 'auctions' ? metrics.auctions : mode === 'review' ? metrics.review : data.products;
+    mode === 'auctions'
+      ? metrics.auctions
+      : mode === 'review'
+        ? metrics.review
+        : data.products;
   const rows = source
     .filter(
       (item) =>
@@ -34,7 +45,7 @@ export default function AdminProductsTab({ data, mode = 'products', initialQuery
         (kind === 'all' || item.listing_type === kind) &&
         `${item.title} ${accountName(metrics.ownerMap[item.owner_id])} ${item.city}`
           .toLocaleLowerCase()
-          .includes(query.toLocaleLowerCase())
+          .includes(query.toLocaleLowerCase()),
     )
     .sort((a, b) => b.created_at.localeCompare(a.created_at));
   const currentPage = Math.min(page, Math.max(1, Math.ceil(rows.length / 10)));
@@ -52,15 +63,21 @@ export default function AdminProductsTab({ data, mode = 'products', initialQuery
       `techmatch-${mode === 'auctions' ? 'subastas' : 'publicaciones'}.csv`,
       [
         { label: 'Título', value: (r) => r.title },
-        { label: 'Vendedor', value: (r) => accountName(metrics.ownerMap[r.owner_id]) },
-        { label: 'Tipo', value: (r) => (r.listing_type === 'auction' ? 'Subasta' : 'Venta') },
+        {
+          label: 'Vendedor',
+          value: (r) => accountName(metrics.ownerMap[r.owner_id]),
+        },
+        {
+          label: 'Tipo',
+          value: (r) => (r.listing_type === 'auction' ? 'Subasta' : 'Venta'),
+        },
         { label: 'Categoría', value: (r) => r.category },
         { label: 'Precio Bs', value: (r) => r.price },
         { label: 'Estado', value: (r) => statusLabel(r.status) },
         { label: 'Ciudad', value: (r) => r.city },
         { label: 'Creación', value: (r) => r.created_at },
       ],
-      rows
+      rows,
     );
   if (creating || editing)
     return (
@@ -85,7 +102,11 @@ export default function AdminProductsTab({ data, mode = 'products', initialQuery
   return (
     <section>
       <AdminHeading
-        eyebrow={mode === 'review' ? 'Control del catálogo' : 'Gestión de publicaciones'}
+        eyebrow={
+          mode === 'review'
+            ? 'Control del catálogo'
+            : 'Gestión de publicaciones'
+        }
         title={
           mode === 'auctions'
             ? 'Subastas'
@@ -95,7 +116,7 @@ export default function AdminProductsTab({ data, mode = 'products', initialQuery
         }
         description={
           mode === 'auctions'
-            ? 'Administrá los anuncios de subasta y sus precios base.'
+            ? 'Administrá las publicaciones de subasta y sus precios base.'
             : mode === 'review'
               ? 'Revisá borradores y publicaciones de cuentas sin verificar.'
               : 'Fotos, videos y productos publicados por las cuentas actuales.'
@@ -108,21 +129,24 @@ export default function AdminProductsTab({ data, mode = 'products', initialQuery
         {mode !== 'review' && (
           <button className="btn-primary" onClick={() => setCreating(true)}>
             <Icon name="plus" size={17} />
-            {mode === 'auctions' ? 'Crear anuncio de subasta' : 'Crear publicación'}
+            {mode === 'auctions' ? 'Crear subasta' : 'Crear publicación'}
           </button>
         )}
       </AdminHeading>
       {mode === 'auctions' && (
         <p className="market-notice">
-          Son anuncios con precio base. Las pujas, adjudicaciones y pagos todavía no están
-          habilitados.
+          Las subastas duran de 3 a 5 días y la oferta más alta gana al cerrar.
+          Las publicaciones con pujas conservan su historial: no se pueden
+          eliminar ni cambiar sus condiciones. Retirar una subasta activa la
+          cancela. Los pagos se coordinan por fuera de la plataforma.
         </p>
       )}
       {mode === 'review' && (
         <p className="market-notice">
-          Un perfil sin verificar o un borrador es un criterio de revisión, no una prueba de fraude
-          o robo. Retirar una publicación la pasa a borrador; su propietario puede editarla y volver
-          a publicarla.
+          Un perfil sin verificar o un borrador es un criterio de revisión, no
+          una prueba de fraude o robo. Retirar una venta la pasa a borrador.
+          Retirar una subasta activa la cancela y conserva las pujas; no se
+          puede reiniciar la misma subasta.
         </p>
       )}
       <div className="admin-filters glass-panel">
@@ -166,7 +190,7 @@ export default function AdminProductsTab({ data, mode = 'products', initialQuery
       <div className="glass-panel admin-table-panel">
         <div className="admin-panel-heading">
           <h2>
-            {rows.length} {mode === 'auctions' ? 'anuncios de subasta' : 'publicaciones'}
+            {rows.length} {mode === 'auctions' ? 'subastas' : 'publicaciones'}
           </h2>
           <span className="admin-subtle">Catálogo conectado a Supabase</span>
         </div>
@@ -184,83 +208,94 @@ export default function AdminProductsTab({ data, mode = 'products', initialQuery
               </tr>
             </thead>
             <tbody>
-              {rows.slice((currentPage - 1) * 10, currentPage * 10).map((item) => (
-                <tr key={item.id}>
-                  <td>
-                    <div className="admin-product-cell">
-                      {item.media_type === 'image' ? (
-                        <img src={mediaUrl(item)} alt="" />
-                      ) : (
-                        <span className="admin-video-thumb">
-                          <Icon name="video" />
+              {rows
+                .slice((currentPage - 1) * 10, currentPage * 10)
+                .map((item) => (
+                  <tr key={item.id}>
+                    <td>
+                      <div className="admin-product-cell">
+                        {item.media_type === 'image' ? (
+                          <img src={mediaUrl(item)} alt="" />
+                        ) : (
+                          <span className="admin-video-thumb">
+                            <Icon name="video" />
+                          </span>
+                        )}
+                        <div>
+                          <strong>{item.title}</strong>
+                          <small>
+                            {item.category} ·{' '}
+                            {item.media_type === 'video' ? 'Video' : 'Foto'}
+                          </small>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div className="admin-owner-cell">
+                        <span>
+                          {accountName(metrics.ownerMap[item.owner_id])}
                         </span>
-                      )}
-                      <div>
-                        <strong>{item.title}</strong>
                         <small>
-                          {item.category} · {item.media_type === 'video' ? 'Video' : 'Foto'}
+                          {metrics.ownerMap[item.owner_id]?.is_verified
+                            ? 'Perfil verificado'
+                            : 'Sin verificar'}
                         </small>
                       </div>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="admin-owner-cell">
-                      <span>{accountName(metrics.ownerMap[item.owner_id])}</span>
-                      <small>
-                        {metrics.ownerMap[item.owner_id]?.is_verified
-                          ? 'Perfil verificado'
-                          : 'Sin verificar'}
-                      </small>
-                    </div>
-                  </td>
-                  <td>
-                    <span className="admin-badge">
-                      {item.listing_type === 'auction' ? 'Subasta' : 'Venta'}
-                    </span>
-                  </td>
-                  <td className="admin-price">{money(item.price)}</td>
-                  <td>
-                    <span className={`admin-badge status-${item.status}`}>
-                      {statusLabel(item.status)}
-                    </span>
-                  </td>
-                  <td>{dateLabel(item.created_at)}</td>
-                  <td>
-                    <div className="admin-row-actions">
-                      <button
-                        className="market-text-button"
-                        onClick={() => setDetailId(item.id)}
-                        aria-label={`Ver ${item.title}`}
-                      >
-                        Ver
-                      </button>
-                      <button
-                        className="market-text-button"
-                        onClick={() => edit(item)}
-                        aria-label={`Editar ${item.title}`}
-                      >
-                        Editar
-                      </button>
-                      {item.status !== 'sold' && (
+                    </td>
+                    <td>
+                      <span className="admin-badge">
+                        {item.listing_type === 'auction' ? 'Subasta' : 'Venta'}
+                      </span>
+                    </td>
+                    <td className="admin-price">{money(item.price)}</td>
+                    <td>
+                      <span className={`admin-badge status-${item.status}`}>
+                        {statusLabel(item.status)}
+                      </span>
+                    </td>
+                    <td>{dateLabel(item.created_at)}</td>
+                    <td>
+                      <div className="admin-row-actions">
                         <button
                           className="market-text-button"
-                          onClick={() => setAction({ kind: 'visibility', product: item })}
-                          aria-label={`${item.status === 'published' ? 'Retirar' : 'Publicar'} ${item.title}`}
+                          onClick={() => setDetailId(item.id)}
+                          aria-label={`Ver ${item.title}`}
                         >
-                          {item.status === 'published' ? 'Retirar' : 'Publicar'}
+                          Ver
                         </button>
-                      )}
-                      <button
-                        className="market-text-button market-danger"
-                        onClick={() => setAction({ kind: 'delete', product: item })}
-                        aria-label={`Eliminar ${item.title}`}
-                      >
-                        Eliminar
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                        <button
+                          className="market-text-button"
+                          onClick={() => edit(item)}
+                          aria-label={`Editar ${item.title}`}
+                        >
+                          Editar
+                        </button>
+                        {item.status !== 'sold' && (
+                          <button
+                            className="market-text-button"
+                            onClick={() =>
+                              setAction({ kind: 'visibility', product: item })
+                            }
+                            aria-label={`${item.status === 'published' ? 'Retirar' : 'Publicar'} ${item.title}`}
+                          >
+                            {item.status === 'published'
+                              ? 'Retirar'
+                              : 'Publicar'}
+                          </button>
+                        )}
+                        <button
+                          className="market-text-button market-danger"
+                          onClick={() =>
+                            setAction({ kind: 'delete', product: item })
+                          }
+                          aria-label={`Eliminar ${item.title}`}
+                        >
+                          Eliminar
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
               {!rows.length && (
                 <tr>
                   <td colSpan={7} className="admin-empty-inline">
@@ -271,13 +306,19 @@ export default function AdminProductsTab({ data, mode = 'products', initialQuery
             </tbody>
           </table>
         </div>
-        <AdminPagination count={rows.length} page={currentPage} onChange={setPage} />
+        <AdminPagination
+          count={rows.length}
+          page={currentPage}
+          onChange={setPage}
+        />
       </div>
       {detail && (
         <MarketDialog title={detail.title} onClose={() => setDetailId(null)}>
           <ProductDetail
             product={detail}
-            seller={{ display_name: accountName(metrics.ownerMap[detail.owner_id]) }}
+            seller={{
+              display_name: accountName(metrics.ownerMap[detail.owner_id]),
+            }}
             onEdit={edit}
             onSeller={() => {
               setDetailId(null);
@@ -319,7 +360,8 @@ export default function AdminProductsTab({ data, mode = 'products', initialQuery
               toast.success('Publicación eliminada.');
             } else {
               await data.updateProduct(action.product.id, {
-                status: action.product.status === 'published' ? 'draft' : 'published',
+                status:
+                  action.product.status === 'published' ? 'draft' : 'published',
               });
               toast.success('Visibilidad actualizada.');
             }

@@ -131,7 +131,7 @@ export function AuthProvider({ children }) {
   };
   const updateProfile = async (updates) => {
     if (!user?.id) throw new Error('Ingresá a tu cuenta para guardar cambios.');
-    const allowed = ['full_name', 'phone', 'city', 'account_type', 'store_name', 'nit'];
+    const allowed = ['full_name', 'phone', 'city', 'store_name', 'nit'];
     const values = Object.fromEntries(
       allowed.filter((key) => Object.hasOwn(updates, key)).map((key) => [key, updates[key]])
     );
