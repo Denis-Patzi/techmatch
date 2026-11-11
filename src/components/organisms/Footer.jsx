@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { NavBrand } from '@/components/molecules/NavBrand';
 import { Icon } from '@/components/atoms/Icon';
+import { FooterSocialLinks } from '@/components/molecules/FooterSocialLinks';
 
 const locationQuery = encodeURIComponent(
   'EMI Escuela Militar de Ingeniería (Irpavi), La Paz, Bolivia'
@@ -19,6 +20,7 @@ export function Footer() {
             <p className="text-sm text-slate-sub mt-5 max-w-xs leading-relaxed">
               Fotos, videos y catálogos para conectar a quienes compran y venden tecnología.
             </p>
+            <FooterSocialLinks />
           </div>
           <div>
             <h3>Explorá</h3>
