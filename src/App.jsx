@@ -5,6 +5,7 @@ import { Toaster } from 'react-hot-toast';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { useLiquidGlass } from '@/hooks/useLiquidGlass';
+import { useSectionNavigation } from '@/hooks/useSectionNavigation';
 import { ScrollProgress } from '@/components/atoms/ScrollProgress';
 
 /* ── Auth ── */
@@ -85,6 +86,7 @@ function LandingPage({ isDark, onToggleTheme }) {
   const rootRef = useRef(null);
   useScrollReveal(rootRef);
   useLiquidGlass(rootRef);
+  useSectionNavigation(rootRef);
   return (
     <div className="landing-page" ref={rootRef}>
       <ScrollProgress />

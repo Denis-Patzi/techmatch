@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { PlanFeatureItem } from '@/components/atoms/PlanFeatureItem';
 
@@ -12,6 +12,7 @@ import { PlanFeatureItem } from '@/components/atoms/PlanFeatureItem';
  * @param {number}   index      - Para stagger animation
  */
 export function PlanCard({ plan, isAnnual, index = 0, showCta = true }) {
+  const reducedMotion = useReducedMotion();
   const { name, priceMonthly, priceAnnual, tagline, limitChip, cta, variant, featured, features } =
     plan;
   const displayPrice = isAnnual ? priceAnnual : priceMonthly;
@@ -24,7 +25,7 @@ export function PlanCard({ plan, isAnnual, index = 0, showCta = true }) {
 
   return (
     <motion.article
-      initial={{ opacity: 0, y: 28 }}
+      initial={reducedMotion ? false : { opacity: 0, y: 28 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-50px' }}
       transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1], delay: index * 0.1 }}

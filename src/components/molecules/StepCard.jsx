@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 
 /**
  * StepCard — Molécula
@@ -11,14 +11,15 @@ import { motion } from 'framer-motion';
  * @param {number}        index  - Índice para stagger delay
  */
 export function StepCard({ number, title, desc, index = 0 }) {
+  const reducedMotion = useReducedMotion();
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24 }}
+      initial={reducedMotion ? false : { opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-60px' }}
       transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1], delay: index * 0.12 }}
       className="
-        relative flex-1 bg-navy-light border border-cyan/10 rounded-2xl p-8
+        how-step-card relative flex-1 bg-navy-light border border-cyan/10 rounded-2xl p-8
         hover:border-cyan/25 hover:-translate-y-1 transition-all duration-300
         hover:shadow-[0_12px_40px_rgba(0,0,0,0.3)]
       "

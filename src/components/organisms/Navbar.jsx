@@ -9,20 +9,14 @@ import { useScrollSpy } from '@/hooks/useScrollSpy';
 import { useAuth } from '@/hooks/useAuth';
 import { getAccountHome } from '@/lib/account';
 import toast from 'react-hot-toast';
+import { navLinks } from '@/data/navLinks';
 
-const LINKS = [
-  { href: '#features', label: 'El feed' },
-  { href: '#profiles', label: 'Perfiles' },
-  { href: '#ai-assistant', label: 'Tasador IA' },
-  { href: '#auctions', label: 'Subastas' },
-  { href: '#how', label: 'Cómo funciona' },
-  { href: '#plans', label: 'Planes' },
-];
-const IDS = ['hero', 'features', 'profiles', 'ai-assistant', 'auctions', 'how', 'plans'];
+const LINKS = navLinks.filter((link) => link.href !== '#contact');
+const IDS = ['hero', ...navLinks.map((link) => link.href.slice(1))];
 
 export function Navbar({ isDark, onToggleTheme }) {
   const { scrolled, scrollingDown } = useScrollAware(12);
-  const activeId = useScrollSpy(IDS, 0.3);
+  const activeId = useScrollSpy(IDS);
   const [open, setOpen] = useState(false);
   const { user, profile, signOut } = useAuth();
   const navigate = useNavigate();
@@ -85,6 +79,7 @@ export function Navbar({ isDark, onToggleTheme }) {
               <a
                 key={link.href}
                 href={link.href}
+                aria-current={activeId === link.href.slice(1) ? 'location' : undefined}
                 className={`nav-link ${activeId === link.href.slice(1) ? 'is-active' : ''}`}
               >
                 {link.label}
@@ -142,12 +137,13 @@ export function Navbar({ isDark, onToggleTheme }) {
             exit={{ opacity: 0, y: -8 }}
             className="nav-links-mobile liquid-glass min-[1100px]:hidden"
           >
-            {[...LINKS, { href: '#contact', label: 'Contacto' }].map((link) => (
+            {navLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
                 onClick={() => setOpen(false)}
-                className="nav-link py-3"
+                className={`nav-link py-3 ${activeId === link.href.slice(1) ? 'is-active' : ''}`}
+                aria-current={activeId === link.href.slice(1) ? 'location' : undefined}
               >
                 {link.label}
               </a>

@@ -1,5 +1,5 @@
 import { SectionLabel } from '@/components/atoms/SectionLabel';
-import { StepCard, StepConnector } from '@/components/molecules/StepCard';
+import { StepCard } from '@/components/molecules/StepCard';
 
 const STEPS = [
   {
@@ -21,27 +21,24 @@ const STEPS = [
 
 /**
  * HowItWorksSection — Organismo
- * 3 pasos con conectores decorativos entre ellos.
+ * Tres pasos con distribución adaptable a móvil y escritorio.
  * StepCard usa Framer Motion whileInView con stagger.
  */
 export function HowItWorksSection() {
   return (
-    <section id="how" className="min-h-screen flex flex-col justify-center py-16 bg-navy">
-      <div className="max-w-[1080px] mx-auto px-6">
+    <section id="how" className="social-section">
+      <div className="page-container">
         <SectionLabel>Simple y rápido</SectionLabel>
-        <h2 className="font-display text-[clamp(1.9rem,4vw,2.7rem)] font-extrabold text-slate-body tracking-tight mb-3">
+        <h2 className="section-title">
           De tu primera publicación a tu próximo match.
         </h2>
-        <p className="text-[1.03rem] text-slate-sub max-w-[520px] mb-14 leading-relaxed">
+        <p className="section-copy">
           Una forma visual de mostrar lo que vendés y conectar con quienes buscan tecnología.
         </p>
 
-        <div className="flex flex-col md:flex-row items-stretch gap-0 md:gap-0">
+        <div className="how-steps">
           {STEPS.map((step, i) => (
-            <div key={i} className="flex md:flex-row items-stretch flex-1">
-              <StepCard number={step.number} title={step.title} desc={step.desc} index={i} />
-              {i < STEPS.length - 1 && <StepConnector />}
-            </div>
+            <StepCard key={step.number} number={step.number} title={step.title} desc={step.desc} index={i} />
           ))}
         </div>
       </div>
