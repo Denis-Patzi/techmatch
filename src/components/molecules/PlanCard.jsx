@@ -8,14 +8,20 @@ import { PlanFeatureItem } from '@/components/atoms/PlanFeatureItem';
  * Soporta 3 variantes visuales: free, personal, business.
  *
  * @param {object}   plan       - Objeto del plan (ver plansData.js)
- * @param {boolean}  isAnnual   - Controla si se muestra precio anual o mensual
  * @param {number}   index      - Para stagger animation
  */
-export function PlanCard({ plan, isAnnual, index = 0, showCta = true }) {
+export function PlanCard({ plan, index = 0, showCta = true }) {
   const reducedMotion = useReducedMotion();
-  const { name, priceMonthly, priceAnnual, tagline, limitChip, cta, variant, featured, features } =
-    plan;
-  const displayPrice = isAnnual ? priceAnnual : priceMonthly;
+  const {
+    name,
+    priceMonthly,
+    tagline,
+    limitChip,
+    variant,
+    featured,
+    features,
+  } = plan;
+  const displayPrice = priceMonthly;
 
   const ctaStyles = {
     free: 'border border-cyan/40 text-cyan hover:bg-cyan/10',
@@ -28,7 +34,11 @@ export function PlanCard({ plan, isAnnual, index = 0, showCta = true }) {
       initial={reducedMotion ? false : { opacity: 0, y: 28 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-50px' }}
-      transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1], delay: index * 0.1 }}
+      transition={{
+        duration: 0.55,
+        ease: [0.16, 1, 0.3, 1],
+        delay: index * 0.1,
+      }}
       className={`
         plan-card relative rounded-[28px] p-7 flex flex-col transition-all duration-300
         ${variant === 'business' ? 'is-featured' : ''}
@@ -57,36 +67,40 @@ export function PlanCard({ plan, isAnnual, index = 0, showCta = true }) {
       </h3>
 
       {/* Price */}
-      <div className="flex items-baseline gap-1 mb-2">
-        <span
-          className={`text-sm font-bold ${variant === 'business' ? 'text-white/70' : 'text-slate-sub'}`}
-        >
-          Bs.
-        </span>
-        <motion.span
-          key={displayPrice}
-          initial={{ opacity: 0, y: -8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-          className={`font-display text-5xl font-black tracking-tight leading-none ${variant === 'business' ? 'text-white' : 'text-slate-body'}`}
-        >
-          {displayPrice}
-        </motion.span>
-        <span
-          className={`text-sm ${variant === 'business' ? 'text-white/60' : 'text-slate-muted'}`}
-        >
-          /mes
-        </span>
-      </div>
+      {displayPrice === null ? (
+        <p className="font-display text-3xl font-bold mb-2">A elección</p>
+      ) : (
+        <div className="flex items-baseline gap-1 mb-2">
+          <span
+            className={`text-sm font-bold ${variant === 'business' ? 'text-white/70' : 'text-slate-sub'}`}
+          >
+            Bs.
+          </span>
+          <motion.span
+            key={displayPrice}
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            className={`font-display text-5xl font-black tracking-tight leading-none ${variant === 'business' ? 'text-white' : 'text-slate-body'}`}
+          >
+            {displayPrice}
+          </motion.span>
+          <span
+            className={`text-sm ${variant === 'business' ? 'text-white/60' : 'text-slate-muted'}`}
+          >
+            /mes
+          </span>
+        </div>
+      )}
 
       <p
         className={`plan-billing-detail ${variant === 'business' ? 'text-white/70' : 'text-slate-muted'}`}
       >
-        {displayPrice === 0
-          ? 'Sin costo'
-          : isAnnual
-            ? `Bs. ${plan.annualTotal.toLocaleString('es-BO')} al año`
-            : 'Facturación mensual'}
+        {displayPrice === null
+          ? 'Costo según los servicios elegidos'
+          : displayPrice === 0
+            ? 'Sin costo'
+            : 'Duración: 1 mes'}
       </p>
 
       {/* Tagline */}
@@ -134,7 +148,7 @@ export function PlanCard({ plan, isAnnual, index = 0, showCta = true }) {
           ${ctaStyles[variant] ?? ctaStyles.free}
         `}
         >
-          {cta}
+          {plan.id === 'free' ? 'Crear cuenta gratis' : 'Crear mi cuenta'}
         </Link>
       ) : (
         <p className="plan-preview-availability">

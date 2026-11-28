@@ -274,7 +274,7 @@ export default function ProductEditor({
               </div>
             )}
             <p className="market-muted">
-              Plan Básico: hasta 25 publicaciones activas, incluidas 5 con
+              Límite de esta versión: hasta 25 publicaciones activas, incluidas 5 con
               video.
             </p>
             {error && (

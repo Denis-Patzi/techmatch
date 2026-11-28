@@ -18,7 +18,7 @@ const SELLER_BENEFITS = [
       </svg>
     ),
     title: 'Publicar es gratis',
-    desc: 'Empezá sin costo con hasta 25 productos activos. Sin comisiones por venta en el plan Básico.',
+    desc: 'Conocé el nuevo plan Gratis con 10 publicaciones activas y los planes para ampliar tu espacio.',
   },
   {
     icon: (

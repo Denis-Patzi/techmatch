@@ -1,5 +1,11 @@
 import { useState, useEffect, useRef, lazy, Suspense } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+} from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Toaster } from 'react-hot-toast';
 import { useTheme } from '@/contexts/ThemeContext';
@@ -11,6 +17,7 @@ import { ScrollProgress } from '@/components/atoms/ScrollProgress';
 /* ── Auth ── */
 import { AuthProvider } from '@/contexts/AuthContext';
 import { ProtectedRoute } from '@/components/organisms/ProtectedRoute';
+import { useAuth } from '@/hooks/useAuth';
 
 /* ── Organisms (Landing) ── */
 import { Navbar } from '@/components/organisms/Navbar';
@@ -26,11 +33,11 @@ import { Footer } from '@/components/organisms/Footer';
 
 /* ── Pages (lazy load) ── */
 const SignUpPage = lazy(() => import('@/pages/SignUpPage'));
-const LoginPage = lazy(() => import('@/pages/LoginPage'));
 const UserPage = lazy(() => import('@/pages/UserPage'));
 const AdminPage = lazy(() => import('@/pages/AdminPage'));
 const ForgotPasswordPage = lazy(() => import('@/pages/ForgotPasswordPage'));
 const UpdatePasswordPage = lazy(() => import('@/pages/UpdatePasswordPage'));
+const PublicFeedPage = lazy(() => import('@/pages/PublicFeedPage'));
 
 /* ── Spinner de carga ── */
 const PageSpinner = () => (
@@ -108,6 +115,20 @@ function LandingPage({ isDark, onToggleTheme }) {
 }
 
 /* ── App Root ── */
+function FeedHome() {
+  const { pathname } = useLocation();
+  const { user, loading } = useAuth();
+  if (loading) return <PageSpinner />;
+  if (user && pathname === '/login') return <Navigate to="/app" replace />;
+  return user ? (
+    <ProtectedRoute requiredRole="user">
+      <UserPage />
+    </ProtectedRoute>
+  ) : (
+    <PublicFeedPage emailLogin={pathname === '/login'} />
+  );
+}
+
 export default function App() {
   const { isDark, toggleTheme } = useTheme();
 
@@ -126,7 +147,9 @@ export default function App() {
               borderRadius: '12px',
               fontSize: '0.9rem',
             },
-            success: { iconTheme: { primary: '#1C75E8', secondary: '#ffffff' } },
+            success: {
+              iconTheme: { primary: '#1C75E8', secondary: '#ffffff' },
+            },
             error: { iconTheme: { primary: '#f87171', secondary: '#0D1118' } },
           }}
         />
@@ -134,11 +157,17 @@ export default function App() {
         <Suspense fallback={<PageSpinner />}>
           <Routes>
             {/* Landing */}
-            <Route path="/" element={<LandingPage isDark={isDark} onToggleTheme={toggleTheme} />} />
+            <Route path="/" element={<FeedHome />} />
+            <Route
+              path="/presentacion"
+              element={
+                <LandingPage isDark={isDark} onToggleTheme={toggleTheme} />
+              }
+            />
 
             {/* Auth */}
             <Route path="/signup" element={<SignUpPage />} />
-            <Route path="/login" element={<LoginPage />} />
+            <Route path="/login" element={<FeedHome />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             <Route path="/update-password" element={<UpdatePasswordPage />} />
 

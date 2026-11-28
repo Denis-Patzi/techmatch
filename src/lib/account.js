@@ -1,6 +1,6 @@
 import { plans } from '../data/plansData.js';
 
-// La base de datos aplica Básico a todas las cuentas hasta activar suscripciones Pro.
+// Las cuentas mantienen Gratis hasta implementar la contratación de suscripciones.
 export function getCurrentPlan() {
   return plans.find((plan) => plan.id === 'free');
 }

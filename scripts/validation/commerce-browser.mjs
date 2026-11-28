@@ -401,6 +401,12 @@ async function accountTests() {
     .waitFor({ state: 'hidden' });
   assert.equal(profiles[buyerId].account_type, 'personal');
   assert.equal(profiles[buyerId].store_name, null);
+  await personal.goto('http://127.0.0.1:5173/');
+  await personal.locator('.market-feed-scroll').waitFor();
+  assert.equal(await personal.locator('.market-public-page').count(), 0);
+  await admin.goto('http://127.0.0.1:5173/');
+  await admin.waitForURL('**/admin');
+  console.log('OK inicio: usuario autenticado entra al feed y administrador a su panel.');
   assert.deepEqual(errors, []);
   console.log(
     'PASS cuentas en navegador: permisos de interfaz, edición normal, tipo y plan, administrador y móvil.'

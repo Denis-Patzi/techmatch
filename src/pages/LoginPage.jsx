@@ -1,19 +1,18 @@
-import { AuthLayout } from '@/components/organisms/AuthLayout';
-import { LoginForm } from '@/components/organisms/LoginForm';
+import { Navigate } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
+import PublicFeedPage from './PublicFeedPage';
 
 /**
- * LoginPage — CU02 + CU03: Autenticar con 2FA
+ * Email sign-in appears over Explore, matching the public access flow.
  */
 export default function LoginPage() {
-  return (
-    <AuthLayout
-      title="Iniciar sesión"
-      subtitle="Ingresá tus datos para acceder a tu cuenta."
-      footerText="¿No tenés cuenta?"
-      footerLink="Registrate gratis"
-      footerLinkTo="/signup"
-    >
-      <LoginForm />
-    </AuthLayout>
-  );
+  const { user, loading } = useAuth();
+  if (loading)
+    return (
+      <div className="market-loading" role="status">
+        Cargando…
+      </div>
+    );
+  if (user) return <Navigate to="/app" replace />;
+  return <PublicFeedPage emailLogin />;
 }

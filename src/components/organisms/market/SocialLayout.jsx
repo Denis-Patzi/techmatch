@@ -7,10 +7,11 @@ import { ThemeToggle } from '@/components/atoms/ThemeToggle';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useAuth } from '@/hooks/useAuth';
 import { getAccountLabel, getAccountType } from '@/lib/account';
-import { MarketDialog } from './MarketViews';
+import { CategoryFilter, MarketDialog } from './MarketViews';
+import { FeedOverlayContext } from '@/contexts/FeedOverlayContext';
 
 const MAIN = [
-  { id: 'explore', label: 'Para vos', mobile: 'Inicio', icon: 'home' },
+  { id: 'explore', label: 'Para ti', mobile: 'Inicio', icon: 'home' },
   { id: 'discovery', label: 'Explorar', mobile: 'Explorar', icon: 'search' },
   { id: 'publish', label: 'Publicar', mobile: 'Publicar', icon: 'plus' },
   { id: 'auctions', label: 'Subastas', mobile: 'Subastas', icon: 'gavel' },
@@ -32,6 +33,10 @@ export default function SocialLayout({
   query,
   setQuery,
   unreadMessages = 0,
+  guest = false,
+  onLogin,
+  category = 'Todos',
+  onCategoryChange,
 }) {
   const { profile, signOut } = useAuth();
   const { isDark, toggleTheme } = useTheme();
@@ -53,10 +58,18 @@ export default function SocialLayout({
       /* The sidebar still works when storage is unavailable. */
     }
   }, [collapsed]);
-  const name =
-    (getAccountType(profile) === 'store'
-      ? profile.store_name
-      : profile.full_name) || 'Mi cuenta';
+  const name = guest
+    ? 'Visitante'
+    : (getAccountType(profile) === 'store'
+        ? profile?.store_name
+        : profile?.full_name) || 'Mi cuenta';
+  const extraItems = guest
+    ? EXTRA.filter((item) => ['messages', 'favorites'].includes(item.id))
+    : EXTRA;
+  const login = () => {
+    setMore(false);
+    onLogin?.();
+  };
   const isFeed = section === 'explore';
   const search = (event) => {
     event.preventDefault();
@@ -98,7 +111,7 @@ export default function SocialLayout({
   );
   return (
     <div
-      className={`market-app ${isFeed ? 'market-feed-page' : ''} ${collapsed ? 'market-sidebar-collapsed' : ''}`}
+      className={`market-app ${isFeed ? 'market-feed-page' : ''} ${collapsed ? 'market-sidebar-collapsed' : ''} ${guest ? 'market-public-page' : ''}`}
     >
       <aside className="market-sidebar">
         <div className="market-sidebar-header">
@@ -156,40 +169,109 @@ export default function SocialLayout({
         <nav aria-label="Navegación principal" id="market-sidebar-navigation">
           {MAIN.map((item) => navButton(item))}
           <div className="market-nav-divider" />
-          {EXTRA.map((item) => navButton(item))}
+          {extraItems.map((item) => navButton(item))}
+          {guest && (
+            <button onClick={() => setMore(true)} aria-label="Más opciones">
+              <Icon name="menu" size={22} />
+              <span>Más</span>
+            </button>
+          )}
         </nav>
         <div className="market-sidebar-bottom">
-          <button
-            className="market-sidebar-account"
-            onClick={() => change('profile')}
-            aria-label={`Mi perfil de ${name}`}
-            title={collapsed ? name : undefined}
-          >
-            <span className="market-avatar">
-              {name.slice(0, 2).toUpperCase()}
-            </span>
-            <span>
-              <strong>{name}</strong>
-              <small>{getAccountLabel(profile)}</small>
-            </span>
-          </button>
-          <button
-            className="market-logout"
-            onClick={logout}
-            disabled={leaving}
-            aria-label="Cerrar sesión"
-            title={collapsed ? 'Cerrar sesión' : undefined}
-          >
-            <Icon name="logout" size={18} />
-            <span>Cerrar sesión</span>
-          </button>
+          {guest ? (
+            <div className="market-guest-welcome">
+              <p>Descubrí tecnología. Ingresá para publicar y conectar.</p>
+              <button
+                className="btn-primary market-guest-login"
+                onClick={login}
+                aria-label="Iniciar sesión"
+              >
+                <Icon name="user" size={19} />
+                <span>Iniciar sesión</span>
+              </button>
+            </div>
+          ) : (
+            <>
+              <button
+                className="market-sidebar-account"
+                onClick={() => change('profile')}
+                aria-label={`Mi perfil de ${name}`}
+                title={collapsed ? name : undefined}
+              >
+                <span className="market-avatar">
+                  {name.slice(0, 2).toUpperCase()}
+                </span>
+                <span>
+                  <strong>{name}</strong>
+                  <small>{getAccountLabel(profile)}</small>
+                </span>
+              </button>
+              <button
+                className="market-logout"
+                onClick={logout}
+                disabled={leaving}
+                aria-label="Cerrar sesión"
+                title={collapsed ? 'Cerrar sesión' : undefined}
+              >
+                <Icon name="logout" size={18} />
+                <span>Cerrar sesión</span>
+              </button>
+            </>
+          )}
         </div>
       </aside>
       <div className="market-main">
         <header
-          className={`market-topbar ${isFeed ? 'market-feed-topbar' : ''}`}
+          className={`market-topbar ${isFeed ? 'market-feed-topbar' : ''} ${guest ? 'market-public-topbar' : ''}`}
         >
-          {isFeed ? (
+          {guest ? (
+            <>
+              <div className="public-header-mobile">
+                <Link to="/" aria-label="TechMatch, inicio">
+                  <img src="/logo-blue.png" width="29" height="29" alt="" />
+                  <strong>TechMatch</strong>
+                </Link>
+                <div>
+                  <button className="market-login-shortcut" onClick={login}>
+                    Ingresar
+                  </button>
+                  <button
+                    className="market-icon"
+                    onClick={() => setSearchOpen(true)}
+                    aria-label="Abrir búsqueda"
+                  >
+                    <Icon name="search" size={22} />
+                  </button>
+                  <button
+                    className="market-icon"
+                    onClick={() => setMore(true)}
+                    aria-label="Más opciones"
+                  >
+                    <Icon name="menu" size={22} />
+                  </button>
+                </div>
+              </div>
+              <nav
+                className="public-header-categories"
+                aria-label="Categorías de productos"
+              >
+                <CategoryFilter value={category} onChange={onCategoryChange} />
+              </nav>
+              <div className="public-header-tools">
+                <button className="market-login-shortcut" onClick={login}>
+                  Ingresar
+                </button>
+                <ThemeToggle isDark={isDark} onToggle={toggleTheme} />
+                <button
+                  className="market-icon"
+                  onClick={() => setSearchOpen(true)}
+                  aria-label="Abrir búsqueda"
+                >
+                  <Icon name="search" size={22} />
+                </button>
+              </div>
+            </>
+          ) : isFeed ? (
             <>
               <button
                 className="market-icon market-feed-menu"
@@ -201,22 +283,28 @@ export default function SocialLayout({
               <nav className="market-feed-tabs" aria-label="Vistas del feed">
                 <button onClick={() => change('discovery')}>Explorar</button>
                 <button aria-current="page" onClick={() => change('explore')}>
-                  Para vos
+                  Para ti
                 </button>
               </nav>
               <div className="market-feed-topbar-tools">
-                <button
-                  className="market-icon market-messages-shortcut"
-                  onClick={() => change('messages')}
-                  aria-label={`Mensajes${unreadMessages ? `, ${unreadMessages} sin leer` : ''}`}
-                >
-                  <Icon name="chat" size={23} />
-                  {unreadMessages > 0 && (
-                    <b className="market-unread-badge">
-                      {unreadMessages > 99 ? '99+' : unreadMessages}
-                    </b>
-                  )}
-                </button>
+                {guest ? (
+                  <button className="market-login-shortcut" onClick={login}>
+                    Ingresar
+                  </button>
+                ) : (
+                  <button
+                    className="market-icon market-messages-shortcut"
+                    onClick={() => change('messages')}
+                    aria-label={`Mensajes${unreadMessages ? `, ${unreadMessages} sin leer` : ''}`}
+                  >
+                    <Icon name="chat" size={23} />
+                    {unreadMessages > 0 && (
+                      <b className="market-unread-badge">
+                        {unreadMessages > 99 ? '99+' : unreadMessages}
+                      </b>
+                    )}
+                  </button>
+                )}
                 <ThemeToggle isDark={isDark} onToggle={toggleTheme} />
                 <button
                   className="market-icon"
@@ -237,18 +325,24 @@ export default function SocialLayout({
                 {[...MAIN, ...EXTRA].find((item) => item.id === section)?.label}
               </span>
               <div className="market-topbar-tools">
-                <button
-                  className="market-icon market-messages-shortcut"
-                  onClick={() => change('messages')}
-                  aria-label={`Mensajes${unreadMessages ? `, ${unreadMessages} sin leer` : ''}`}
-                >
-                  <Icon name="chat" size={23} />
-                  {unreadMessages > 0 && (
-                    <b className="market-unread-badge">
-                      {unreadMessages > 99 ? '99+' : unreadMessages}
-                    </b>
-                  )}
-                </button>
+                {guest ? (
+                  <button className="market-login-shortcut" onClick={login}>
+                    Ingresar
+                  </button>
+                ) : (
+                  <button
+                    className="market-icon market-messages-shortcut"
+                    onClick={() => change('messages')}
+                    aria-label={`Mensajes${unreadMessages ? `, ${unreadMessages} sin leer` : ''}`}
+                  >
+                    <Icon name="chat" size={23} />
+                    {unreadMessages > 0 && (
+                      <b className="market-unread-badge">
+                        {unreadMessages > 99 ? '99+' : unreadMessages}
+                      </b>
+                    )}
+                  </button>
+                )}
                 <span className="market-online-dot" />{' '}
                 <span className="market-community-label">
                   Hecho para conectar
@@ -273,7 +367,9 @@ export default function SocialLayout({
           )}
         </header>
         <main id="market-content" className="market-content">
-          {children}
+          <FeedOverlayContext.Provider value={more || searchOpen}>
+            {children}
+          </FeedOverlayContext.Provider>
         </main>
       </div>
       <nav
@@ -320,7 +416,7 @@ export default function SocialLayout({
             <div className="market-section-heading">
               <h2>Tu espacio</h2>
             </div>
-            {EXTRA.map((item) => (
+            {extraItems.map((item) => (
               <button
                 className="market-more-link"
                 key={item.id}
@@ -339,14 +435,20 @@ export default function SocialLayout({
               <Icon name="sparkles" />
               {isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
             </button>
-            <button
-              className="market-more-link"
-              onClick={logout}
-              disabled={leaving}
-            >
-              <Icon name="logout" />
-              Cerrar sesión
-            </button>
+            {guest ? (
+              <button className="btn-primary" onClick={login}>
+                Iniciar sesión
+              </button>
+            ) : (
+              <button
+                className="market-more-link"
+                onClick={logout}
+                disabled={leaving}
+              >
+                <Icon name="logout" />
+                Cerrar sesión
+              </button>
+            )}
           </div>
         </MarketDialog>
       )}

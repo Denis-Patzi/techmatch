@@ -1,0 +1,201 @@
+.market-email-login-modal {
+  width: min(510px, 100%);
+  max-width: 510px;
+  border-radius: 26px;
+  color: rgb(var(--c-slate-body));
+  padding: 0;
+}
+.market-email-login-modal .market-dialog-close,
+.email-login-back {
+  position: absolute;
+  top: 20px;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: rgb(var(--c-slate-body));
+}
+.market-email-login-modal .market-dialog-close {
+  right: 13px;
+  top: 13px;
+}
+.email-login-back {
+  left: 12px;
+  background: transparent;
+}
+.email-login-back:hover {
+  background: rgb(var(--c-brand-blue) / 0.12);
+}
+.email-login-content {
+  padding: 68px 44px 30px;
+}
+.email-login-content > h2 {
+  text-align: center;
+  color: rgb(var(--c-slate-body));
+  font-size: clamp(1.45rem, 3vw, 1.85rem);
+  font-weight: 650;
+  letter-spacing: -0.04em;
+  line-height: 1.2;
+}
+.email-login-content > h2 > span {
+  color: rgb(var(--c-cyan));
+}
+.email-login-tabs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  max-width: 100%;
+  padding: 4px;
+  margin: 40px auto 36px;
+  border-radius: 28px;
+  background: rgb(var(--c-brand-blue) / 0.1);
+}
+.email-login-tabs > button {
+  border: 0;
+  border-radius: 24px;
+  padding: 10px 16px;
+  color: rgb(var(--c-slate-sub));
+  font-size: 0.8rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.email-login-tabs > button[aria-pressed='true'] {
+  background: rgb(var(--c-brand-blue));
+  color: white;
+}
+.email-login-tabs > button:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+.social-login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.social-login-form > div > label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.social-login-input {
+  display: block;
+  width: 100%;
+  height: 54px;
+  padding: 16px;
+  border: 1px solid rgb(var(--c-cyan) / 0.12);
+  border-radius: 28px;
+  background: rgb(var(--c-slate-muted) / 0.12);
+  color: rgb(var(--c-slate-body));
+  font: inherit;
+  font-size: 0.9rem;
+  outline: none;
+}
+.social-login-input::placeholder {
+  color: rgb(var(--c-slate-muted));
+}
+.social-login-input:focus {
+  border-color: rgb(var(--c-brand-blue));
+}
+.social-login-input[aria-invalid='true'] {
+  border-color: #f87171;
+}
+.social-login-password {
+  position: relative;
+}
+.social-login-password input {
+  padding-right: 50px;
+}
+.social-login-password > button {
+  position: absolute;
+  inset: 0 7px 0 auto;
+  width: 40px;
+  display: grid;
+  place-items: center;
+  color: rgb(var(--c-slate-sub));
+}
+.social-login-submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 52px;
+  margin-top: 64px;
+  border: 0;
+  border-radius: 28px;
+  background: rgb(var(--c-brand-blue));
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+.social-login-submit:disabled {
+  background: rgb(var(--c-brand-blue) / 0.12);
+  color: rgb(var(--c-slate-muted));
+  cursor: not-allowed;
+}
+.social-login-forgot {
+  align-self: center;
+  padding: 10px 0 2px;
+  color: rgb(var(--c-slate-sub));
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+.social-login-forgot:hover {
+  color: rgb(var(--c-cyan));
+}
+.email-login-footer {
+  border-top: 1px solid rgb(var(--c-cyan) / 0.12);
+  padding: 22px 20px 18px;
+  text-align: center;
+  color: rgb(var(--c-slate-sub));
+  font-size: 0.79rem;
+}
+.email-login-footer > a {
+  color: rgb(var(--c-cyan));
+  margin-left: 3px;
+  font-weight: 600;
+}
+@media (max-width: 767px) {
+  .email-login-content {
+    padding: 62px 24px 24px;
+  }
+  .email-login-content > h2 {
+    font-size: 1.45rem;
+  }
+  .email-login-tabs {
+    margin: 30px auto;
+  }
+  .email-login-tabs > button {
+    padding: 10px 13px;
+    font-size: 0.75rem;
+  }
+  .social-login-input {
+    height: 56px;
+    font-size: 0.82rem;
+  }
+  .social-login-submit {
+    margin-top: 42px;
+    font-size: 0.75rem;
+  }
+  .email-login-footer {
+    padding: 24px 14px;
+    font-size: 0.76rem;
+  }
+}
+@media (max-width: 359px) {
+  .email-login-content {
+    padding-inline: 18px;
+  }
+  .email-login-tabs > button {
+    padding-inline: 10px;
+    font-size: 0.66rem;
+  }
+}

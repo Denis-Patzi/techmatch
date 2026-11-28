@@ -576,6 +576,132 @@ try {
       );
     });
   });
+  const publicMigration = await readFile(
+    new URL(
+      '../../supabase/migrations/20261128_public_feed.sql',
+      import.meta.url
+    ),
+    'utf8'
+  );
+  await db.exec(publicMigration);
+  await test('Feed público repetible y sin permiso de lectura directa sobre tablas', async () => {
+    await db.exec(publicMigration);
+    await db.exec('set role anon');
+    try {
+      for (const table of [
+        'profiles',
+        'products',
+        'auction_bids',
+        'messages',
+        'conversations',
+      ]) {
+        await rejected(
+          `select * from public.${table}`,
+          [],
+          /permission denied/
+        );
+      }
+    } finally {
+      await db.exec('reset role');
+    }
+  });
+  const publicSale = await product({ type: 'sale' });
+  const publicDraft = await product({ type: 'sale', status: 'draft' });
+  const publicSold = await product({ type: 'sale', status: 'sold' });
+  await db.query(
+    "update public.profiles set phone='PRIVATE_PHONE',nit='PRIVATE_NIT' where id=$1",
+    [users.seller]
+  );
+  await test('Visitante solo ve publicados e identidad pública, sin información privada', async () => {
+    await db.exec('set role anon');
+    try {
+      const rows = await query('select * from public.get_public_feed()');
+      assert.ok(rows.some((row) => row.product.id === publicSale));
+      assert.ok(rows.every((row) => row.product.status === 'published'));
+      assert.ok(
+        !rows.some((row) => [publicDraft, publicSold].includes(row.product.id))
+      );
+      for (const row of rows) {
+        assert.deepEqual(Object.keys(row.seller).sort(), [
+          'account_type',
+          'city',
+          'display_name',
+          'id',
+          'is_verified',
+        ]);
+        assert.ok(!JSON.stringify(row).includes('PRIVATE_'));
+        if (row.auction)
+          assert.ok(
+            !Object.keys(row.auction).some((key) =>
+              /winner|bidder|is_mine|buyer/.test(key)
+            )
+          );
+      }
+      assert.equal(
+        (
+          await query('select * from public.get_public_feed(null,$1)', [
+            publicDraft,
+          ])
+        ).length,
+        0
+      );
+      assert.equal(
+        (
+          await query('select * from public.get_public_feed(null,$1)', [
+            publicSold,
+          ])
+        ).length,
+        0
+      );
+      const single = await query(
+        'select * from public.get_public_feed(null,$1)',
+        [publicSale]
+      );
+      assert.equal(single.length, 1);
+      assert.equal(single[0].product.id, publicSale);
+      assert.ok(
+        (
+          await query('select * from public.get_public_feed($1)', [
+            users.seller,
+          ])
+        ).every((row) => row.product.owner_id === users.seller)
+      );
+    } finally {
+      await db.exec('reset role');
+    }
+  });
+  await test('Visitante no puede editar ni publicar ni guardar deseos', async () => {
+    await db.exec('set role anon');
+    try {
+      await rejected(
+        'delete from public.products where id=$1',
+        [publicSale],
+        /permission denied/
+      );
+      await rejected(
+        "update public.products set title='Ataque' where id=$1",
+        [publicSale],
+        /permission denied/
+      );
+      await rejected(
+        'insert into public.product_favorites(user_id,product_id) values($1,$2)',
+        [users.buyer, publicSale],
+        /permission denied/
+      );
+      await rejected(
+        'select public.place_auction_bid($1,500)',
+        [publicSale],
+        /permission denied/
+      );
+      await rejected(
+        'select public.open_product_conversation($1)',
+        [publicSale],
+        /permission denied/
+      );
+    } finally {
+      await db.exec('reset role');
+    }
+  });
   console.log(
     `PASS ${checks} escenarios PostgreSQL: subastas, permisos y mensajería.`
   );

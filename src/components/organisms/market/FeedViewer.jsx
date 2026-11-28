@@ -1,8 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { Icon } from '@/components/atoms/Icon';
 import { COVERS, mediaUrl, money } from '@/lib/products';
 import { EmptyProducts } from './MarketViews';
 import { AuctionCountdown } from './AuctionPanel';
+import { FeedOverlayContext } from '@/contexts/FeedOverlayContext';
+import FeedLoadingScreen from './FeedLoadingScreen';
 
 const clock = (seconds) =>
   `${Math.floor((seconds || 0) / 60)}:${String(Math.floor((seconds || 0) % 60)).padStart(2, '0')}`;
@@ -17,54 +19,116 @@ function FeedCard({
   onContact,
   own,
   auction,
+  active,
+  suspended,
+  autoAdvance,
+  photoSeconds,
+  onAdvance,
+  pageReady,
+  preloadNext,
+  onMediaSettled,
 }) {
   const stage = useRef(null);
   const video = useRef(null);
+  const image = useRef(null);
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(true);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
   const [failed, setFailed] = useState(false);
+  const [manualPaused, setManualPaused] = useState(false);
+  const [ready, setReady] = useState(false);
+  const [imageAttempt, setImageAttempt] = useState(0);
+  const [autoplayBlocked, setAutoplayBlocked] = useState(false);
   const isVideo = product.media_type === 'video';
+  useEffect(() => {
+    if (
+      (isVideo && video.current?.readyState >= 2) ||
+      (!isVideo && image.current?.complete && image.current.naturalWidth > 0)
+    )
+      setReady(true);
+  }, [isVideo, imageAttempt]);
+  useEffect(() => {
+    if (ready || failed) onMediaSettled(product.id);
+  }, [ready, failed, product.id, onMediaSettled]);
+  useEffect(() => {
+    if (!active || ready || failed) return;
+    const timer = window.setTimeout(() => setFailed(true), 20000);
+    return () => window.clearTimeout(timer);
+  }, [active, ready, failed]);
+  useEffect(() => {
+    if (!active) {
+      setManualPaused(false);
+    }
+  }, [active]);
   useEffect(() => {
     if (!isVideo) return;
     const element = video.current;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (
-          entry.isIntersecting &&
-          !document.hidden &&
-          !window.matchMedia('(prefers-reduced-motion: reduce)').matches
-        )
-          element.play().catch(() => {});
-        else element.pause();
-      },
-      { threshold: 0.65 },
-    );
-    const hide = () => {
-      if (document.hidden) element.pause();
-    };
-    observer.observe(stage.current);
-    document.addEventListener('visibilitychange', hide);
+    let cancelled = false;
+    if (
+      active &&
+      !suspended &&
+      !manualPaused &&
+      pageReady &&
+      ready &&
+      !failed
+    ) {
+      element.play().catch((error) => {
+        if (!cancelled && error.name !== 'AbortError') setAutoplayBlocked(true);
+      });
+    } else element.pause();
     return () => {
-      observer.disconnect();
-      document.removeEventListener('visibilitychange', hide);
+      cancelled = true;
       element.pause();
     };
-  }, [isVideo]);
+  }, [active, suspended, isVideo, manualPaused, pageReady, ready, failed]);
+  useEffect(() => {
+    if (
+      !active ||
+      suspended ||
+      !autoAdvance ||
+      (!ready && !failed) ||
+      (isVideo && !failed)
+    )
+      return;
+    const timer = window.setTimeout(onAdvance, photoSeconds * 1000);
+    return () => window.clearTimeout(timer);
+  }, [
+    active,
+    suspended,
+    autoAdvance,
+    isVideo,
+    failed,
+    photoSeconds,
+    onAdvance,
+    ready,
+  ]);
   const togglePlay = () => {
     if (!video.current) return;
-    if (video.current.paused) video.current.play().catch(() => setFailed(true));
-    else video.current.pause();
+    if (video.current.paused) {
+      setManualPaused(false);
+      video.current.play().catch(() => setAutoplayBlocked(true));
+    } else {
+      setManualPaused(true);
+      video.current.pause();
+    }
   };
   const fullscreen = () => {
     stage.current?.requestFullscreen?.().catch(() => {});
+  };
+  const retry = () => {
+    setFailed(false);
+    setReady(false);
+    setAutoplayBlocked(false);
+    if (isVideo) video.current?.load();
+    else setImageAttempt((value) => value + 1);
   };
   return (
     <article
       className={`market-feed-stage ${isVideo ? 'has-video' : ''}`}
       ref={stage}
       aria-label={product.title}
+      data-active={active}
     >
       <div
         className="market-feed-ambient"
@@ -72,17 +136,41 @@ function FeedCard({
           backgroundImage: `url("${isVideo ? COVERS[product.cover_key]?.src || COVERS.phone.src : mediaUrl(product)}")`,
         }}
       />
-      <div className="market-feed-media">
+      <div
+        className={`market-feed-media ${ready && !failed ? 'is-ready' : 'is-loading'}`}
+      >
         {isVideo ? (
           <video
             ref={video}
             src={mediaUrl(product)}
             playsInline
             muted={muted}
-            loop
-            preload="metadata"
-            onPlay={() => setPlaying(true)}
+            autoPlay={
+              active &&
+              pageReady &&
+              ready &&
+              !suspended &&
+              !manualPaused &&
+              !failed
+            }
+            loop={!autoAdvance}
+            preload={active || preloadNext ? 'auto' : 'none'}
+            onLoadedData={() => {
+              setReady(true);
+              setFailed(false);
+            }}
+            onCanPlay={() => {
+              setReady(true);
+              setFailed(false);
+            }}
+            onPlay={() => {
+              setPlaying(true);
+              setAutoplayBlocked(false);
+            }}
             onPause={() => setPlaying(false)}
+            onEnded={() => {
+              if (active && autoAdvance && !suspended) onAdvance();
+            }}
             onTimeUpdate={(event) =>
               setProgress(event.currentTarget.currentTime)
             }
@@ -90,27 +178,53 @@ function FeedCard({
               setDuration(
                 Number.isFinite(event.currentTarget.duration)
                   ? event.currentTarget.duration
-                  : 0,
+                  : 0
               )
             }
-            onError={() => setFailed(true)}
+            onError={() => {
+              setReady(false);
+              setFailed(true);
+            }}
           />
         ) : (
-          <img src={mediaUrl(product)} alt={product.title} />
+          <img
+            ref={image}
+            key={imageAttempt}
+            src={mediaUrl(product)}
+            alt={product.title}
+            loading={active ? 'eager' : 'lazy'}
+            onLoad={() => {
+              setReady(true);
+              setFailed(false);
+            }}
+            onError={() => {
+              setReady(false);
+              setFailed(true);
+            }}
+          />
         )}
       </div>
-      {isVideo && (
+      {failed && (
+        <img
+          className="market-feed-fallback"
+          src={(COVERS[product.cover_key] || COVERS.phone).src}
+          alt="Imagen de referencia del producto"
+        />
+      )}
+      {active && !ready && !failed && (
+        <div className="market-feed-media-loading" role="status">
+          <span className="market-feed-loading-spinner" aria-hidden="true" />
+          <span>Cargando publicación…</span>
+        </div>
+      )}
+      {isVideo && ready && !failed && (
         <button
-          className={`market-player-hitarea ${!playing ? 'is-paused' : ''}`}
+          className="market-player-hitarea"
           onClick={togglePlay}
           aria-label={
             playing ? `Pausar ${product.title}` : `Reproducir ${product.title}`
           }
-        >
-          <span>
-            <Icon name="play" size={52} />
-          </span>
-        </button>
+        />
       )}
       <div className="market-feed-caption">
         <button
@@ -159,9 +273,14 @@ function FeedCard({
         )}
         {failed && (
           <p role="status">
-            No pudimos reproducir este video. Podés consultar los detalles del
-            producto.
+            No pudimos cargar {isVideo ? 'este video' : 'esta imagen'}.{' '}
+            <button className="market-media-retry" onClick={retry}>
+              Volver a cargar
+            </button>
           </p>
+        )}
+        {autoplayBlocked && !failed && (
+          <p role="status">Tocá el video para reproducirlo.</p>
         )}
       </div>
       <div className="market-feed-actions">
@@ -275,20 +394,135 @@ export default function FeedViewer({
   onContact,
   userId,
   auctions = {},
+  suspended = false,
 }) {
   const feed = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  if (!products.length) return <EmptyProducts onCreate={onCreate} />;
-  const move = (direction) =>
-    feed.current?.scrollBy({
-      top: direction * feed.current.clientHeight,
-      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
-        ? 'instant'
-        : 'smooth',
+  const [autoAdvance, setAutoAdvance] = useState(false);
+  const [photoSeconds, setPhotoSeconds] = useState(8);
+  const [status, setStatus] = useState('');
+  const [visible, setVisible] = useState(() => !document.hidden);
+  const [pageReady, setPageReady] = useState(false);
+  const [settledFirstId, setSettledFirstId] = useState(null);
+  const firstId = products[0]?.id;
+  const booting = !pageReady || settledFirstId !== firstId;
+  const onMediaSettled = useCallback(
+    (id) => {
+      if (id === firstId) setSettledFirstId(id);
+    },
+    [firstId]
+  );
+  const overlay = useContext(FeedOverlayContext);
+  const blocked = suspended || overlay || !visible || booting;
+  const indexRef = useRef(activeIndex);
+  indexRef.current = activeIndex;
+  useEffect(() => {
+    let cancelled = false;
+    let frame;
+    let paint;
+    const finish = () => {
+      if (cancelled) return;
+      window.clearTimeout(timeout);
+      frame = window.requestAnimationFrame(() => {
+        paint = window.requestAnimationFrame(() => {
+          if (!cancelled) setPageReady(true);
+        });
+      });
+    };
+    // Wait for typography/layout without trapping the feed on a slow font CDN.
+    const timeout = window.setTimeout(finish, 5000);
+    Promise.resolve(document.fonts?.ready).then(finish);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timeout);
+      window.cancelAnimationFrame(frame);
+      window.cancelAnimationFrame(paint);
+    };
+  }, []);
+  useEffect(() => {
+    const change = () => setVisible(!document.hidden);
+    document.addEventListener('visibilitychange', change);
+    return () => document.removeEventListener('visibilitychange', change);
+  }, []);
+  const scrollToIndex = useCallback(
+    (index) => {
+      if (!feed.current) return;
+      feed.current.scrollTo({
+        top:
+          Math.max(0, Math.min(index, products.length - 1)) *
+          feed.current.clientHeight,
+        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
+          ? 'instant'
+          : 'smooth',
+      });
+    },
+    [products.length]
+  );
+  const advance = useCallback(() => {
+    if (activeIndex >= products.length - 1) {
+      setAutoAdvance(false);
+      setStatus('Llegaste a la última publicación.');
+    } else scrollToIndex(activeIndex + 1);
+  }, [activeIndex, products.length, scrollToIndex]);
+  useEffect(() => {
+    if (!feed.current) return;
+    const observer = new ResizeObserver(() => {
+      const index = Math.max(
+        0,
+        Math.min(indexRef.current, products.length - 1)
+      );
+      feed.current?.scrollTo({
+        top: index * feed.current.clientHeight,
+        behavior: 'instant',
+      });
+      setActiveIndex(index);
     });
+    observer.observe(feed.current);
+    return () => observer.disconnect();
+  }, [products.length]);
+  if (!products.length) return <EmptyProducts onCreate={onCreate} />;
+  const move = (direction) => scrollToIndex(activeIndex + direction);
   return (
-    <div className="market-feed-layout">
-      <h1 className="sr-only">Para vos · Productos de la comunidad</h1>
+    <div
+      className={`market-feed-layout ${booting ? 'market-feed-booting' : ''}`}
+      aria-busy={booting}
+    >
+      {booting && <FeedLoadingScreen />}
+      <h1 className="sr-only">Para ti · Productos de la comunidad</h1>
+      <div className="market-feed-options">
+        <button
+          type="button"
+          aria-label="Desplazamiento automático"
+          aria-pressed={autoAdvance}
+          disabled={products.length < 2}
+          onClick={() => {
+            setAutoAdvance((value) => !value);
+            setStatus('');
+          }}
+          title="Pasar fotos por tiempo y videos al terminar"
+        >
+          <Icon name={autoAdvance ? 'pause' : 'refresh'} size={16} />
+          Desplazamiento automático{' '}
+          <span>{autoAdvance ? 'activado' : 'desactivado'}</span>
+        </button>
+        {autoAdvance && (
+          <label>
+            Fotos{' '}
+            <select
+              aria-label="Tiempo por foto"
+              value={photoSeconds}
+              onChange={(event) => setPhotoSeconds(Number(event.target.value))}
+            >
+              <option value={5}>5 s</option>
+              <option value={8}>8 s</option>
+              <option value={12}>12 s</option>
+            </select>
+          </label>
+        )}
+      </div>
+      <span className="sr-only" role="status">
+        {status}
+      </span>
       <div
         className="market-feed-scroll"
         ref={feed}
@@ -297,8 +531,8 @@ export default function FeedViewer({
         onScroll={(event) =>
           setActiveIndex(
             Math.round(
-              event.currentTarget.scrollTop / event.currentTarget.clientHeight,
-            ),
+              event.currentTarget.scrollTop / event.currentTarget.clientHeight
+            )
           )
         }
         onKeyDown={(event) => {
@@ -311,7 +545,7 @@ export default function FeedViewer({
           }
         }}
       >
-        {products.map((product) => (
+        {products.map((product, index) => (
           <FeedCard
             key={product.id}
             product={product}
@@ -324,6 +558,14 @@ export default function FeedViewer({
             onContact={onContact}
             own={product.owner_id === userId}
             auction={auctions[product.id]}
+            active={index === activeIndex}
+            suspended={blocked}
+            autoAdvance={autoAdvance}
+            photoSeconds={photoSeconds}
+            onAdvance={advance}
+            pageReady={pageReady}
+            preloadNext={index === activeIndex + 1}
+            onMediaSettled={onMediaSettled}
           />
         ))}
       </div>

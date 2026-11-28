@@ -155,10 +155,10 @@ export function ProfileCatalog({
   const list = (
     tab === 'favorites'
       ? products.filter(
-          (item) => favorites.includes(item.id) && item.status === 'published',
+          (item) => favorites.includes(item.id) && item.status === 'published'
         )
       : mine.filter(
-          (item) => tab !== 'auctions' || item.listing_type === 'auction',
+          (item) => tab !== 'auctions' || item.listing_type === 'auction'
         )
   )
     .filter((item) => category === 'Todos' || item.category === category)
@@ -167,7 +167,7 @@ export function ProfileCatalog({
         ? Number(a.price) - Number(b.price)
         : order === 'oldest'
           ? a.created_at.localeCompare(b.created_at)
-          : b.created_at.localeCompare(a.created_at),
+          : b.created_at.localeCompare(a.created_at)
     );
   const tabs = [
     { id: 'publications', label: 'Publicaciones', icon: 'video' },
@@ -292,7 +292,15 @@ export function ProfileCatalog({
     </section>
   );
 }
-export function MarketDialog({ title, onClose, children, compact = false }) {
+export function MarketDialog({
+  title,
+  onClose,
+  children,
+  compact = false,
+  className = '',
+  backdropClassName = '',
+  closeOnBackdrop = true,
+}) {
   const ref = useRef(null);
   const closeRef = useRef(onClose);
   closeRef.current = onClose;
@@ -306,7 +314,7 @@ export function MarketDialog({ title, onClose, children, compact = false }) {
       if (event.key === 'Tab') {
         const controls = [
           ...ref.current.querySelectorAll(
-            'button:not(:disabled),input,select,textarea,a[href],video[controls],[tabindex="0"]',
+            'button:not(:disabled),input,select,textarea,a[href],video[controls],[tabindex="0"]'
           ),
         ];
         const first = controls[0],
@@ -329,13 +337,13 @@ export function MarketDialog({ title, onClose, children, compact = false }) {
   }, []);
   return (
     <div
-      className="market-dialog-backdrop"
+      className={`market-dialog-backdrop ${backdropClassName}`}
       onClick={(event) => {
-        if (event.target === event.currentTarget) onClose();
+        if (closeOnBackdrop && event.target === event.currentTarget) onClose();
       }}
     >
       <section
-        className={`market-dialog ${compact ? 'market-dialog-compact' : ''}`}
+        className={`market-dialog ${compact ? 'market-dialog-compact' : ''} ${className}`}
         ref={ref}
         role="dialog"
         aria-modal="true"

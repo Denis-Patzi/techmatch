@@ -18,7 +18,7 @@ try {
     const errors = [];
     page.on('pageerror', (error) => errors.push(error.message));
     await page.route('**/*', (route) => new URL(route.request().url()).origin === origin ? route.continue() : route.abort());
-    await page.goto(origin, { waitUntil: 'networkidle' });
+    await page.goto(`${origin}/presentacion`, { waitUntil: 'networkidle' });
     await page.evaluate(() => { document.documentElement.style.scrollBehavior = 'auto'; });
 
     // Check both themes and every visible text/control, rather than only body width:

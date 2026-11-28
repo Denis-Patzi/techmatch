@@ -12,6 +12,7 @@ import {
   ProfileCatalog,
 } from '@/components/organisms/market/MarketViews';
 import FeedViewer from '@/components/organisms/market/FeedViewer';
+import FeedLoadingScreen from '@/components/organisms/market/FeedLoadingScreen';
 import BuyerProfileTab from '@/components/organisms/buyer/BuyerProfileTab';
 import SellerSubscriptionTab from '@/components/organisms/seller/SellerSubscriptionTab';
 import { AITasadorDemo } from '@/components/organisms/AITasadorDemo';
@@ -64,7 +65,7 @@ export default function UserPage() {
     }
   }, [sharedProductId, market.loading, market.error, market.products]);
   const shareProduct = async (product) => {
-    const url = new URL('/app', window.location.origin);
+    const url = new URL('/', window.location.origin);
     url.searchParams.set('product', product.id);
     try {
       if (navigator.share)
@@ -99,17 +100,17 @@ export default function UserPage() {
   const seller = sellerId === user.id ? ownSeller : market.sellers[sellerId];
   const detail = market.products.find((item) => item.id === detailId);
   const published = market.products.filter(
-    (item) => item.status === 'published',
+    (item) => item.status === 'published'
   );
   const visible = published.filter(
     (item) =>
       (category === 'Todos' || item.category === category) &&
       `${item.title} ${item.description} ${item.city}`
         .toLocaleLowerCase()
-        .includes(query.toLocaleLowerCase().trim()),
+        .includes(query.toLocaleLowerCase().trim())
   );
   const favoriteProducts = published.filter((item) =>
-    market.favorites.includes(item.id),
+    market.favorites.includes(item.id)
   );
   const openSeller = (id) => {
     setDetailId(null);
@@ -148,7 +149,7 @@ export default function UserPage() {
     try {
       const id = await commerceRpc(
         winner ? 'contact_auction_winner' : 'open_product_conversation',
-        { p_product_id: product.id },
+        { p_product_id: product.id }
       );
       await inbox.refresh();
       setDetailId(null);
@@ -178,7 +179,8 @@ export default function UserPage() {
     'publish',
   ];
   let content;
-  if (market.loading && productSections.includes(section))
+  if (market.loading && section === 'explore') content = <FeedLoadingScreen />;
+  else if (market.loading && productSections.includes(section))
     content = (
       <div className="market-loading" role="status">
         <span />
@@ -216,6 +218,7 @@ export default function UserPage() {
         onContact={contact}
         userId={user.id}
         auctions={auctionData.auctions}
+        suspended={Boolean(detailId || deleting)}
       />
     );
   else if (section === 'discovery')

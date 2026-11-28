@@ -14,7 +14,7 @@ export function AccountStatus({ profile }) {
       </span>
       <span className="account-status-plan">
         <Icon name="bag" size={16} />
-        Plan {plan.name} · Gratis
+        Plan {plan.name} · Bs. {plan.priceMonthly}/mes
       </span>
     </div>
   );

@@ -17,7 +17,10 @@ const credentialsSchema = z.object({
 
 const TIMER_SECONDS = 60;
 
-export function LoginForm() {
+export function LoginForm({ redirectTo = '/app', variant = 'default' }) {
+  const social = variant === 'social';
+  const [showPassword, setShowPassword] = useState(false);
+  const [loginError, setLoginError] = useState('');
   const [step, setStep] = useState('credentials'); // 'credentials' | 'otp'
   const [otpEmail, setOtpEmail] = useState('');
   const [otpValue, setOtpValue] = useState('');
@@ -31,9 +34,11 @@ export function LoginForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm({
     resolver: zodResolver(credentialsSchema),
+    mode: social ? 'onChange' : 'onSubmit',
+    defaultValues: { email: '', password: '' },
   });
 
   /* ── Timer de cuenta regresiva ── */
@@ -56,18 +61,29 @@ export function LoginForm() {
 
   /* ── Paso 1: Verificar credenciales ── */
   const onCredentials = async (data) => {
+    setLoginError('');
     setLoading(true);
     try {
       await signIn(data.email, data.password);
       toast.success('¡Sesión iniciada!');
 
       // El guard espera el perfil y envía al administrador a su propio espacio.
-      navigate('/app');
+      navigate(redirectTo);
     } catch (err) {
       console.error(err);
       if (err.message?.includes('Email not confirmed')) {
-        toast.error('Tenés que confirmar tu correo primero (revisá tu bandeja de entrada)');
+        setLoginError(
+          'Confirmá tu correo antes de ingresar. Revisá tu bandeja de entrada.'
+        );
+        toast.error(
+          'Tenés que confirmar tu correo primero (revisá tu bandeja de entrada)'
+        );
       } else {
+        setLoginError(
+          err.message?.includes('Invalid login credentials')
+            ? 'Correo o contraseña incorrectos. Revisá tus datos e intentá de nuevo.'
+            : 'No pudimos iniciar sesión. Volvé a intentarlo.'
+        );
         toast.error(err.message || 'Email o contraseña incorrectos');
       }
     } finally {
@@ -86,7 +102,7 @@ export function LoginForm() {
       await verifyOtp(otpEmail, otpValue.trim());
       // Redirige según el rol
       if (profile?.role === 'admin') navigate('/admin');
-      else navigate('/app');
+      else navigate(redirectTo);
     } catch (err) {
       if (err.message?.includes('expired')) {
         toast.error('Código expirado. Solicitá uno nuevo.');
@@ -126,7 +142,7 @@ export function LoginForm() {
           exit={{ opacity: 0, x: 20 }}
           transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
           onSubmit={handleSubmit(onCredentials)}
-          className="flex flex-col gap-4"
+          className={social ? 'social-login-form' : 'flex flex-col gap-4'}
         >
           <FormField
             label="Correo Electrónico"
@@ -135,7 +151,18 @@ export function LoginForm() {
             placeholder="correo@ejemplo.com"
             register={register}
             error={errors.email}
-          />
+          >
+            {social ? (
+              <input
+                {...register('email')}
+                type="email"
+                inputMode="email"
+                autoComplete="username"
+                placeholder="Correo electrónico"
+                className="social-login-input"
+              />
+            ) : undefined}
+          </FormField>
           <FormField
             label="Contraseña"
             name="password"
@@ -143,32 +170,88 @@ export function LoginForm() {
             placeholder="Tu contraseña"
             register={register}
             error={errors.password}
-          />
+          >
+            {social ? (
+              <div id="social-password-field" className="social-login-password">
+                <input
+                  {...register('password')}
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  autoComplete="current-password"
+                  placeholder="Contraseña"
+                  aria-invalid={Boolean(errors.password) || undefined}
+                  aria-describedby={
+                    errors.password ? 'password-error' : undefined
+                  }
+                  className="social-login-input"
+                />
+                <button
+                  type="button"
+                  aria-label={
+                    showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'
+                  }
+                  aria-pressed={showPassword}
+                  onClick={() => setShowPassword((value) => !value)}
+                >
+                  <svg
+                    width="21"
+                    height="21"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    aria-hidden="true"
+                  >
+                    <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" />
+                    <circle cx="12" cy="12" r="3" />
+                    {!showPassword && <path d="m3 3 18 18" />}
+                  </svg>
+                </button>
+              </div>
+            ) : undefined}
+          </FormField>
 
-          <div className="flex justify-end">
-            <Link
-              to="/forgot-password"
-              className="text-xs text-cyan hover:opacity-75 transition-opacity"
-            >
-              ¿Olvidaste tu contraseña?
-            </Link>
-          </div>
+          {!social && (
+            <div className="flex justify-end">
+              <Link
+                to="/forgot-password"
+                className="text-xs text-cyan hover:opacity-75 transition-opacity"
+              >
+                ¿Olvidaste tu contraseña?
+              </Link>
+            </div>
+          )}
+
+          {loginError && (
+            <p role="alert" className="text-sm text-red-500">
+              {loginError}
+            </p>
+          )}
 
           <button
             type="submit"
-            disabled={loading}
-            className="
+            disabled={loading || (social && !isValid)}
+            className={
+              social
+                ? 'social-login-submit'
+                : `
               w-full py-3.5 rounded-xl font-bold text-navy bg-cyan mt-1
               hover:opacity-90 active:scale-[0.98] transition-all duration-150
               disabled:opacity-50 disabled:cursor-not-allowed
               flex items-center justify-center gap-2
-            "
+            `
+            }
           >
             {loading && (
               <span className="w-4 h-4 border-2 border-navy border-t-transparent rounded-full animate-spin" />
             )}
             {loading ? 'Verificando...' : 'Continuar'}
           </button>
+          {social && (
+            <Link to="/forgot-password" className="social-login-forgot">
+              ¿Olvidaste tu contraseña?
+            </Link>
+          )}
         </motion.form>
       )}
 
@@ -211,7 +294,8 @@ export function LoginForm() {
           <p className="text-xs text-slate-muted">
             {canResend ? null : (
               <>
-                El código expira en <span className="text-cyan font-bold">{timer}s</span>
+                El código expira en{' '}
+                <span className="text-cyan font-bold">{timer}s</span>
               </>
             )}
           </p>
